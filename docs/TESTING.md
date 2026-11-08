@@ -134,7 +134,10 @@ reproduction is printed; CI runs this as the informational, non-blocking "Known 
 `exploratory()` is for proposed invariants that random search violates only rarely; it runs only
 with `EXPLORE=1` (stress). Same classification, except a violation at the declared checkpoint is
 *recorded* (warning annotation, job summary, scenario fixture) instead of failed — it is a new
-instance of a known discrepancy. Any other failure fails the stress run.
+instance of a known discrepancy — and the exploration **continues**, so the requested number of
+cases still runs. Any other failure fails the stress run, and so does a run that stopped short of
+the requested case count, whatever the reason (`scripts/stress-lib.mjs`). The fixture's
+`replay.fastCheck` command carries `EXPLORE=1`, the test file and an escaped `-t` filter.
 
 ## Randomized scenarios: reproduction and replay
 

@@ -5,7 +5,8 @@
 // --seed   fixed fast-check seed (deterministic); omit for a fresh random seed per property
 // Exit code is non-zero if any property fails unexpectedly, is interrupted by its time
 // budget, does not run, or does not execute the requested number of cases. A DISC-15
-// counterexample (known discrepancy) is reported in the summary but does not fail.
+// instance (known discrepancy) is recorded and the exploration continues to the full
+// case count; it is reported in the summary but does not fail. Stopping early does.
 import { spawnSync } from 'node:child_process';
 import { readdirSync, readFileSync, rmSync, appendFileSync, existsSync } from 'node:fs';
 import path from 'node:path';

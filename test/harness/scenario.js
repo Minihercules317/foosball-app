@@ -20,6 +20,7 @@
  * <id>.inflight.json so a run killed mid-case still names the scenario.
  */
 import { it } from 'vitest';
+import { getCurrentTest } from 'vitest/suite';
 import fc from 'fast-check';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
@@ -118,14 +119,35 @@ function writeJson(file, data) {
   writeFileSync(file, JSON.stringify(data, null, 2) + '\n');
 }
 
+/** Shell-ready `-t` filter matching exactly this test name (vitest treats -t as a regex). */
+function testNameFilter(name) {
+  const re = String(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return ` -t '${re.replace(/'/g, "'\\''")}'`;
+}
+
+/** The fast-check replay command for one case (EXPLORE=1 for exploratory tests, which are skipped otherwise). */
+function fastCheckReplay(fcSeed, fcPath, testFile, testName) {
+  const fileArg = testFile ? path.relative(ROOT, testFile) : '<test file>';
+  const explore = process.env.EXPLORE === '1' ? 'EXPLORE=1 ' : '';
+  return `${explore}FC_SEED=${fcSeed} FC_PATH=${fcPath} npx vitest run ${fileArg}${testName ? testNameFilter(testName) : ''}`;
+}
+
 /**
  * Run a property through fast-check with per-case isolation, seed reporting,
  * a time budget, and failure fixtures.
+ *
+ * Exploration (`disc.acceptKnown`, set by exploratory() in discrepancy.js): a case
+ * whose ONLY failure is the known observation is recorded (fixture + disc.known) and
+ * the run CONTINUES, so the requested number of cases still executes. Any other
+ * failure stops the run and fails as usual.
  * @param {PropertyDef} def
  * @param {{disc?:object, signal?:AbortSignal, testFile?:string, testName?:string}} [opts]
- * @returns {Promise<{numRuns:number, seed:number}>}
+ * @returns {Promise<{numRuns:number, seed:number, knownFindings:object[]}>}
  */
 export async function checkProperty(def, { disc = PLAIN_OBSERVER, signal, testFile, testName } = {}) {
+  const current = getCurrentTest();
+  testFile = testFile || current?.file?.filepath;
+  testName = testName || current?.name;
   const params = fcParams(def.defaultRuns);
   const budgetMs = propertyBudgetMs(def, params.numRuns);
   const inflightFile = path.join(SCENARIO_DIR, `${safeName(def.id)}.inflight.json`);
@@ -135,7 +157,27 @@ export async function checkProperty(def, { disc = PLAIN_OBSERVER, signal, testFi
 
   let executed = 0;
   let slowest = { ms: 0, scenario: null };
+  const known = []; // accepted known observations (exploration only)
   const started = Date.now();
+  // fast-check path of the current case (no shrinking happens before it: earlier cases passed)
+  const casePath = () => (params.path?.includes(':') ? params.path : String(Number(params.path || 0) + executed - 1));
+  const recordKnown = (scenario, e) => {
+    const fcPath = casePath();
+    const fixture = path.join(SCENARIO_DIR, `${safeName(def.id)}__${params.seed}__${safeName(fcPath)}.json`);
+    const report = {
+      property: def.id, title: def.title, discrepancy: disc.id, checkpoint: disc.checkpoint,
+      outcome: 'known discrepancy (recorded; exploration continued)',
+      fcSeed: params.seed, fcPath, numRunsRequested: params.numRuns, caseNumber: executed, scenario,
+      error: String(e.stack || e),
+      replay: { scenarioOnly: `npm run replay -- ${path.relative(ROOT, fixture)}`, fastCheck: fastCheckReplay(params.seed, fcPath, testFile, testName) },
+      recordedAt: new Date().toISOString(),
+    };
+    writeJson(fixture, report);
+    const finding = { caseNumber: executed, fcPath, fixture: path.relative(ROOT, fixture), fixtureFile: fixture, report };
+    known.push(finding);
+    disc.known?.push(finding);
+    console.warn(`[property ${def.id}] known discrepancy on case ${executed} of ${params.numRuns} — recorded (${finding.fixture}); continuing`);
+  };
   const prop = fc.asyncProperty(def.arbitrary, async (scenario) => {
     if (signal?.aborted) throw new Error(`[property ${def.id}] aborted by the test runner (timeout?) before case ${executed + 1}`);
     executed++;
@@ -143,6 +185,9 @@ export async function checkProperty(def, { disc = PLAIN_OBSERVER, signal, testFi
     const t0 = Date.now();
     try {
       await runScenario(scenario, (ctx) => def.run({ ...ctx, disc }), { appOptions: def.appOptions, allowPageErrors: def.allowPageErrors });
+    } catch (e) {
+      if (!disc.acceptKnown?.(e)) throw e;
+      recordKnown(scenario, e);
     } finally {
       const ms = Date.now() - t0;
       if (ms > slowest.ms) slowest = { ms, scenario };
@@ -151,7 +196,9 @@ export async function checkProperty(def, { disc = PLAIN_OBSERVER, signal, testFi
   const record = (outcome, extra = {}) => writeJson(path.join(RUN_RECORD_DIR, `${safeName(def.id)}.json`), {
     property: def.id, outcome, fcSeed: params.seed, randomSeed: params.randomSeed, requested: params.numRuns,
     executed, durationMs: Date.now() - started, slowestCaseMs: slowest.ms, slowestCase: slowest.scenario,
-    caseBudgetMs: Math.round(budgetMs / params.numRuns), ...extra,
+    caseBudgetMs: Math.round(budgetMs / params.numRuns),
+    ...(known.length ? { knownFindings: known.map(({ caseNumber, fcPath, fixture }) => ({ caseNumber, fcPath, fixture })) } : {}),
+    ...extra,
   });
 
   const fcOpts = {
@@ -163,8 +210,9 @@ export async function checkProperty(def, { disc = PLAIN_OBSERVER, signal, testFi
   if (!out.failed) {
     rmSync(inflightFile, { force: true });
     record('passed');
-    console.log(`[property ${def.id}] passed: ${executed} case(s) executed (requested ${params.numRuns}); slowest case ${slowest.ms} ms`);
-    return { numRuns: executed, seed: params.seed };
+    console.log(`[property ${def.id}] passed: ${executed} case(s) executed (requested ${params.numRuns})` +
+      `${known.length ? `, ${known.length} with the known discrepancy` : ''}; slowest case ${slowest.ms} ms`);
+    return { numRuns: executed, seed: params.seed, knownFindings: known };
   }
 
   // ---- failure: record everything needed to replay this exact case ----
@@ -172,8 +220,6 @@ export async function checkProperty(def, { disc = PLAIN_OBSERVER, signal, testFi
   const fcPath = out.counterexamplePath;
   const fixture = path.join(SCENARIO_DIR, `${safeName(def.id)}__${out.seed}__${safeName(fcPath || 'interrupted')}.json`);
   const rel = path.relative(ROOT, fixture);
-  const fileArg = testFile ? path.relative(ROOT, testFile) : '<test file>';
-  const filter = testName ? ` -t ${JSON.stringify(testName)}` : '';
   const report = {
     property: def.id,
     title: def.title,
@@ -187,7 +233,7 @@ export async function checkProperty(def, { disc = PLAIN_OBSERVER, signal, testFi
     error: out.errorInstance ? String(out.errorInstance.stack || out.errorInstance) : null,
     replay: {
       scenarioOnly: scenario ? `npm run replay -- ${rel}` : null,
-      fastCheck: fcPath ? `FC_SEED=${out.seed} FC_PATH=${fcPath} npx vitest run ${fileArg}${filter}` : null,
+      fastCheck: fcPath ? fastCheckReplay(out.seed, fcPath, testFile, testName) : null,
     },
     recordedAt: new Date().toISOString(),
   };

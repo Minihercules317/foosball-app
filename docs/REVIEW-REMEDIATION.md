@@ -184,6 +184,15 @@ failure, missing property, run count not honored — the exact F6 case, fewer ca
 interruption, counterexample, known DISC-15 finding), and a real stress run in a child process
 with the app broken, which must exit 1 and leave a replayable fixture for each failing property.
 
+**Follow-up (second audit, F6 partial).** A known DISC-15 counterexample stopped fast-check at
+the first case and was still accepted (`--runs 3 --seed 1671` printed `1 / 3 … Result: passed`).
+Now `checkProperty` records a case that fails *only* with the exploratory checkpoint observation
+and keeps going; every `counterexample` record — known property or not — fails verification as
+an incomplete workload. Self-tests cover the known-then-crash case and run that exact stress
+command in a child process (3/3 on every property, finding reported, fixture replays). Replay
+commands now name the real test file and filter for every `checkProperty` caller (previously
+`<test file>` for DISC-01 and the DISC-15 exploration).
+
 ## F7 — Regression test quality
 
 **Problem.** The non-podium ordering guard checked monotonic loss counts, but every non-podium

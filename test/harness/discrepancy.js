@@ -56,7 +56,9 @@ export function discrepancy(id, title, opts, fn) {
  *   - no violation found                       → pass (the checkpoint must have been
  *                                                reached at least once, else FAIL)
  *   - violation at the declared checkpoint     → pass, but REPORTED: GitHub
- *       warning annotation + job summary line + scenario fixture file (artifact)
+ *       warning annotation + job summary line + scenario fixture file (artifact).
+ *       Inside checkProperty() the run CONTINUES after recording it, so the
+ *       requested number of cases still executes (review F6)
  *   - anything else (crash, unrelated assertion, page error, budget exhausted)
  *                                              → FAIL (red stress workflow)
  */
@@ -65,8 +67,8 @@ export function exploratory(id, title, opts, fn) {
   const name = `[${id}] (exploratory) ${title}`;
   if (process.env.EXPLORE !== '1') return it.skip(name, () => {}, timeout);
   return it(name, async () => {
-    const outcome = await runDiscrepancy({ id, checkpoint, allowPageErrors, allowPass: true }, fn);
-    if (outcome.reproduced) reportKnownFinding(id, checkpoint, outcome.error);
+    const outcome = await runDiscrepancy({ id, checkpoint, allowPageErrors, allowPass: true, continueOnKnown: true }, fn);
+    for (const f of outcome.findings || (outcome.reproduced ? [outcome.error] : [])) reportKnownFinding(id, checkpoint, f);
   }, timeout);
 }
 
@@ -143,8 +145,14 @@ export function isExpectedObservation(e, id, checkpoint) {
  * { reproduced: false } when allowPass and the invariant held; otherwise throws an
  * actionable error.
  */
-export async function runDiscrepancy({ id, checkpoint, allowPageErrors = [], allowPass = false }, fn) {
+export async function runDiscrepancy({ id, checkpoint, allowPageErrors = [], allowPass = false, continueOnKnown = false }, fn) {
   const disc = makeObserver(id, checkpoint);
+  if (continueOnKnown) {
+    // checkProperty() records a case that failed ONLY with this exact observation and
+    // keeps going, so the requested run count still executes (review F6).
+    disc.known = [];
+    disc.acceptKnown = (e) => { const o = observationOf(e); return !!o && o.id === id && o.checkpoint === checkpoint; };
+  }
   let error = null;
   try { await fn(disc); } catch (e) { error = e; }
 
@@ -157,6 +165,7 @@ export async function runDiscrepancy({ id, checkpoint, allowPageErrors = [], all
     if (!disc.reached) {
       throw new Error(`[${id}] CHECKPOINT NEVER REACHED — the body finished without reaching observe('${checkpoint}'). The scenario no longer sets up the situation it documents; fix the test.`);
     }
+    if (disc.known?.length) return { reproduced: true, findings: disc.known }; // exploration ran to completion
     if (allowPass) return { reproduced: false }; // exploration: checkpoint reached, no violation found
     throw new Error(`[${id}] DISCREPANCY NO LONGER REPRODUCES — checkpoint '${checkpoint}' was reached and the proposed invariant held. Behavior changed: review it, update docs/AUDIT.md, and convert this to a normal test.`);
   }

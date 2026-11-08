@@ -1,12 +1,13 @@
 /**
  * [regression] Guards for bugs that index.html's own comments say were fixed in
- * earlier releases. Each test cites the comment it protects.
+ * earlier releases. Each test cites the comment it protects. Check bodies live in
+ * ./checks.js so test/selftest/mutations.test.js can prove each one FAILS against
+ * a mutated copy of the app that reintroduces the bug (or reverses the rule).
  */
 import { describe, it, expect } from 'vitest';
 import { useApp } from '../harness/useApp.js';
 import { loadApp } from '../harness/loadApp.js';
-import { runMonsterNight } from '../factories/driver.js';
-import { sideIds } from '../factories/oracles.js';
+import { checkPartnersSharePlace, checkNonPodiumFollowsStandings, checkBackupKeepsStoredDeltas, checkLateJoinersDoNotSit } from './checks.js';
 
 const ctx = useApp();
 
@@ -25,40 +26,21 @@ describe('legacy fixes stay fixed', () => {
   });
 
   it('"old code assigned 4, 5, 6… to individual players, splitting doubles partners": partners share a finish place', () => {
-    const { app, d } = ctx;
-    const { t } = runMonsterNight(app, d, { players: 12 });
-    for (const team of t.playoffTeams) {
-      const [a, b] = team.playerIds;
-      expect(t.rankingDeltaDetail[a].place).toBe(t.rankingDeltaDetail[b].place);
-    }
+    checkPartnersSharePlace(ctx.app, ctx.d);
   });
 
-  it('"Previous sort put more losses first": non-podium places go to deeper runs first', () => {
-    const { app, d } = ctx;
-    const { t } = runMonsterNight(app, d, { players: 16, rounds: 2 });
-    const losses = {};
-    for (const m of d.bracketMatches(t)) {
-      if (!m.winner || (m.scoreA === 0 && m.scoreB === 0) || !m.a?.entity || !m.b?.entity) continue;
-      for (const id of sideIds(m.winner === 'a' ? m.b.entity : m.a.entity)) losses[id] = (losses[id] || 0) + 1;
-    }
-    const rest = Object.entries(t.rankingDeltaDetail).filter(([, x]) => x.place >= 4)
-      .map(([id, x]) => ({ place: x.place, losses: losses[id] || 0 })).sort((a, b) => a.place - b.place);
-    for (let i = 1; i < rest.length; i++) expect(rest[i].losses).toBeGreaterThanOrEqual(rest[i - 1].losses);
+  it('"Previous sort … inverted seed places" (narrowed): Monster double-elim non-podium places follow ranking-round standings', () => {
+    // All non-podium teams have 2 losses in double elimination, so this guards the
+    // order the weekly workflow actually produces, not the loss-key direction
+    // (only single-elim bronze losers differ in losses — see DISC-16).
+    checkNonPodiumFollowsStandings(ctx.app, ctx.d);
   });
 
   it('"Wiping and full-recalc was overwriting stored event deltas": loading a backup keeps the file\'s per-event deltas', async () => {
-    const { app, d } = ctx;
-    const { t } = runMonsterNight(app, d, { players: 8 });
-    const backup = JSON.parse(JSON.stringify(d.exportAll().data));
-    const pid = Object.keys(backup.tournaments[0].rankingDeltas)[0];
-    backup.tournaments[0].rankingDeltas[pid] = 0; // historical value under older rules
-    const device = await loadApp(); // a fresh, empty device (there is no in-place reset any more)
+    const opened = [];
     try {
-      device.call('applyFullBackupData', device.toWindow(backup), device.toWindow({ silent: true }));
-      expect(device.state.tournaments[0].rankingDeltas[pid]).toBe(0);
-      expect(device.state.players.find((p) => p.id === pid).rankingPoints).toBe(2000);
-    } finally { device.close(); }
-    expect(t).toBeTruthy();
+      await checkBackupKeepsStoredDeltas(ctx.app, ctx.d, async () => { const a = await loadApp(); opened.push(a); return a; });
+    } finally { opened.forEach((a) => a.close()); }
   });
 
   it('"Upgrade previous default start (900) to 2000 if no ranking results applied yet"', () => {
@@ -72,16 +54,7 @@ describe('legacy fixes stay fixed', () => {
   });
 
   it('"Late joiners (0 ranking matches played) only sit if veterans cannot fill the sit slots"', () => {
-    const { d } = ctx;
-    const ids = d.addPlayers(8);
-    const t = d.createTournament({ type: 'monster' });
-    d.addToEvent(t, ids);
-    d.generateRound(t); d.playRound(t);
-    const late = d.addPlayers(1);
-    d.addToEvent(t, late); // 9 present → 1 must sit
-    const r = d.generateRound(t);
-    expect(r.sitOutIds).toHaveLength(1);
-    expect(r.sitOutIds).not.toContain(late[0]);
+    checkLateJoinersDoNotSit(ctx.app, ctx.d);
   });
 
   it('"Persist geography as homeState": legacy `state` field migrates to region/homeState on load', async () => {

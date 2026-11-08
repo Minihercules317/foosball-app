@@ -93,3 +93,21 @@ export const disc15Exploration = defineProperty({
   },
 });
 
+/**
+ * DISC-16 scenario: single-elim 8 with a bronze match, side a always wins.
+ * Returns the bronze-match loser (a semi-finalist: 2 losses) and the four
+ * quarter-final losers (1 loss each), with their finish places.
+ */
+export function bronzeLoserScenario(app, d) {
+  const t = singlesBracket(d, 8, 'single-elim');
+  d.playBracketToCompletion(t, { pickWinner: () => true });
+  expect(t.status, 'setup: bracket finished').toBe('finished');
+  const bronze = t.playoffs.bronze;
+  expect(bronze?.winner, 'setup: a bronze match was played').toBeTruthy();
+  const loserOf = (m) => sideIds(m.winner === 'a' ? m.b.entity : m.a.entity)[0];
+  const bronzeLoser = loserOf(bronze);
+  const qfLosers = t.playoffs.winnersRounds[0].matches.filter((m) => m.a?.entity && m.b?.entity).map(loserOf);
+  expect(qfLosers, 'setup: four quarter-final losers').toHaveLength(4);
+  const { placeOf } = app.call('getEventFinishPlaces', t);
+  return { t, bronzeLoser, qfLosers, placeOf };
+}

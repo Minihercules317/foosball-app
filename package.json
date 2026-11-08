@@ -1,0 +1,26 @@
+{
+  "name": "lcfc-manager",
+  "private": true,
+  "description": "Development tooling for LCFC Manager. The app itself is index.html and needs no build step.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:deep": "PROP_RUNS=150 vitest run test/properties",
+    "test:discrepancies": "STRICT=1 vitest run test/discrepancies",
+    "test:e2e": "playwright test",
+    "check": "node scripts/check-syntax.mjs",
+    "serve": "node scripts/serve.mjs",
+    "fixtures": "node scripts/generate-fixtures.mjs",
+    "ci": "npm run check && npm test && npm run test:e2e"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "fast-check": "^4.10.2",
+    "jsdom": "^26.1.0",
+    "vitest": "^3.2.7"
+  }
+}

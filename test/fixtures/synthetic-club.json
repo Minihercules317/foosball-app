@@ -1,0 +1,5385 @@
+{
+  "app": "LCFC Manager",
+  "version": "7.28",
+  "exportedAt": "2026-01-20T04:00:00.000Z",
+  "type": "full",
+  "players": [
+    {
+      "id": "p_0001",
+      "name": "Gid Fabrikant",
+      "skill": 4,
+      "rankingPoints": 2016,
+      "rankingDelta": 16,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0002",
+      "name": "Rook Testwood",
+      "skill": 5,
+      "rankingPoints": 2040,
+      "rankingDelta": 40,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0003",
+      "name": "Azzo Mockley",
+      "skill": 3,
+      "rankingPoints": 2080,
+      "rankingDelta": 80,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0004",
+      "name": "Rook Fixturo",
+      "skill": 1,
+      "rankingPoints": 2088,
+      "rankingDelta": 88,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0005",
+      "name": "Ivo Synthby",
+      "skill": 2,
+      "rankingPoints": 2125,
+      "rankingDelta": 125,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0006",
+      "name": "Esko Samplegate",
+      "skill": 5,
+      "rankingPoints": 2219,
+      "rankingDelta": 219,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0007",
+      "name": "Mabry Stubbs",
+      "skill": 4,
+      "rankingPoints": 2090,
+      "rankingDelta": 90,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0008",
+      "name": "Tamsin Fixturo",
+      "skill": 5,
+      "rankingPoints": 2159,
+      "rankingDelta": 159,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0009",
+      "name": "Zeb Dummond",
+      "skill": 2,
+      "rankingPoints": 2008,
+      "rankingDelta": 8,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0010",
+      "name": "Zeb Fakeham",
+      "skill": 3,
+      "rankingPoints": 2040,
+      "rankingDelta": 40,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0011",
+      "name": "Rook Fixturo 11",
+      "skill": 2,
+      "rankingPoints": 1976,
+      "rankingDelta": -24,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0012",
+      "name": "Gid Synthby",
+      "skill": 3,
+      "rankingPoints": 2149,
+      "rankingDelta": 149,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0013",
+      "name": "Xandr Fakeham",
+      "skill": 5,
+      "rankingPoints": 2163,
+      "rankingDelta": 163,
+      "region": "",
+      "homeState": ""
+    },
+    {
+      "id": "p_0014",
+      "name": "Mabry Placehold",
+      "skill": 5,
+      "rankingPoints": 2061,
+      "rankingDelta": 61,
+      "region": "",
+      "homeState": ""
+    }
+  ],
+  "tournaments": [
+    {
+      "id": "mw89gdb4x9c1s8",
+      "name": "Synthetic Night 3",
+      "type": "monster",
+      "format": "swiss",
+      "raceTo": 5,
+      "bestOf": 1,
+      "tables": 2,
+      "drawStyle": "random",
+      "monsterPositions": false,
+      "colorBand": "spec-ec-monster",
+      "sandbox": false,
+      "playerIds": [
+        "p_0003",
+        "p_0006",
+        "p_0001",
+        "p_0012",
+        "p_0014",
+        "p_0007",
+        "p_0011",
+        "p_0002",
+        "p_0008",
+        "p_0013",
+        "p_0009",
+        "p_0010"
+      ],
+      "absentIds": [],
+      "teams": [
+        {
+          "id": "mw89gdtpg43ndb",
+          "playerIds": [
+            "p_0013",
+            "p_0006"
+          ],
+          "name": "Xandr Fakeham + Esko Samplegate"
+        },
+        {
+          "id": "mw89gdtpn19kem",
+          "playerIds": [
+            "p_0014",
+            "p_0009"
+          ],
+          "name": "Mabry Placehold + Zeb Dummond"
+        },
+        {
+          "id": "mw89gdtpefy0he",
+          "playerIds": [
+            "p_0011",
+            "p_0001"
+          ],
+          "name": "Rook Fixturo 11 + Gid Fabrikant"
+        },
+        {
+          "id": "mw89gdtpqu6e4y",
+          "playerIds": [
+            "p_0003",
+            "p_0012"
+          ],
+          "name": "Azzo Mockley + Gid Synthby"
+        },
+        {
+          "id": "mw89gdtpy7ty2u",
+          "playerIds": [
+            "p_0007",
+            "p_0008"
+          ],
+          "name": "Mabry Stubbs + Tamsin Fixturo"
+        },
+        {
+          "id": "mw89gdtps4pa1v",
+          "playerIds": [
+            "p_0010",
+            "p_0002"
+          ],
+          "name": "Zeb Fakeham + Rook Testwood"
+        }
+      ],
+      "rounds": [
+        {
+          "number": 1,
+          "matches": [
+            {
+              "id": "mw89gdclf9pvi8",
+              "entityA": {
+                "id": "mw89gdcddy66p1",
+                "name": "Rook Fixturo 11 + Gid Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0011",
+                  "p_0012"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdcdvrubl1",
+                "name": "Rook Testwood + Gid Fabrikant",
+                "type": "team",
+                "playerIds": [
+                  "p_0002",
+                  "p_0001"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 0,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "heads",
+                "serveSide": "b",
+                "flippedAt": 1794168254613
+              },
+              "timerStartAt": 1794168284613,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 0
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168254662
+            },
+            {
+              "id": "mw89gdclr6vvig",
+              "entityA": {
+                "id": "mw89gdcdffmnby",
+                "name": "Zeb Dummond + Zeb Fakeham",
+                "type": "team",
+                "playerIds": [
+                  "p_0009",
+                  "p_0010"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdcdfn3wyg",
+                "name": "Xandr Fakeham + Esko Samplegate",
+                "type": "team",
+                "playerIds": [
+                  "p_0013",
+                  "p_0006"
+                ],
+                "positions": null
+              },
+              "scoreA": 0,
+              "scoreB": 5,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "heads",
+                "serveSide": "a",
+                "flippedAt": 1794168254613
+              },
+              "timerStartAt": 1794168284613,
+              "games": [
+                {
+                  "scoreA": 0,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168254705
+            },
+            {
+              "id": "mw89gdclbrbfkx",
+              "entityA": {
+                "id": "mw89gdcdej9hoc",
+                "name": "Azzo Mockley + Mabry Placehold",
+                "type": "team",
+                "playerIds": [
+                  "p_0003",
+                  "p_0014"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdcd1y7s1q",
+                "name": "Mabry Stubbs + Tamsin Fixturo",
+                "type": "team",
+                "playerIds": [
+                  "p_0007",
+                  "p_0008"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 4,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "tails",
+                "serveSide": "b",
+                "flippedAt": 1794168254613
+              },
+              "timerStartAt": 1794168284662,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 4
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168254747
+            }
+          ],
+          "sitOutIds": [],
+          "teams": [
+            {
+              "id": "mw89gdcdfn3wyg",
+              "playerIds": [
+                "p_0013",
+                "p_0006"
+              ],
+              "name": "Xandr Fakeham + Esko Samplegate",
+              "positions": null
+            },
+            {
+              "id": "mw89gdcd1y7s1q",
+              "playerIds": [
+                "p_0007",
+                "p_0008"
+              ],
+              "name": "Mabry Stubbs + Tamsin Fixturo",
+              "positions": null
+            },
+            {
+              "id": "mw89gdcdvrubl1",
+              "playerIds": [
+                "p_0002",
+                "p_0001"
+              ],
+              "name": "Rook Testwood + Gid Fabrikant",
+              "positions": null
+            },
+            {
+              "id": "mw89gdcddy66p1",
+              "playerIds": [
+                "p_0011",
+                "p_0012"
+              ],
+              "name": "Rook Fixturo 11 + Gid Synthby",
+              "positions": null
+            },
+            {
+              "id": "mw89gdcdej9hoc",
+              "playerIds": [
+                "p_0003",
+                "p_0014"
+              ],
+              "name": "Azzo Mockley + Mabry Placehold",
+              "positions": null
+            },
+            {
+              "id": "mw89gdcdffmnby",
+              "playerIds": [
+                "p_0009",
+                "p_0010"
+              ],
+              "name": "Zeb Dummond + Zeb Fakeham",
+              "positions": null
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "matches": [
+            {
+              "id": "mw89gdhidlauxv",
+              "entityA": {
+                "id": "mw89gdh9r7jliu",
+                "name": "Tamsin Fixturo + Zeb Dummond",
+                "type": "team",
+                "playerIds": [
+                  "p_0008",
+                  "p_0009"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdh9gmivhc",
+                "name": "Zeb Fakeham + Mabry Stubbs",
+                "type": "team",
+                "playerIds": [
+                  "p_0010",
+                  "p_0007"
+                ],
+                "positions": null
+              },
+              "scoreA": 3,
+              "scoreB": 5,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "heads",
+                "serveSide": "a",
+                "flippedAt": 1794168254790
+              },
+              "timerStartAt": 1794168284790,
+              "games": [
+                {
+                  "scoreA": 3,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168254843
+            },
+            {
+              "id": "mw89gdhiuacfo1",
+              "entityA": {
+                "id": "mw89gdh9ykcoxd",
+                "name": "Mabry Placehold + Gid Fabrikant",
+                "type": "team",
+                "playerIds": [
+                  "p_0014",
+                  "p_0001"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdh9umy9xf",
+                "name": "Azzo Mockley + Rook Testwood",
+                "type": "team",
+                "playerIds": [
+                  "p_0003",
+                  "p_0002"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 2,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "tails",
+                "serveSide": "b",
+                "flippedAt": 1794168254790
+              },
+              "timerStartAt": 1794168284790,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 2
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168254899
+            },
+            {
+              "id": "mw89gdhi4p42xh",
+              "entityA": {
+                "id": "mw89gdh9f0ufvj",
+                "name": "Rook Fixturo 11 + Xandr Fakeham",
+                "type": "team",
+                "playerIds": [
+                  "p_0011",
+                  "p_0013"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdh9l0eurs",
+                "name": "Gid Synthby + Esko Samplegate",
+                "type": "team",
+                "playerIds": [
+                  "p_0012",
+                  "p_0006"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 0,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "tails",
+                "serveSide": "b",
+                "flippedAt": 1794168254790
+              },
+              "timerStartAt": 1794168284843,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 0
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168254944
+            }
+          ],
+          "sitOutIds": [],
+          "teams": [
+            {
+              "id": "mw89gdh9r7jliu",
+              "playerIds": [
+                "p_0008",
+                "p_0009"
+              ],
+              "name": "Tamsin Fixturo + Zeb Dummond",
+              "positions": null
+            },
+            {
+              "id": "mw89gdh9ykcoxd",
+              "playerIds": [
+                "p_0014",
+                "p_0001"
+              ],
+              "name": "Mabry Placehold + Gid Fabrikant",
+              "positions": null
+            },
+            {
+              "id": "mw89gdh9l0eurs",
+              "playerIds": [
+                "p_0012",
+                "p_0006"
+              ],
+              "name": "Gid Synthby + Esko Samplegate",
+              "positions": null
+            },
+            {
+              "id": "mw89gdh9gmivhc",
+              "playerIds": [
+                "p_0010",
+                "p_0007"
+              ],
+              "name": "Zeb Fakeham + Mabry Stubbs",
+              "positions": null
+            },
+            {
+              "id": "mw89gdh9umy9xf",
+              "playerIds": [
+                "p_0003",
+                "p_0002"
+              ],
+              "name": "Azzo Mockley + Rook Testwood",
+              "positions": null
+            },
+            {
+              "id": "mw89gdh9f0ufvj",
+              "playerIds": [
+                "p_0011",
+                "p_0013"
+              ],
+              "name": "Rook Fixturo 11 + Xandr Fakeham",
+              "positions": null
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "matches": [
+            {
+              "id": "mw89gdn8ep4luw",
+              "entityA": {
+                "id": "mw89gdmvw2igcw",
+                "name": "Esko Samplegate + Gid Fabrikant",
+                "type": "team",
+                "playerIds": [
+                  "p_0006",
+                  "p_0001"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdmvlbh1os",
+                "name": "Mabry Placehold + Mabry Stubbs",
+                "type": "team",
+                "playerIds": [
+                  "p_0014",
+                  "p_0007"
+                ],
+                "positions": null
+              },
+              "scoreA": 4,
+              "scoreB": 5,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "tails",
+                "serveSide": "a",
+                "flippedAt": 1794168254996
+              },
+              "timerStartAt": 1794168284996,
+              "games": [
+                {
+                  "scoreA": 4,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168255054
+            },
+            {
+              "id": "mw89gdn8t86htd",
+              "entityA": {
+                "id": "mw89gdmv5egtp9",
+                "name": "Gid Synthby + Rook Testwood",
+                "type": "team",
+                "playerIds": [
+                  "p_0012",
+                  "p_0002"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdmvq8no3s",
+                "name": "Azzo Mockley + Zeb Dummond",
+                "type": "team",
+                "playerIds": [
+                  "p_0003",
+                  "p_0009"
+                ],
+                "positions": null
+              },
+              "scoreA": 0,
+              "scoreB": 5,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "tails",
+                "serveSide": "b",
+                "flippedAt": 1794168254996
+              },
+              "timerStartAt": 1794168284996,
+              "games": [
+                {
+                  "scoreA": 0,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168255115
+            },
+            {
+              "id": "mw89gdn8h8o9up",
+              "entityA": {
+                "id": "mw89gdmvj4izr7",
+                "name": "Xandr Fakeham + Zeb Fakeham",
+                "type": "team",
+                "playerIds": [
+                  "p_0013",
+                  "p_0010"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gdmvxhn4sr",
+                "name": "Tamsin Fixturo + Rook Fixturo 11",
+                "type": "team",
+                "playerIds": [
+                  "p_0008",
+                  "p_0011"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 4,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "tails",
+                "serveSide": "a",
+                "flippedAt": 1794168254996
+              },
+              "timerStartAt": 1794168285054,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 4
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168255184
+            }
+          ],
+          "sitOutIds": [],
+          "teams": [
+            {
+              "id": "mw89gdmvq8no3s",
+              "playerIds": [
+                "p_0003",
+                "p_0009"
+              ],
+              "name": "Azzo Mockley + Zeb Dummond",
+              "positions": null
+            },
+            {
+              "id": "mw89gdmvlbh1os",
+              "playerIds": [
+                "p_0014",
+                "p_0007"
+              ],
+              "name": "Mabry Placehold + Mabry Stubbs",
+              "positions": null
+            },
+            {
+              "id": "mw89gdmvxhn4sr",
+              "playerIds": [
+                "p_0008",
+                "p_0011"
+              ],
+              "name": "Tamsin Fixturo + Rook Fixturo 11",
+              "positions": null
+            },
+            {
+              "id": "mw89gdmvw2igcw",
+              "playerIds": [
+                "p_0006",
+                "p_0001"
+              ],
+              "name": "Esko Samplegate + Gid Fabrikant",
+              "positions": null
+            },
+            {
+              "id": "mw89gdmvj4izr7",
+              "playerIds": [
+                "p_0013",
+                "p_0010"
+              ],
+              "name": "Xandr Fakeham + Zeb Fakeham",
+              "positions": null
+            },
+            {
+              "id": "mw89gdmv5egtp9",
+              "playerIds": [
+                "p_0012",
+                "p_0002"
+              ],
+              "name": "Gid Synthby + Rook Testwood",
+              "positions": null
+            }
+          ]
+        }
+      ],
+      "currentRound": 3,
+      "playoffs": {
+        "type": "double-elim",
+        "size": 8,
+        "rounds": [
+          {
+            "number": 1,
+            "name": "Winners R1",
+            "matches": [
+              {
+                "id": "mw89gdtqfm8gxh",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gdtpg43ndb",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gdtqqbwhzm",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gdtpqu6e4y",
+                    "name": "Azzo Mockley + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0003",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gdtpy7ty2u",
+                    "name": "Mabry Stubbs + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0007",
+                      "p_0008"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168255230
+                },
+                "table": 1,
+                "timerStartAt": 1794168285230,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 1
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168255365
+              },
+              {
+                "id": "mw89gdtq0gcj83",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gdtpn19kem",
+                    "name": "Mabry Placehold + Zeb Dummond",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0009"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gdtql0prmr",
+                "a": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gdtpefy0he",
+                    "name": "Rook Fixturo 11 + Gid Fabrikant",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0011",
+                      "p_0001"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 6,
+                  "entity": {
+                    "id": "mw89gdtps4pa1v",
+                    "name": "Zeb Fakeham + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0002"
+                    ],
+                    "seed": 6
+                  },
+                  "score": null
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168255230
+                },
+                "table": 2,
+                "timerStartAt": 1794168285230,
+                "games": [
+                  {
+                    "scoreA": 2,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168255507
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Winners SF",
+            "matches": [
+              {
+                "id": "mw89gdtqwo3swh",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gdtpg43ndb",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqfm8gxh",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gdtpqu6e4y",
+                    "name": "Azzo Mockley + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0003",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqqbwhzm",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "heads",
+                  "serveSide": "b",
+                  "flippedAt": 1794168255366
+                },
+                "table": 1,
+                "timerStartAt": 1794168285366,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 2
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 2
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168255655
+              },
+              {
+                "id": "mw89gdtqdm4k9y",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gdtpn19kem",
+                    "name": "Mabry Placehold + Zeb Dummond",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0009"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtq0gcj83",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 6,
+                  "entity": {
+                    "id": "mw89gdtps4pa1v",
+                    "name": "Zeb Fakeham + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0002"
+                    ],
+                    "seed": 6
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtql0prmr",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168255507
+                },
+                "table": 1,
+                "timerStartAt": 1794168285655,
+                "games": [
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 2,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168255802
+              }
+            ]
+          },
+          {
+            "number": 3,
+            "name": "Winners Final",
+            "matches": [
+              {
+                "id": "mw89gdtqoa5i39",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gdtpg43ndb",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqwo3swh",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 6,
+                  "entity": {
+                    "id": "mw89gdtps4pa1v",
+                    "name": "Zeb Fakeham + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0002"
+                    ],
+                    "seed": 6
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqdm4k9y",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168255802
+                },
+                "table": 1,
+                "timerStartAt": 1794168285802,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 3
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 3
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168255951
+              }
+            ]
+          }
+        ],
+        "winnersRounds": [
+          {
+            "number": 1,
+            "name": "Winners R1",
+            "matches": [
+              {
+                "id": "mw89gdtqfm8gxh",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gdtpg43ndb",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gdtqqbwhzm",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gdtpqu6e4y",
+                    "name": "Azzo Mockley + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0003",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gdtpy7ty2u",
+                    "name": "Mabry Stubbs + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0007",
+                      "p_0008"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168255230
+                },
+                "table": 1,
+                "timerStartAt": 1794168285230,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 1
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168255365
+              },
+              {
+                "id": "mw89gdtq0gcj83",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gdtpn19kem",
+                    "name": "Mabry Placehold + Zeb Dummond",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0009"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gdtql0prmr",
+                "a": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gdtpefy0he",
+                    "name": "Rook Fixturo 11 + Gid Fabrikant",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0011",
+                      "p_0001"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 6,
+                  "entity": {
+                    "id": "mw89gdtps4pa1v",
+                    "name": "Zeb Fakeham + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0002"
+                    ],
+                    "seed": 6
+                  },
+                  "score": null
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168255230
+                },
+                "table": 2,
+                "timerStartAt": 1794168285230,
+                "games": [
+                  {
+                    "scoreA": 2,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168255507
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Winners SF",
+            "matches": [
+              {
+                "id": "mw89gdtqwo3swh",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gdtpg43ndb",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqfm8gxh",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gdtpqu6e4y",
+                    "name": "Azzo Mockley + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0003",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqqbwhzm",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "heads",
+                  "serveSide": "b",
+                  "flippedAt": 1794168255366
+                },
+                "table": 1,
+                "timerStartAt": 1794168285366,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 2
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 2
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168255655
+              },
+              {
+                "id": "mw89gdtqdm4k9y",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gdtpn19kem",
+                    "name": "Mabry Placehold + Zeb Dummond",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0009"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtq0gcj83",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 6,
+                  "entity": {
+                    "id": "mw89gdtps4pa1v",
+                    "name": "Zeb Fakeham + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0002"
+                    ],
+                    "seed": 6
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtql0prmr",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168255507
+                },
+                "table": 1,
+                "timerStartAt": 1794168285655,
+                "games": [
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 2,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168255802
+              }
+            ]
+          },
+          {
+            "number": 3,
+            "name": "Winners Final",
+            "matches": [
+              {
+                "id": "mw89gdtqoa5i39",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gdtpg43ndb",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqwo3swh",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 6,
+                  "entity": {
+                    "id": "mw89gdtps4pa1v",
+                    "name": "Zeb Fakeham + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0002"
+                    ],
+                    "seed": 6
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqdm4k9y",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168255802
+                },
+                "table": 1,
+                "timerStartAt": 1794168285802,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 3
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 3
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168255951
+              }
+            ]
+          }
+        ],
+        "losersRounds": [
+          {
+            "number": 1,
+            "name": "Losers R1",
+            "matches": [
+              {
+                "id": "mw89gdtq2elg72",
+                "a": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gdtpy7ty2u",
+                    "name": "Mabry Stubbs + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0007",
+                      "p_0008"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqqbwhzm",
+                  "fromLoser": true
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gdtpefy0he",
+                    "name": "Rook Fixturo 11 + Gid Fabrikant",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0011",
+                      "p_0001"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtql0prmr",
+                  "fromLoser": true
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "heads",
+                  "serveSide": "a",
+                  "flippedAt": 1794168255507
+                },
+                "table": 2,
+                "timerStartAt": 1794168285507,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 1
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 2
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168256094
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Losers R2",
+            "matches": [
+              {
+                "id": "mw89gdtqek4mgl",
+                "a": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gdtpy7ty2u",
+                    "name": "Mabry Stubbs + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0007",
+                      "p_0008"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtq2elg72",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gdtpqu6e4y",
+                    "name": "Azzo Mockley + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0003",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqwo3swh",
+                  "fromLoser": true
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "heads",
+                  "serveSide": "b",
+                  "flippedAt": 1794168256094
+                },
+                "table": 1,
+                "timerStartAt": 1794168286094,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168256255
+              },
+              {
+                "id": "mw89gdtqbg08io",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gdtpn19kem",
+                    "name": "Mabry Placehold + Zeb Dummond",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0009"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqdm4k9y",
+                  "fromLoser": true
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "losers"
+              }
+            ]
+          },
+          {
+            "number": 3,
+            "name": "Losers R3",
+            "matches": [
+              {
+                "id": "mw89gdtq2cj1fb",
+                "a": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gdtpy7ty2u",
+                    "name": "Mabry Stubbs + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0007",
+                      "p_0008"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqek4mgl",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gdtpn19kem",
+                    "name": "Mabry Placehold + Zeb Dummond",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0009"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqbg08io",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "heads",
+                  "serveSide": "a",
+                  "flippedAt": 1794168256255
+                },
+                "table": 1,
+                "timerStartAt": 1794168286255,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 2
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168256409
+              }
+            ]
+          },
+          {
+            "number": 4,
+            "name": "Losers Final",
+            "matches": [
+              {
+                "id": "mw89gdtq9zcg1m",
+                "a": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gdtpy7ty2u",
+                    "name": "Mabry Stubbs + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0007",
+                      "p_0008"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtq2cj1fb",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 6,
+                  "entity": {
+                    "id": "mw89gdtps4pa1v",
+                    "name": "Zeb Fakeham + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0002"
+                    ],
+                    "seed": 6
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gdtqoa5i39",
+                  "fromLoser": true
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168256409
+                },
+                "table": 1,
+                "timerStartAt": 1794168286409,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 1
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168256563
+              }
+            ]
+          }
+        ],
+        "grandFinal": {
+          "id": "mw89gdtqua0zam",
+          "a": {
+            "seed": 1,
+            "entity": {
+              "id": "mw89gdtpg43ndb",
+              "name": "Xandr Fakeham + Esko Samplegate",
+              "type": "team",
+              "playerIds": [
+                "p_0013",
+                "p_0006"
+              ],
+              "seed": 1
+            },
+            "score": null,
+            "fromMatch": "mw89gdtqoa5i39",
+            "fromLoser": false
+          },
+          "b": {
+            "seed": 5,
+            "entity": {
+              "id": "mw89gdtpy7ty2u",
+              "name": "Mabry Stubbs + Tamsin Fixturo",
+              "type": "team",
+              "playerIds": [
+                "p_0007",
+                "p_0008"
+              ],
+              "seed": 5
+            },
+            "score": null,
+            "fromMatch": "mw89gdtq9zcg1m",
+            "fromLoser": false
+          },
+          "winner": "a",
+          "loser": "b",
+          "scoreA": 2,
+          "scoreB": 0,
+          "bracket": "gf",
+          "isGrandFinal": true,
+          "coinToss": {
+            "headsSide": "b",
+            "result": "tails",
+            "serveSide": "a",
+            "flippedAt": 1794168256563
+          },
+          "table": 1,
+          "timerStartAt": 1794168286563,
+          "games": [
+            {
+              "scoreA": 5,
+              "scoreB": 3
+            },
+            {
+              "scoreA": 5,
+              "scoreB": 3
+            }
+          ],
+          "seriesA": 2,
+          "seriesB": 0,
+          "timerEndedAt": 1794168256720
+        },
+        "grandFinal2": {
+          "id": "mw89gdtqla5pjr",
+          "a": {
+            "entity": null,
+            "fromMatch": null,
+            "fromLoser": false
+          },
+          "b": {
+            "entity": null,
+            "fromMatch": null,
+            "fromLoser": false
+          },
+          "winner": null,
+          "loser": null,
+          "scoreA": null,
+          "scoreB": null,
+          "bracket": "gf2",
+          "isGrandFinal": true,
+          "isReset": true,
+          "void": true
+        },
+        "bronze": null,
+        "placements": {
+          "first": {
+            "id": "mw89gdtpg43ndb",
+            "name": "Xandr Fakeham + Esko Samplegate",
+            "type": "team",
+            "playerIds": [
+              "p_0013",
+              "p_0006"
+            ],
+            "seed": 1
+          },
+          "second": {
+            "id": "mw89gdtpy7ty2u",
+            "name": "Mabry Stubbs + Tamsin Fixturo",
+            "type": "team",
+            "playerIds": [
+              "p_0007",
+              "p_0008"
+            ],
+            "seed": 5
+          },
+          "third": {
+            "id": "mw89gdtps4pa1v",
+            "name": "Zeb Fakeham + Rook Testwood",
+            "type": "team",
+            "playerIds": [
+              "p_0010",
+              "p_0002"
+            ],
+            "seed": 6
+          }
+        },
+        "gfResetRequired": false,
+        "gfResetActive": false,
+        "tieredDraw": true,
+        "tieredPairs": [
+          "#1+#7",
+          "#2+#8",
+          "#3+#9",
+          "#4+#10",
+          "#5+#11",
+          "#6+#12"
+        ],
+        "bonusPoolLocked": {
+          "bonusPool": 245,
+          "fieldSize": 12,
+          "fieldPoints": 24511,
+          "shares": [
+            123,
+            74,
+            48
+          ],
+          "mode": "50-30-20",
+          "lockedAt": 1794168255230
+        },
+        "bestOf": 3
+      },
+      "createdAt": 1768863600000,
+      "status": "finished",
+      "currentSitOutIds": [],
+      "playoffTeams": [
+        {
+          "id": "mw89gdtpg43ndb",
+          "playerIds": [
+            "p_0013",
+            "p_0006"
+          ],
+          "name": "Xandr Fakeham + Esko Samplegate",
+          "seed": 1,
+          "tieredFrom": {
+            "top": "p_0013",
+            "bottom": "p_0006",
+            "ranks": [
+              1,
+              7
+            ]
+          }
+        },
+        {
+          "id": "mw89gdtpn19kem",
+          "playerIds": [
+            "p_0014",
+            "p_0009"
+          ],
+          "name": "Mabry Placehold + Zeb Dummond",
+          "seed": 2,
+          "tieredFrom": {
+            "top": "p_0014",
+            "bottom": "p_0009",
+            "ranks": [
+              2,
+              8
+            ]
+          }
+        },
+        {
+          "id": "mw89gdtpefy0he",
+          "playerIds": [
+            "p_0011",
+            "p_0001"
+          ],
+          "name": "Rook Fixturo 11 + Gid Fabrikant",
+          "seed": 3,
+          "tieredFrom": {
+            "top": "p_0011",
+            "bottom": "p_0001",
+            "ranks": [
+              3,
+              9
+            ]
+          }
+        },
+        {
+          "id": "mw89gdtpqu6e4y",
+          "playerIds": [
+            "p_0003",
+            "p_0012"
+          ],
+          "name": "Azzo Mockley + Gid Synthby",
+          "seed": 4,
+          "tieredFrom": {
+            "top": "p_0003",
+            "bottom": "p_0012",
+            "ranks": [
+              4,
+              10
+            ]
+          }
+        },
+        {
+          "id": "mw89gdtpy7ty2u",
+          "playerIds": [
+            "p_0007",
+            "p_0008"
+          ],
+          "name": "Mabry Stubbs + Tamsin Fixturo",
+          "seed": 5,
+          "tieredFrom": {
+            "top": "p_0007",
+            "bottom": "p_0008",
+            "ranks": [
+              5,
+              11
+            ]
+          }
+        },
+        {
+          "id": "mw89gdtps4pa1v",
+          "playerIds": [
+            "p_0010",
+            "p_0002"
+          ],
+          "name": "Zeb Fakeham + Rook Testwood",
+          "seed": 6,
+          "tieredFrom": {
+            "top": "p_0010",
+            "bottom": "p_0002",
+            "ranks": [
+              6,
+              12
+            ]
+          }
+        }
+      ],
+      "bonusPoolLocked": {
+        "fieldIds": [
+          "p_0013",
+          "p_0006",
+          "p_0014",
+          "p_0009",
+          "p_0011",
+          "p_0001",
+          "p_0003",
+          "p_0012",
+          "p_0007",
+          "p_0008",
+          "p_0010",
+          "p_0002"
+        ],
+        "fieldSize": 12,
+        "fieldPoints": 24511,
+        "bonusPool": 245,
+        "shares": [
+          123,
+          74,
+          48
+        ],
+        "fr": [
+          0.5,
+          0.3,
+          0.2
+        ],
+        "mode": "50-30-20",
+        "lockedAt": 1794168255230
+      },
+      "placements": {
+        "first": {
+          "id": "mw89gdtpg43ndb",
+          "name": "Xandr Fakeham + Esko Samplegate",
+          "type": "team",
+          "playerIds": [
+            "p_0013",
+            "p_0006"
+          ],
+          "seed": 1
+        },
+        "second": {
+          "id": "mw89gdtpy7ty2u",
+          "name": "Mabry Stubbs + Tamsin Fixturo",
+          "type": "team",
+          "playerIds": [
+            "p_0007",
+            "p_0008"
+          ],
+          "seed": 5
+        },
+        "third": {
+          "id": "mw89gdtps4pa1v",
+          "name": "Zeb Fakeham + Rook Testwood",
+          "type": "team",
+          "playerIds": [
+            "p_0010",
+            "p_0002"
+          ],
+          "seed": 6
+        }
+      },
+      "rankingApplied": true,
+      "rankingAppliedAt": 1794168256720,
+      "rankingDeltas": {
+        "p_0013": 123,
+        "p_0006": 123,
+        "p_0007": 90,
+        "p_0008": 90,
+        "p_0010": 56,
+        "p_0002": 56,
+        "p_0009": -8,
+        "p_0014": -8,
+        "p_0001": -8,
+        "p_0011": -8,
+        "p_0003": -8,
+        "p_0012": -8
+      },
+      "rankingDeltaDetail": {
+        "p_0013": {
+          "place": 1,
+          "expected": 1,
+          "seedDelta": 0,
+          "bonus": 123,
+          "total": 123
+        },
+        "p_0006": {
+          "place": 1,
+          "expected": 1,
+          "seedDelta": 0,
+          "bonus": 123,
+          "total": 123
+        },
+        "p_0007": {
+          "place": 2,
+          "expected": 5,
+          "seedDelta": 16,
+          "bonus": 74,
+          "total": 90
+        },
+        "p_0008": {
+          "place": 2,
+          "expected": 5,
+          "seedDelta": 16,
+          "bonus": 74,
+          "total": 90
+        },
+        "p_0010": {
+          "place": 3,
+          "expected": 6,
+          "seedDelta": 8,
+          "bonus": 48,
+          "total": 56
+        },
+        "p_0002": {
+          "place": 3,
+          "expected": 6,
+          "seedDelta": 8,
+          "bonus": 48,
+          "total": 56
+        },
+        "p_0009": {
+          "place": 4,
+          "expected": 2,
+          "seedDelta": -8,
+          "bonus": 0,
+          "total": -8
+        },
+        "p_0014": {
+          "place": 4,
+          "expected": 2,
+          "seedDelta": -8,
+          "bonus": 0,
+          "total": -8
+        },
+        "p_0001": {
+          "place": 5,
+          "expected": 3,
+          "seedDelta": -8,
+          "bonus": 0,
+          "total": -8
+        },
+        "p_0011": {
+          "place": 5,
+          "expected": 3,
+          "seedDelta": -8,
+          "bonus": 0,
+          "total": -8
+        },
+        "p_0003": {
+          "place": 6,
+          "expected": 4,
+          "seedDelta": -8,
+          "bonus": 0,
+          "total": -8
+        },
+        "p_0012": {
+          "place": 6,
+          "expected": 4,
+          "seedDelta": -8,
+          "bonus": 0,
+          "total": -8
+        }
+      },
+      "rankingBonusShare": [
+        123,
+        74,
+        48
+      ],
+      "rankingBonusPool": 245
+    },
+    {
+      "id": "mw89gc4bu4z0xs",
+      "name": "Synthetic Night 2",
+      "type": "monster",
+      "format": "swiss",
+      "raceTo": 5,
+      "bestOf": 1,
+      "tables": 2,
+      "drawStyle": "random",
+      "monsterPositions": false,
+      "colorBand": "spec-ec-monster",
+      "sandbox": false,
+      "playerIds": [
+        "p_0006",
+        "p_0001",
+        "p_0012",
+        "p_0005",
+        "p_0014",
+        "p_0002",
+        "p_0008",
+        "p_0013",
+        "p_0009",
+        "p_0010"
+      ],
+      "absentIds": [],
+      "teams": [
+        {
+          "id": "mw89gcgqt7yb9q",
+          "playerIds": [
+            "p_0009",
+            "p_0002"
+          ],
+          "name": "Zeb Dummond + Rook Testwood"
+        },
+        {
+          "id": "mw89gcgqjf7bc9",
+          "playerIds": [
+            "p_0010",
+            "p_0013"
+          ],
+          "name": "Zeb Fakeham + Xandr Fakeham"
+        },
+        {
+          "id": "mw89gcgqmqh4do",
+          "playerIds": [
+            "p_0014",
+            "p_0008"
+          ],
+          "name": "Mabry Placehold + Tamsin Fixturo"
+        },
+        {
+          "id": "mw89gcgqia67kj",
+          "playerIds": [
+            "p_0001",
+            "p_0006"
+          ],
+          "name": "Gid Fabrikant + Esko Samplegate"
+        },
+        {
+          "id": "mw89gcgqy9kltp",
+          "playerIds": [
+            "p_0012",
+            "p_0005"
+          ],
+          "name": "Gid Synthby + Ivo Synthby"
+        }
+      ],
+      "rounds": [
+        {
+          "number": 1,
+          "matches": [
+            {
+              "id": "mw89gc5r3y1x2k",
+              "entityA": {
+                "id": "mw89gc5hk6wohc",
+                "name": "Tamsin Fixturo + Ivo Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0008",
+                  "p_0005"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gc5hb58do5",
+                "name": "Gid Fabrikant + Gid Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0001",
+                  "p_0012"
+                ],
+                "positions": null
+              },
+              "scoreA": 1,
+              "scoreB": 5,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "heads",
+                "serveSide": "a",
+                "flippedAt": 1794168253071
+              },
+              "timerStartAt": 1794168283071,
+              "games": [
+                {
+                  "scoreA": 1,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168253116
+            },
+            {
+              "id": "mw89gc5r0gmdv1",
+              "entityA": {
+                "id": "mw89gc5hhnxfem",
+                "name": "Rook Testwood + Zeb Dummond",
+                "type": "team",
+                "playerIds": [
+                  "p_0002",
+                  "p_0009"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gc5hymrvr4",
+                "name": "Xandr Fakeham + Esko Samplegate",
+                "type": "team",
+                "playerIds": [
+                  "p_0013",
+                  "p_0006"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 0,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "heads",
+                "serveSide": "b",
+                "flippedAt": 1794168253071
+              },
+              "timerStartAt": 1794168283071,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 0
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168253159
+            }
+          ],
+          "sitOutIds": [
+            "p_0014",
+            "p_0010"
+          ],
+          "teams": [
+            {
+              "id": "mw89gc5hk6wohc",
+              "playerIds": [
+                "p_0008",
+                "p_0005"
+              ],
+              "name": "Tamsin Fixturo + Ivo Synthby",
+              "positions": null
+            },
+            {
+              "id": "mw89gc5hb58do5",
+              "playerIds": [
+                "p_0001",
+                "p_0012"
+              ],
+              "name": "Gid Fabrikant + Gid Synthby",
+              "positions": null
+            },
+            {
+              "id": "mw89gc5hymrvr4",
+              "playerIds": [
+                "p_0013",
+                "p_0006"
+              ],
+              "name": "Xandr Fakeham + Esko Samplegate",
+              "positions": null
+            },
+            {
+              "id": "mw89gc5hhnxfem",
+              "playerIds": [
+                "p_0002",
+                "p_0009"
+              ],
+              "name": "Rook Testwood + Zeb Dummond",
+              "positions": null
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "matches": [
+            {
+              "id": "mw89gc9dzgznp7",
+              "entityA": {
+                "id": "mw89gc92bbzaaf",
+                "name": "Rook Testwood + Ivo Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0002",
+                  "p_0005"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gc924mg0zi",
+                "name": "Mabry Placehold + Zeb Fakeham",
+                "type": "team",
+                "playerIds": [
+                  "p_0014",
+                  "p_0010"
+                ],
+                "positions": null
+              },
+              "scoreA": 0,
+              "scoreB": 5,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "tails",
+                "serveSide": "a",
+                "flippedAt": 1794168253201
+              },
+              "timerStartAt": 1794168283201,
+              "games": [
+                {
+                  "scoreA": 0,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168253244
+            },
+            {
+              "id": "mw89gc9dia567r",
+              "entityA": {
+                "id": "mw89gc92qmv0g1",
+                "name": "Zeb Dummond + Xandr Fakeham",
+                "type": "team",
+                "playerIds": [
+                  "p_0009",
+                  "p_0013"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gc92qi1lxr",
+                "name": "Tamsin Fixturo + Gid Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0008",
+                  "p_0012"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 2,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "tails",
+                "serveSide": "a",
+                "flippedAt": 1794168253201
+              },
+              "timerStartAt": 1794168283201,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 2
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168253286
+            }
+          ],
+          "sitOutIds": [
+            "p_0006",
+            "p_0001"
+          ],
+          "teams": [
+            {
+              "id": "mw89gc92bbzaaf",
+              "playerIds": [
+                "p_0002",
+                "p_0005"
+              ],
+              "name": "Rook Testwood + Ivo Synthby",
+              "positions": null
+            },
+            {
+              "id": "mw89gc92qmv0g1",
+              "playerIds": [
+                "p_0009",
+                "p_0013"
+              ],
+              "name": "Zeb Dummond + Xandr Fakeham",
+              "positions": null
+            },
+            {
+              "id": "mw89gc92qi1lxr",
+              "playerIds": [
+                "p_0008",
+                "p_0012"
+              ],
+              "name": "Tamsin Fixturo + Gid Synthby",
+              "positions": null
+            },
+            {
+              "id": "mw89gc924mg0zi",
+              "playerIds": [
+                "p_0014",
+                "p_0010"
+              ],
+              "name": "Mabry Placehold + Zeb Fakeham",
+              "positions": null
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "matches": [
+            {
+              "id": "mw89gccyv2s5fn",
+              "entityA": {
+                "id": "mw89gccpckx4mc",
+                "name": "Mabry Placehold + Tamsin Fixturo",
+                "type": "team",
+                "playerIds": [
+                  "p_0014",
+                  "p_0008"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gccp4t8alt",
+                "name": "Esko Samplegate + Rook Testwood",
+                "type": "team",
+                "playerIds": [
+                  "p_0006",
+                  "p_0002"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 4,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "heads",
+                "serveSide": "b",
+                "flippedAt": 1794168253330
+              },
+              "timerStartAt": 1794168283330,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 4
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168253382
+            },
+            {
+              "id": "mw89gccy8dplu3",
+              "entityA": {
+                "id": "mw89gccpcm5k9n",
+                "name": "Zeb Dummond + Zeb Fakeham",
+                "type": "team",
+                "playerIds": [
+                  "p_0009",
+                  "p_0010"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gccpoyixus",
+                "name": "Xandr Fakeham + Gid Fabrikant",
+                "type": "team",
+                "playerIds": [
+                  "p_0013",
+                  "p_0001"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 3,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "heads",
+                "serveSide": "b",
+                "flippedAt": 1794168253330
+              },
+              "timerStartAt": 1794168283330,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 3
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168253428
+            }
+          ],
+          "sitOutIds": [
+            "p_0012",
+            "p_0005"
+          ],
+          "teams": [
+            {
+              "id": "mw89gccpcm5k9n",
+              "playerIds": [
+                "p_0009",
+                "p_0010"
+              ],
+              "name": "Zeb Dummond + Zeb Fakeham",
+              "positions": null
+            },
+            {
+              "id": "mw89gccpoyixus",
+              "playerIds": [
+                "p_0013",
+                "p_0001"
+              ],
+              "name": "Xandr Fakeham + Gid Fabrikant",
+              "positions": null
+            },
+            {
+              "id": "mw89gccp4t8alt",
+              "playerIds": [
+                "p_0006",
+                "p_0002"
+              ],
+              "name": "Esko Samplegate + Rook Testwood",
+              "positions": null
+            },
+            {
+              "id": "mw89gccpckx4mc",
+              "playerIds": [
+                "p_0014",
+                "p_0008"
+              ],
+              "name": "Mabry Placehold + Tamsin Fixturo",
+              "positions": null
+            }
+          ]
+        }
+      ],
+      "currentRound": 3,
+      "playoffs": {
+        "type": "double-elim",
+        "size": 8,
+        "rounds": [
+          {
+            "number": 1,
+            "name": "Winners R1",
+            "matches": [
+              {
+                "id": "mw89gcgqcqbklb",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gcgqt7yb9q",
+                    "name": "Zeb Dummond + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0002"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gcgqf17xx4",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gcgqia67kj",
+                    "name": "Gid Fabrikant + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0006"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gcgqy9kltp",
+                    "name": "Gid Synthby + Ivo Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0012",
+                      "p_0005"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168253466
+                },
+                "table": 1,
+                "timerStartAt": 1794168283466,
+                "games": [
+                  {
+                    "scoreA": 1,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 2,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168253588
+              },
+              {
+                "id": "mw89gcgqw64iyj",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gcgqjf7bc9",
+                    "name": "Zeb Fakeham + Xandr Fakeham",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0013"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gcgqi6p2hg",
+                "a": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gcgqmqh4do",
+                    "name": "Mabry Placehold + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0008"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Winners SF",
+            "matches": [
+              {
+                "id": "mw89gcgqv374r4",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gcgqt7yb9q",
+                    "name": "Zeb Dummond + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0002"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqcqbklb",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gcgqy9kltp",
+                    "name": "Gid Synthby + Ivo Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0012",
+                      "p_0005"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqf17xx4",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168253588
+                },
+                "table": 1,
+                "timerStartAt": 1794168283588,
+                "games": [
+                  {
+                    "scoreA": 0,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168253723
+              },
+              {
+                "id": "mw89gcgqz6q34y",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gcgqjf7bc9",
+                    "name": "Zeb Fakeham + Xandr Fakeham",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0013"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqw64iyj",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gcgqmqh4do",
+                    "name": "Mabry Placehold + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0008"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqi6p2hg",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "heads",
+                  "serveSide": "b",
+                  "flippedAt": 1794168253466
+                },
+                "table": 2,
+                "timerStartAt": 1794168283466,
+                "games": [
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 3,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168253852
+              }
+            ]
+          },
+          {
+            "number": 3,
+            "name": "Winners Final",
+            "matches": [
+              {
+                "id": "mw89gcgq5jgevm",
+                "a": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gcgqy9kltp",
+                    "name": "Gid Synthby + Ivo Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0012",
+                      "p_0005"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqv374r4",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gcgqmqh4do",
+                    "name": "Mabry Placehold + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0008"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqz6q34y",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "heads",
+                  "serveSide": "a",
+                  "flippedAt": 1794168253852
+                },
+                "table": 2,
+                "timerStartAt": 1794168283852,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 4
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 4
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168253984
+              }
+            ]
+          }
+        ],
+        "winnersRounds": [
+          {
+            "number": 1,
+            "name": "Winners R1",
+            "matches": [
+              {
+                "id": "mw89gcgqcqbklb",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gcgqt7yb9q",
+                    "name": "Zeb Dummond + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0002"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gcgqf17xx4",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gcgqia67kj",
+                    "name": "Gid Fabrikant + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0006"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gcgqy9kltp",
+                    "name": "Gid Synthby + Ivo Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0012",
+                      "p_0005"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168253466
+                },
+                "table": 1,
+                "timerStartAt": 1794168283466,
+                "games": [
+                  {
+                    "scoreA": 1,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 2,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168253588
+              },
+              {
+                "id": "mw89gcgqw64iyj",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gcgqjf7bc9",
+                    "name": "Zeb Fakeham + Xandr Fakeham",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0013"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              },
+              {
+                "id": "mw89gcgqi6p2hg",
+                "a": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gcgqmqh4do",
+                    "name": "Mabry Placehold + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0008"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "winners"
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Winners SF",
+            "matches": [
+              {
+                "id": "mw89gcgqv374r4",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gcgqt7yb9q",
+                    "name": "Zeb Dummond + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0002"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqcqbklb",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gcgqy9kltp",
+                    "name": "Gid Synthby + Ivo Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0012",
+                      "p_0005"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqf17xx4",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168253588
+                },
+                "table": 1,
+                "timerStartAt": 1794168283588,
+                "games": [
+                  {
+                    "scoreA": 0,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168253723
+              },
+              {
+                "id": "mw89gcgqz6q34y",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gcgqjf7bc9",
+                    "name": "Zeb Fakeham + Xandr Fakeham",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0013"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqw64iyj",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gcgqmqh4do",
+                    "name": "Mabry Placehold + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0008"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqi6p2hg",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "heads",
+                  "serveSide": "b",
+                  "flippedAt": 1794168253466
+                },
+                "table": 2,
+                "timerStartAt": 1794168283466,
+                "games": [
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 3,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168253852
+              }
+            ]
+          },
+          {
+            "number": 3,
+            "name": "Winners Final",
+            "matches": [
+              {
+                "id": "mw89gcgq5jgevm",
+                "a": {
+                  "seed": 5,
+                  "entity": {
+                    "id": "mw89gcgqy9kltp",
+                    "name": "Gid Synthby + Ivo Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0012",
+                      "p_0005"
+                    ],
+                    "seed": 5
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqv374r4",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gcgqmqh4do",
+                    "name": "Mabry Placehold + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0008"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqz6q34y",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "heads",
+                  "serveSide": "a",
+                  "flippedAt": 1794168253852
+                },
+                "table": 2,
+                "timerStartAt": 1794168283852,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 4
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 4
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168253984
+              }
+            ]
+          }
+        ],
+        "losersRounds": [
+          {
+            "number": 1,
+            "name": "Losers R1",
+            "matches": [
+              {
+                "id": "mw89gcgqk5icsa",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gcgqia67kj",
+                    "name": "Gid Fabrikant + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0006"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqf17xx4",
+                  "fromLoser": true
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "losers"
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Losers R2",
+            "matches": [
+              {
+                "id": "mw89gcgq7yugxs",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gcgqia67kj",
+                    "name": "Gid Fabrikant + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0006"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqk5icsa",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gcgqt7yb9q",
+                    "name": "Zeb Dummond + Rook Testwood",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0002"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqv374r4",
+                  "fromLoser": true
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168253723
+                },
+                "table": 1,
+                "timerStartAt": 1794168283723,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 2
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168254125
+              },
+              {
+                "id": "mw89gcgq3z3u6u",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gcgqjf7bc9",
+                    "name": "Zeb Fakeham + Xandr Fakeham",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0013"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqz6q34y",
+                  "fromLoser": true
+                },
+                "b": {
+                  "seed": null,
+                  "entity": null,
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 0,
+                "scoreB": 0,
+                "bracket": "losers"
+              }
+            ]
+          },
+          {
+            "number": 3,
+            "name": "Losers R3",
+            "matches": [
+              {
+                "id": "mw89gcgqfok45d",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gcgqia67kj",
+                    "name": "Gid Fabrikant + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0006"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgq7yugxs",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gcgqjf7bc9",
+                    "name": "Zeb Fakeham + Xandr Fakeham",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0010",
+                      "p_0013"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgq3z3u6u",
+                  "fromLoser": false
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168254125
+                },
+                "table": 1,
+                "timerStartAt": 1794168284125,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 4
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 4
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168254258
+              }
+            ]
+          },
+          {
+            "number": 4,
+            "name": "Losers Final",
+            "matches": [
+              {
+                "id": "mw89gcgq4b9prk",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gcgqia67kj",
+                    "name": "Gid Fabrikant + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0006"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgqfok45d",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gcgqmqh4do",
+                    "name": "Mabry Placehold + Tamsin Fixturo",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0014",
+                      "p_0008"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gcgq5jgevm",
+                  "fromLoser": true
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "tails",
+                  "serveSide": "a",
+                  "flippedAt": 1794168254258
+                },
+                "table": 1,
+                "timerStartAt": 1794168284258,
+                "games": [
+                  {
+                    "scoreA": 0,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 0,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168254394
+              }
+            ]
+          }
+        ],
+        "grandFinal": {
+          "id": "mw89gcgqjv241k",
+          "a": {
+            "seed": 5,
+            "entity": {
+              "id": "mw89gcgqy9kltp",
+              "name": "Gid Synthby + Ivo Synthby",
+              "type": "team",
+              "playerIds": [
+                "p_0012",
+                "p_0005"
+              ],
+              "seed": 5
+            },
+            "score": null,
+            "fromMatch": "mw89gcgq5jgevm",
+            "fromLoser": false
+          },
+          "b": {
+            "seed": 3,
+            "entity": {
+              "id": "mw89gcgqmqh4do",
+              "name": "Mabry Placehold + Tamsin Fixturo",
+              "type": "team",
+              "playerIds": [
+                "p_0014",
+                "p_0008"
+              ],
+              "seed": 3
+            },
+            "score": null,
+            "fromMatch": "mw89gcgq4b9prk",
+            "fromLoser": false
+          },
+          "winner": "a",
+          "loser": "b",
+          "scoreA": 2,
+          "scoreB": 0,
+          "bracket": "gf",
+          "isGrandFinal": true,
+          "coinToss": {
+            "headsSide": "a",
+            "result": "heads",
+            "serveSide": "a",
+            "flippedAt": 1794168254394
+          },
+          "table": 1,
+          "timerStartAt": 1794168284394,
+          "games": [
+            {
+              "scoreA": 5,
+              "scoreB": 4
+            },
+            {
+              "scoreA": 5,
+              "scoreB": 4
+            }
+          ],
+          "seriesA": 2,
+          "seriesB": 0,
+          "timerEndedAt": 1794168254533
+        },
+        "grandFinal2": {
+          "id": "mw89gcgq3ytlm0",
+          "a": {
+            "entity": null,
+            "fromMatch": null,
+            "fromLoser": false
+          },
+          "b": {
+            "entity": null,
+            "fromMatch": null,
+            "fromLoser": false
+          },
+          "winner": null,
+          "loser": null,
+          "scoreA": null,
+          "scoreB": null,
+          "bracket": "gf2",
+          "isGrandFinal": true,
+          "isReset": true,
+          "void": true
+        },
+        "bronze": null,
+        "placements": {
+          "first": {
+            "id": "mw89gcgqy9kltp",
+            "name": "Gid Synthby + Ivo Synthby",
+            "type": "team",
+            "playerIds": [
+              "p_0012",
+              "p_0005"
+            ],
+            "seed": 5
+          },
+          "second": {
+            "id": "mw89gcgqmqh4do",
+            "name": "Mabry Placehold + Tamsin Fixturo",
+            "type": "team",
+            "playerIds": [
+              "p_0014",
+              "p_0008"
+            ],
+            "seed": 3
+          },
+          "third": {
+            "id": "mw89gcgqia67kj",
+            "name": "Gid Fabrikant + Esko Samplegate",
+            "type": "team",
+            "playerIds": [
+              "p_0001",
+              "p_0006"
+            ],
+            "seed": 4
+          }
+        },
+        "gfResetRequired": false,
+        "gfResetActive": false,
+        "tieredDraw": true,
+        "tieredPairs": [
+          "#1+#6",
+          "#2+#7",
+          "#3+#8",
+          "#4+#9",
+          "#5+#10"
+        ],
+        "bonusPoolLocked": {
+          "bonusPool": 202,
+          "fieldSize": 10,
+          "fieldPoints": 20160,
+          "shares": [
+            101,
+            61,
+            40
+          ],
+          "mode": "50-30-20",
+          "lockedAt": 1794168253466
+        },
+        "bestOf": 3
+      },
+      "createdAt": 1768258800000,
+      "status": "finished",
+      "sitOutQueue": [
+        "p_0002",
+        "p_0008",
+        "p_0013",
+        "p_0009",
+        "p_0014",
+        "p_0010",
+        "p_0006",
+        "p_0001",
+        "p_0012",
+        "p_0005"
+      ],
+      "currentSitOutIds": [],
+      "playoffTeams": [
+        {
+          "id": "mw89gcgqt7yb9q",
+          "playerIds": [
+            "p_0009",
+            "p_0002"
+          ],
+          "name": "Zeb Dummond + Rook Testwood",
+          "seed": 1,
+          "tieredFrom": {
+            "top": "p_0009",
+            "bottom": "p_0002",
+            "ranks": [
+              1,
+              6
+            ]
+          }
+        },
+        {
+          "id": "mw89gcgqjf7bc9",
+          "playerIds": [
+            "p_0010",
+            "p_0013"
+          ],
+          "name": "Zeb Fakeham + Xandr Fakeham",
+          "seed": 2,
+          "tieredFrom": {
+            "top": "p_0010",
+            "bottom": "p_0013",
+            "ranks": [
+              2,
+              7
+            ]
+          }
+        },
+        {
+          "id": "mw89gcgqmqh4do",
+          "playerIds": [
+            "p_0014",
+            "p_0008"
+          ],
+          "name": "Mabry Placehold + Tamsin Fixturo",
+          "seed": 3,
+          "tieredFrom": {
+            "top": "p_0014",
+            "bottom": "p_0008",
+            "ranks": [
+              3,
+              8
+            ]
+          }
+        },
+        {
+          "id": "mw89gcgqia67kj",
+          "playerIds": [
+            "p_0001",
+            "p_0006"
+          ],
+          "name": "Gid Fabrikant + Esko Samplegate",
+          "seed": 4,
+          "tieredFrom": {
+            "top": "p_0001",
+            "bottom": "p_0006",
+            "ranks": [
+              4,
+              9
+            ]
+          }
+        },
+        {
+          "id": "mw89gcgqy9kltp",
+          "playerIds": [
+            "p_0012",
+            "p_0005"
+          ],
+          "name": "Gid Synthby + Ivo Synthby",
+          "seed": 5,
+          "tieredFrom": {
+            "top": "p_0012",
+            "bottom": "p_0005",
+            "ranks": [
+              5,
+              10
+            ]
+          }
+        }
+      ],
+      "bonusPoolLocked": {
+        "fieldIds": [
+          "p_0009",
+          "p_0002",
+          "p_0010",
+          "p_0013",
+          "p_0014",
+          "p_0008",
+          "p_0001",
+          "p_0006",
+          "p_0012",
+          "p_0005"
+        ],
+        "fieldSize": 10,
+        "fieldPoints": 20160,
+        "bonusPool": 202,
+        "shares": [
+          101,
+          61,
+          40
+        ],
+        "fr": [
+          0.5,
+          0.3,
+          0.2
+        ],
+        "mode": "50-30-20",
+        "lockedAt": 1794168253466
+      },
+      "placements": {
+        "first": {
+          "id": "mw89gcgqy9kltp",
+          "name": "Gid Synthby + Ivo Synthby",
+          "type": "team",
+          "playerIds": [
+            "p_0012",
+            "p_0005"
+          ],
+          "seed": 5
+        },
+        "second": {
+          "id": "mw89gcgqmqh4do",
+          "name": "Mabry Placehold + Tamsin Fixturo",
+          "type": "team",
+          "playerIds": [
+            "p_0014",
+            "p_0008"
+          ],
+          "seed": 3
+        },
+        "third": {
+          "id": "mw89gcgqia67kj",
+          "name": "Gid Fabrikant + Esko Samplegate",
+          "type": "team",
+          "playerIds": [
+            "p_0001",
+            "p_0006"
+          ],
+          "seed": 4
+        }
+      },
+      "rankingApplied": true,
+      "rankingAppliedAt": 1794168254534,
+      "rankingDeltas": {
+        "p_0012": 125,
+        "p_0005": 125,
+        "p_0014": 69,
+        "p_0008": 69,
+        "p_0001": 40,
+        "p_0006": 40,
+        "p_0002": -16,
+        "p_0009": -16,
+        "p_0010": -16,
+        "p_0013": -16
+      },
+      "rankingDeltaDetail": {
+        "p_0012": {
+          "place": 1,
+          "expected": 5,
+          "seedDelta": 24,
+          "bonus": 101,
+          "total": 125
+        },
+        "p_0005": {
+          "place": 1,
+          "expected": 5,
+          "seedDelta": 24,
+          "bonus": 101,
+          "total": 125
+        },
+        "p_0014": {
+          "place": 2,
+          "expected": 3,
+          "seedDelta": 8,
+          "bonus": 61,
+          "total": 69
+        },
+        "p_0008": {
+          "place": 2,
+          "expected": 3,
+          "seedDelta": 8,
+          "bonus": 61,
+          "total": 69
+        },
+        "p_0001": {
+          "place": 3,
+          "expected": 4,
+          "seedDelta": 0,
+          "bonus": 40,
+          "total": 40
+        },
+        "p_0006": {
+          "place": 3,
+          "expected": 4,
+          "seedDelta": 0,
+          "bonus": 40,
+          "total": 40
+        },
+        "p_0002": {
+          "place": 4,
+          "expected": 1,
+          "seedDelta": -16,
+          "bonus": 0,
+          "total": -16
+        },
+        "p_0009": {
+          "place": 4,
+          "expected": 1,
+          "seedDelta": -16,
+          "bonus": 0,
+          "total": -16
+        },
+        "p_0010": {
+          "place": 5,
+          "expected": 2,
+          "seedDelta": -16,
+          "bonus": 0,
+          "total": -16
+        },
+        "p_0013": {
+          "place": 5,
+          "expected": 2,
+          "seedDelta": -16,
+          "bonus": 0,
+          "total": -16
+        }
+      },
+      "rankingBonusShare": [
+        101,
+        61,
+        40
+      ],
+      "rankingBonusPool": 202
+    },
+    {
+      "id": "mw89gb7ige7i23",
+      "name": "Synthetic Night 1",
+      "type": "monster",
+      "format": "swiss",
+      "raceTo": 5,
+      "bestOf": 1,
+      "tables": 2,
+      "drawStyle": "random",
+      "monsterPositions": false,
+      "colorBand": "spec-ec-monster",
+      "sandbox": false,
+      "playerIds": [
+        "p_0003",
+        "p_0006",
+        "p_0001",
+        "p_0012",
+        "p_0004",
+        "p_0011",
+        "p_0013",
+        "p_0009"
+      ],
+      "absentIds": [],
+      "teams": [
+        {
+          "id": "mw89gbknubg5y7",
+          "playerIds": [
+            "p_0001",
+            "p_0011"
+          ],
+          "name": "Gid Fabrikant + Rook Fixturo 11"
+        },
+        {
+          "id": "mw89gbkn832ytp",
+          "playerIds": [
+            "p_0004",
+            "p_0003"
+          ],
+          "name": "Rook Fixturo + Azzo Mockley"
+        },
+        {
+          "id": "mw89gbknbkyl1j",
+          "playerIds": [
+            "p_0013",
+            "p_0006"
+          ],
+          "name": "Xandr Fakeham + Esko Samplegate"
+        },
+        {
+          "id": "mw89gbknpljqgp",
+          "playerIds": [
+            "p_0009",
+            "p_0012"
+          ],
+          "name": "Zeb Dummond + Gid Synthby"
+        }
+      ],
+      "rounds": [
+        {
+          "number": 1,
+          "matches": [
+            {
+              "id": "mw89gb9tx2k5nn",
+              "entityA": {
+                "id": "mw89gb9kybm11e",
+                "name": "Azzo Mockley + Gid Fabrikant",
+                "type": "team",
+                "playerIds": [
+                  "p_0003",
+                  "p_0001"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gb9k9xthg0",
+                "name": "Esko Samplegate + Zeb Dummond",
+                "type": "team",
+                "playerIds": [
+                  "p_0006",
+                  "p_0009"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 1,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "tails",
+                "serveSide": "b",
+                "flippedAt": 1794168251921
+              },
+              "timerStartAt": 1794168281921,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 1
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168251970
+            },
+            {
+              "id": "mw89gb9t1gvspl",
+              "entityA": {
+                "id": "mw89gb9ks0cu59",
+                "name": "Xandr Fakeham + Rook Fixturo",
+                "type": "team",
+                "playerIds": [
+                  "p_0013",
+                  "p_0004"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gb9k7c5u5e",
+                "name": "Rook Fixturo 11 + Gid Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0011",
+                  "p_0012"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 2,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "heads",
+                "serveSide": "b",
+                "flippedAt": 1794168251921
+              },
+              "timerStartAt": 1794168281921,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 2
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168252013
+            }
+          ],
+          "sitOutIds": [],
+          "teams": [
+            {
+              "id": "mw89gb9k7c5u5e",
+              "playerIds": [
+                "p_0011",
+                "p_0012"
+              ],
+              "name": "Rook Fixturo 11 + Gid Synthby",
+              "positions": null
+            },
+            {
+              "id": "mw89gb9k9xthg0",
+              "playerIds": [
+                "p_0006",
+                "p_0009"
+              ],
+              "name": "Esko Samplegate + Zeb Dummond",
+              "positions": null
+            },
+            {
+              "id": "mw89gb9ks0cu59",
+              "playerIds": [
+                "p_0013",
+                "p_0004"
+              ],
+              "name": "Xandr Fakeham + Rook Fixturo",
+              "positions": null
+            },
+            {
+              "id": "mw89gb9kybm11e",
+              "playerIds": [
+                "p_0003",
+                "p_0001"
+              ],
+              "name": "Azzo Mockley + Gid Fabrikant",
+              "positions": null
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "matches": [
+            {
+              "id": "mw89gbdf0h0a3f",
+              "entityA": {
+                "id": "mw89gbd7gmg82m",
+                "name": "Xandr Fakeham + Gid Fabrikant",
+                "type": "team",
+                "playerIds": [
+                  "p_0013",
+                  "p_0001"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gbd7sey6wo",
+                "name": "Azzo Mockley + Gid Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0003",
+                  "p_0012"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 1,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "b",
+                "result": "tails",
+                "serveSide": "a",
+                "flippedAt": 1794168252052
+              },
+              "timerStartAt": 1794168282052,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 1
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168252103
+            },
+            {
+              "id": "mw89gbdf2vknb5",
+              "entityA": {
+                "id": "mw89gbd7i2fvs5",
+                "name": "Rook Fixturo 11 + Esko Samplegate",
+                "type": "team",
+                "playerIds": [
+                  "p_0011",
+                  "p_0006"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gbd7rmzhy6",
+                "name": "Rook Fixturo + Zeb Dummond",
+                "type": "team",
+                "playerIds": [
+                  "p_0004",
+                  "p_0009"
+                ],
+                "positions": null
+              },
+              "scoreA": 4,
+              "scoreB": 5,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "heads",
+                "serveSide": "a",
+                "flippedAt": 1794168252052
+              },
+              "timerStartAt": 1794168282052,
+              "games": [
+                {
+                  "scoreA": 4,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168252141
+            }
+          ],
+          "sitOutIds": [],
+          "teams": [
+            {
+              "id": "mw89gbd7gmg82m",
+              "playerIds": [
+                "p_0013",
+                "p_0001"
+              ],
+              "name": "Xandr Fakeham + Gid Fabrikant",
+              "positions": null
+            },
+            {
+              "id": "mw89gbd7i2fvs5",
+              "playerIds": [
+                "p_0011",
+                "p_0006"
+              ],
+              "name": "Rook Fixturo 11 + Esko Samplegate",
+              "positions": null
+            },
+            {
+              "id": "mw89gbd7sey6wo",
+              "playerIds": [
+                "p_0003",
+                "p_0012"
+              ],
+              "name": "Azzo Mockley + Gid Synthby",
+              "positions": null
+            },
+            {
+              "id": "mw89gbd7rmzhy6",
+              "playerIds": [
+                "p_0004",
+                "p_0009"
+              ],
+              "name": "Rook Fixturo + Zeb Dummond",
+              "positions": null
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "matches": [
+            {
+              "id": "mw89gbh8ttapil",
+              "entityA": {
+                "id": "mw89gbgx0x5bsh",
+                "name": "Xandr Fakeham + Gid Synthby",
+                "type": "team",
+                "playerIds": [
+                  "p_0013",
+                  "p_0012"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gbgxyopjpk",
+                "name": "Rook Fixturo 11 + Zeb Dummond",
+                "type": "team",
+                "playerIds": [
+                  "p_0011",
+                  "p_0009"
+                ],
+                "positions": null
+              },
+              "scoreA": 1,
+              "scoreB": 5,
+              "table": 1,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "heads",
+                "serveSide": "a",
+                "flippedAt": 1794168252188
+              },
+              "timerStartAt": 1794168282188,
+              "games": [
+                {
+                  "scoreA": 1,
+                  "scoreB": 5
+                }
+              ],
+              "seriesA": 0,
+              "seriesB": 1,
+              "timerEndedAt": 1794168252231
+            },
+            {
+              "id": "mw89gbh8k1qz04",
+              "entityA": {
+                "id": "mw89gbgxv5xuec",
+                "name": "Gid Fabrikant + Rook Fixturo",
+                "type": "team",
+                "playerIds": [
+                  "p_0001",
+                  "p_0004"
+                ],
+                "positions": null
+              },
+              "entityB": {
+                "id": "mw89gbgxsidjs3",
+                "name": "Azzo Mockley + Esko Samplegate",
+                "type": "team",
+                "playerIds": [
+                  "p_0003",
+                  "p_0006"
+                ],
+                "positions": null
+              },
+              "scoreA": 5,
+              "scoreB": 3,
+              "table": 2,
+              "status": "done",
+              "coinToss": {
+                "headsSide": "a",
+                "result": "tails",
+                "serveSide": "b",
+                "flippedAt": 1794168252188
+              },
+              "timerStartAt": 1794168282188,
+              "games": [
+                {
+                  "scoreA": 5,
+                  "scoreB": 3
+                }
+              ],
+              "seriesA": 1,
+              "seriesB": 0,
+              "timerEndedAt": 1794168252273
+            }
+          ],
+          "sitOutIds": [],
+          "teams": [
+            {
+              "id": "mw89gbgxv5xuec",
+              "playerIds": [
+                "p_0001",
+                "p_0004"
+              ],
+              "name": "Gid Fabrikant + Rook Fixturo",
+              "positions": null
+            },
+            {
+              "id": "mw89gbgxyopjpk",
+              "playerIds": [
+                "p_0011",
+                "p_0009"
+              ],
+              "name": "Rook Fixturo 11 + Zeb Dummond",
+              "positions": null
+            },
+            {
+              "id": "mw89gbgxsidjs3",
+              "playerIds": [
+                "p_0003",
+                "p_0006"
+              ],
+              "name": "Azzo Mockley + Esko Samplegate",
+              "positions": null
+            },
+            {
+              "id": "mw89gbgx0x5bsh",
+              "playerIds": [
+                "p_0013",
+                "p_0012"
+              ],
+              "name": "Xandr Fakeham + Gid Synthby",
+              "positions": null
+            }
+          ]
+        }
+      ],
+      "currentRound": 3,
+      "playoffs": {
+        "type": "double-elim",
+        "size": 4,
+        "rounds": [
+          {
+            "number": 1,
+            "name": "Winners SF",
+            "matches": [
+              {
+                "id": "mw89gbkout8o6m",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gbknubg5y7",
+                    "name": "Gid Fabrikant + Rook Fixturo 11",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0011"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gbknpljqgp",
+                    "name": "Zeb Dummond + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168252312
+                },
+                "table": 1,
+                "timerStartAt": 1794168282312,
+                "games": [
+                  {
+                    "scoreA": 1,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168252425
+              },
+              {
+                "id": "mw89gbkoxqe16b",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gbkn832ytp",
+                    "name": "Rook Fixturo + Azzo Mockley",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0004",
+                      "p_0003"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gbknbkyl1j",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168252312
+                },
+                "table": 2,
+                "timerStartAt": 1794168282312,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 1
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168252532
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Winners Final",
+            "matches": [
+              {
+                "id": "mw89gbko4pm4lc",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gbknpljqgp",
+                    "name": "Zeb Dummond + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbkout8o6m",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gbkn832ytp",
+                    "name": "Rook Fixturo + Azzo Mockley",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0004",
+                      "p_0003"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbkoxqe16b",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "heads",
+                  "serveSide": "a",
+                  "flippedAt": 1794168252532
+                },
+                "table": 1,
+                "timerStartAt": 1794168282532,
+                "games": [
+                  {
+                    "scoreA": 3,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 1,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168252649
+              }
+            ]
+          }
+        ],
+        "winnersRounds": [
+          {
+            "number": 1,
+            "name": "Winners SF",
+            "matches": [
+              {
+                "id": "mw89gbkout8o6m",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gbknubg5y7",
+                    "name": "Gid Fabrikant + Rook Fixturo 11",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0011"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gbknpljqgp",
+                    "name": "Zeb Dummond + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168252312
+                },
+                "table": 1,
+                "timerStartAt": 1794168282312,
+                "games": [
+                  {
+                    "scoreA": 1,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 4,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168252425
+              },
+              {
+                "id": "mw89gbkoxqe16b",
+                "a": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gbkn832ytp",
+                    "name": "Rook Fixturo + Azzo Mockley",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0004",
+                      "p_0003"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gbknbkyl1j",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "tails",
+                  "serveSide": "b",
+                  "flippedAt": 1794168252312
+                },
+                "table": 2,
+                "timerStartAt": 1794168282312,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 1
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168252532
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Winners Final",
+            "matches": [
+              {
+                "id": "mw89gbko4pm4lc",
+                "a": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gbknpljqgp",
+                    "name": "Zeb Dummond + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbkout8o6m",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 2,
+                  "entity": {
+                    "id": "mw89gbkn832ytp",
+                    "name": "Rook Fixturo + Azzo Mockley",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0004",
+                      "p_0003"
+                    ],
+                    "seed": 2
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbkoxqe16b",
+                  "fromLoser": false
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "winners",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "heads",
+                  "serveSide": "a",
+                  "flippedAt": 1794168252532
+                },
+                "table": 1,
+                "timerStartAt": 1794168282532,
+                "games": [
+                  {
+                    "scoreA": 3,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 1,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168252649
+              }
+            ]
+          }
+        ],
+        "losersRounds": [
+          {
+            "number": 1,
+            "name": "Losers R1",
+            "matches": [
+              {
+                "id": "mw89gbkoml6ihm",
+                "a": {
+                  "seed": 1,
+                  "entity": {
+                    "id": "mw89gbknubg5y7",
+                    "name": "Gid Fabrikant + Rook Fixturo 11",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0001",
+                      "p_0011"
+                    ],
+                    "seed": 1
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbkout8o6m",
+                  "fromLoser": true
+                },
+                "b": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gbknbkyl1j",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbkoxqe16b",
+                  "fromLoser": true
+                },
+                "winner": "b",
+                "loser": "a",
+                "scoreA": 0,
+                "scoreB": 2,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "b",
+                  "result": "heads",
+                  "serveSide": "b",
+                  "flippedAt": 1794168252532
+                },
+                "table": 2,
+                "timerStartAt": 1794168282532,
+                "games": [
+                  {
+                    "scoreA": 3,
+                    "scoreB": 5
+                  },
+                  {
+                    "scoreA": 3,
+                    "scoreB": 5
+                  }
+                ],
+                "seriesA": 0,
+                "seriesB": 2,
+                "timerEndedAt": 1794168252760
+              }
+            ]
+          },
+          {
+            "number": 2,
+            "name": "Losers Final",
+            "matches": [
+              {
+                "id": "mw89gbkols6q0l",
+                "a": {
+                  "seed": 3,
+                  "entity": {
+                    "id": "mw89gbknbkyl1j",
+                    "name": "Xandr Fakeham + Esko Samplegate",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0013",
+                      "p_0006"
+                    ],
+                    "seed": 3
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbkoml6ihm",
+                  "fromLoser": false
+                },
+                "b": {
+                  "seed": 4,
+                  "entity": {
+                    "id": "mw89gbknpljqgp",
+                    "name": "Zeb Dummond + Gid Synthby",
+                    "type": "team",
+                    "playerIds": [
+                      "p_0009",
+                      "p_0012"
+                    ],
+                    "seed": 4
+                  },
+                  "score": null,
+                  "fromMatch": "mw89gbko4pm4lc",
+                  "fromLoser": true
+                },
+                "winner": "a",
+                "loser": "b",
+                "scoreA": 2,
+                "scoreB": 0,
+                "bracket": "losers",
+                "coinToss": {
+                  "headsSide": "a",
+                  "result": "heads",
+                  "serveSide": "a",
+                  "flippedAt": 1794168252760
+                },
+                "table": 1,
+                "timerStartAt": 1794168282760,
+                "games": [
+                  {
+                    "scoreA": 5,
+                    "scoreB": 0
+                  },
+                  {
+                    "scoreA": 5,
+                    "scoreB": 4
+                  }
+                ],
+                "seriesA": 2,
+                "seriesB": 0,
+                "timerEndedAt": 1794168252877
+              }
+            ]
+          }
+        ],
+        "grandFinal": {
+          "id": "mw89gbko7bleff",
+          "a": {
+            "seed": 2,
+            "entity": {
+              "id": "mw89gbkn832ytp",
+              "name": "Rook Fixturo + Azzo Mockley",
+              "type": "team",
+              "playerIds": [
+                "p_0004",
+                "p_0003"
+              ],
+              "seed": 2
+            },
+            "score": null,
+            "fromMatch": "mw89gbko4pm4lc",
+            "fromLoser": false
+          },
+          "b": {
+            "seed": 3,
+            "entity": {
+              "id": "mw89gbknbkyl1j",
+              "name": "Xandr Fakeham + Esko Samplegate",
+              "type": "team",
+              "playerIds": [
+                "p_0013",
+                "p_0006"
+              ],
+              "seed": 3
+            },
+            "score": null,
+            "fromMatch": "mw89gbkols6q0l",
+            "fromLoser": false
+          },
+          "winner": "a",
+          "loser": "b",
+          "scoreA": 2,
+          "scoreB": 0,
+          "bracket": "gf",
+          "isGrandFinal": true,
+          "coinToss": {
+            "headsSide": "a",
+            "result": "tails",
+            "serveSide": "b",
+            "flippedAt": 1794168252877
+          },
+          "table": 1,
+          "timerStartAt": 1794168282877,
+          "games": [
+            {
+              "scoreA": 5,
+              "scoreB": 4
+            },
+            {
+              "scoreA": 5,
+              "scoreB": 4
+            }
+          ],
+          "seriesA": 2,
+          "seriesB": 0,
+          "timerEndedAt": 1794168252996
+        },
+        "grandFinal2": {
+          "id": "mw89gbko87jy4j",
+          "a": {
+            "entity": null,
+            "fromMatch": null,
+            "fromLoser": false
+          },
+          "b": {
+            "entity": null,
+            "fromMatch": null,
+            "fromLoser": false
+          },
+          "winner": null,
+          "loser": null,
+          "scoreA": null,
+          "scoreB": null,
+          "bracket": "gf2",
+          "isGrandFinal": true,
+          "isReset": true,
+          "void": true
+        },
+        "bronze": null,
+        "placements": {
+          "first": {
+            "id": "mw89gbkn832ytp",
+            "name": "Rook Fixturo + Azzo Mockley",
+            "type": "team",
+            "playerIds": [
+              "p_0004",
+              "p_0003"
+            ],
+            "seed": 2
+          },
+          "second": {
+            "id": "mw89gbknbkyl1j",
+            "name": "Xandr Fakeham + Esko Samplegate",
+            "type": "team",
+            "playerIds": [
+              "p_0013",
+              "p_0006"
+            ],
+            "seed": 3
+          },
+          "third": {
+            "id": "mw89gbknpljqgp",
+            "name": "Zeb Dummond + Gid Synthby",
+            "type": "team",
+            "playerIds": [
+              "p_0009",
+              "p_0012"
+            ],
+            "seed": 4
+          }
+        },
+        "gfResetRequired": false,
+        "gfResetActive": false,
+        "tieredDraw": true,
+        "tieredPairs": [
+          "#1+#5",
+          "#2+#6",
+          "#3+#7",
+          "#4+#8"
+        ],
+        "bonusPoolLocked": {
+          "bonusPool": 160,
+          "fieldSize": 8,
+          "fieldPoints": 16000,
+          "shares": [
+            80,
+            48,
+            32
+          ],
+          "mode": "50-30-20",
+          "lockedAt": 1794168252312
+        },
+        "bestOf": 3
+      },
+      "createdAt": 1767654000000,
+      "status": "finished",
+      "currentSitOutIds": [],
+      "playoffTeams": [
+        {
+          "id": "mw89gbknubg5y7",
+          "playerIds": [
+            "p_0001",
+            "p_0011"
+          ],
+          "name": "Gid Fabrikant + Rook Fixturo 11",
+          "seed": 1,
+          "tieredFrom": {
+            "top": "p_0001",
+            "bottom": "p_0011",
+            "ranks": [
+              1,
+              5
+            ]
+          }
+        },
+        {
+          "id": "mw89gbkn832ytp",
+          "playerIds": [
+            "p_0004",
+            "p_0003"
+          ],
+          "name": "Rook Fixturo + Azzo Mockley",
+          "seed": 2,
+          "tieredFrom": {
+            "top": "p_0004",
+            "bottom": "p_0003",
+            "ranks": [
+              2,
+              6
+            ]
+          }
+        },
+        {
+          "id": "mw89gbknbkyl1j",
+          "playerIds": [
+            "p_0013",
+            "p_0006"
+          ],
+          "name": "Xandr Fakeham + Esko Samplegate",
+          "seed": 3,
+          "tieredFrom": {
+            "top": "p_0013",
+            "bottom": "p_0006",
+            "ranks": [
+              3,
+              7
+            ]
+          }
+        },
+        {
+          "id": "mw89gbknpljqgp",
+          "playerIds": [
+            "p_0009",
+            "p_0012"
+          ],
+          "name": "Zeb Dummond + Gid Synthby",
+          "seed": 4,
+          "tieredFrom": {
+            "top": "p_0009",
+            "bottom": "p_0012",
+            "ranks": [
+              4,
+              8
+            ]
+          }
+        }
+      ],
+      "bonusPoolLocked": {
+        "fieldIds": [
+          "p_0001",
+          "p_0011",
+          "p_0004",
+          "p_0003",
+          "p_0013",
+          "p_0006",
+          "p_0009",
+          "p_0012"
+        ],
+        "fieldSize": 8,
+        "fieldPoints": 16000,
+        "bonusPool": 160,
+        "shares": [
+          80,
+          48,
+          32
+        ],
+        "fr": [
+          0.5,
+          0.3,
+          0.2
+        ],
+        "mode": "50-30-20",
+        "lockedAt": 1794168252312
+      },
+      "placements": {
+        "first": {
+          "id": "mw89gbkn832ytp",
+          "name": "Rook Fixturo + Azzo Mockley",
+          "type": "team",
+          "playerIds": [
+            "p_0004",
+            "p_0003"
+          ],
+          "seed": 2
+        },
+        "second": {
+          "id": "mw89gbknbkyl1j",
+          "name": "Xandr Fakeham + Esko Samplegate",
+          "type": "team",
+          "playerIds": [
+            "p_0013",
+            "p_0006"
+          ],
+          "seed": 3
+        },
+        "third": {
+          "id": "mw89gbknpljqgp",
+          "name": "Zeb Dummond + Gid Synthby",
+          "type": "team",
+          "playerIds": [
+            "p_0009",
+            "p_0012"
+          ],
+          "seed": 4
+        }
+      },
+      "rankingApplied": true,
+      "rankingAppliedAt": 1794168252997,
+      "rankingDeltas": {
+        "p_0004": 88,
+        "p_0003": 88,
+        "p_0013": 56,
+        "p_0006": 56,
+        "p_0009": 32,
+        "p_0012": 32,
+        "p_0001": -16,
+        "p_0011": -16
+      },
+      "rankingDeltaDetail": {
+        "p_0004": {
+          "place": 1,
+          "expected": 2,
+          "seedDelta": 8,
+          "bonus": 80,
+          "total": 88
+        },
+        "p_0003": {
+          "place": 1,
+          "expected": 2,
+          "seedDelta": 8,
+          "bonus": 80,
+          "total": 88
+        },
+        "p_0013": {
+          "place": 2,
+          "expected": 3,
+          "seedDelta": 8,
+          "bonus": 48,
+          "total": 56
+        },
+        "p_0006": {
+          "place": 2,
+          "expected": 3,
+          "seedDelta": 8,
+          "bonus": 48,
+          "total": 56
+        },
+        "p_0009": {
+          "place": 3,
+          "expected": 4,
+          "seedDelta": 0,
+          "bonus": 32,
+          "total": 32
+        },
+        "p_0012": {
+          "place": 3,
+          "expected": 4,
+          "seedDelta": 0,
+          "bonus": 32,
+          "total": 32
+        },
+        "p_0001": {
+          "place": 4,
+          "expected": 1,
+          "seedDelta": -16,
+          "bonus": 0,
+          "total": -16
+        },
+        "p_0011": {
+          "place": 4,
+          "expected": 1,
+          "seedDelta": -16,
+          "bonus": 0,
+          "total": -16
+        }
+      },
+      "rankingBonusShare": [
+        80,
+        48,
+        32
+      ],
+      "rankingBonusPool": 160
+    }
+  ]
+}

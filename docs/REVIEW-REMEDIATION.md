@@ -15,15 +15,16 @@ Every claim below is backed by a test that runs on every push (`npm test`, under
 
 ## Summary
 
-| Finding | Severity | Status | Proven by |
-|---|---|---|---|
-| F1 unrelated assertions accepted as known discrepancies | High | Fixed | `selftest/classifier.test.js` (22 probes + real DISC-03 fault injection) |
-| F2 shared random state; counterexamples not replayable | Medium | Fixed | `selftest/replay.test.js` |
-| F3 incomplete reset leaks state between tests/cases | Medium | Fixed | `selftest/isolation.test.js` |
-| F4 security test swallowed exceptions, wrong tab ids | Medium | Fixed (vulnerability itself untouched) | `selftest/security-faults.test.js` |
-| F5 stress workload exceeded its timeout; no seed on timeout | Medium | Fixed | full 150-case run (below), `selftest/stress.test.js` |
-| F6 stress could stay green on failure; run count not honored | Medium | Fixed | `selftest/stress.test.js`, CI `stress-smoke` job |
-| F7 non-podium guard could not tell right from reversed order | Medium | Repaired + narrowed; related guards audited | `selftest/mutations.test.js` |
+| Finding | Severity | Status | Proven by | Commit |
+|---|---|---|---|---|
+| F1 unrelated assertions accepted as known discrepancies | High | Fixed | `selftest/classifier.test.js` (22 probes + fault sweep of the real discrepancy suite) | `1a0b2cd` |
+| F2 shared random state; counterexamples not replayable | Medium | Fixed | `selftest/replay.test.js` | `1a0b2cd` |
+| F3 incomplete reset leaks state between tests/cases | Medium | Fixed | `selftest/isolation.test.js` | `1a0b2cd` |
+| F4 security test swallowed exceptions, wrong tab ids | Medium | Fixed (vulnerability itself untouched) | `selftest/security-faults.test.js` | `16e1025` |
+| F5 stress workload exceeded its timeout; no seed on timeout | Medium | Fixed | full 150-case run (below), `selftest/stress.test.js` | `dcf9bf7` (budgets/records in `1a0b2cd`) |
+| F6 stress could stay green on failure; run count not honored | Medium | Fixed | `selftest/stress.test.js`, CI `stress-smoke` job | `dcf9bf7` |
+| F7 non-podium guard could not tell right from reversed order | Medium | Repaired + narrowed; related guards audited; DISC-16 recorded | `selftest/mutations.test.js` | `31e257b` |
+| Docs, `engines`, snapshot check | — | Updated | — | `ccbd854` |
 
 ## F1 — Expected-failure classification
 
@@ -223,7 +224,28 @@ exactly once or the probe refuses to run):
 
 ## Verification log
 
-VERIFICATION_LOG
+All on 2026-11-08. Local machine: Node 22.23.3, 24 cores. CI: GitHub Actions, Node 22.23.4.
+
+| Check | Result |
+|---|---|
+| `npm run check` | pass (3 scripts parse, versions agree, snapshot shape ok) |
+| `npm test` (final tree) | 21 files passed, 1 skipped; 144 tests passed, 2 skipped by design (DISC-15 exploration without `EXPLORE=1`; replay entry without `SCENARIO_FILE`) |
+| `npm test` with shuffled order (`--sequence.shuffle --sequence.seed=4242`) | 144 passed, 2 skipped — no order dependence |
+| Each commit in its own worktree (`1a0b2cd`, `16e1025`, `31e257b`, `dcf9bf7`) | each green on its own: 124 / 127 / 135 / 144 tests passed (production hashes checked in each) |
+| `npm run test:discrepancies` (STRICT) | 26 failed (24 original + DISC-01 fixture + DISC-16), **every one at its tagged checkpoint** (25 directly, DISC-01 property via its direct cause) |
+| Fault sweep `LCFC_FAULT=noop-submitScore` over `test/discrepancies` | 21 fail with a classifier label, 5 scoring-independent still reproduce (now a self-test) |
+| Classifier probes | 22 probes: 4 expected pass, 18 fail with the asserted messages (incl. review repro and real timeout) |
+| Replay | later-case failure replayed via FC_PATH, fixture and separate process; DISC-01 fixture reproduces alone via `npm run replay` |
+| Isolation | contamination does not leak across tests or property cases; sensitivity control detects each leaked item from the review |
+| Mutation probes | 5/5 mutations caught; previous F7 guard shown blind |
+| Chromium (`npm run test:e2e`) | 4 passed (local, and in CI) |
+| Bounded stress (`node scripts/stress.mjs --runs 3 --seed 20261108`) | pass, 3/3 cases per property (local, and in CI via the real `stress.yml`) |
+| Full default stress (`--runs 150`, random seeds) | pass, 150/150 per property, 5 min 36 s (table in F5) |
+| `gh workflow run stress.yml` on the branch | **not possible**: `HTTP 404: workflow stress.yml not found on the default branch` — exercised via CI's `stress-smoke` call instead |
+| GitHub Actions run [42530290649](https://github.com/Minihercules317/foosball-app/actions/runs/42530290649) (head `ccbd854`) | Static ✅, Unit 144 passed / 2 skipped ✅, Browser 4 passed ✅, Stress workflow (3 cases, fixed seed) ✅ 3/3 per property, Known discrepancies ❌ by design: 26 failed, all at checkpoints |
+
+CI timing note: the same bracket case took 13.8 s on the GitHub runner vs 7.5 s locally (≈1.8×).
+Scaled, the 150-case bracket total (334 s locally) is ≈600–700 s on GitHub against its 1,800 s budget.
 
 ## Production files
 

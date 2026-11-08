@@ -67,6 +67,13 @@ fast-check prints the seed and path of the failing case:
 FC_SEED=<seed> FC_PATH=<path> npx vitest run test/properties/<file>
 SHRINK=1 FC_SEED=<seed> npx vitest run ...   # shrink to a minimal night (slow)
 ```
+Property tests in `test/properties/` draw a **new random seed on every run** so CI keeps
+exploring new nights. A red property test in CI is therefore a genuine new counterexample,
+not flakiness in the usual sense: copy the printed seed/path, reproduce locally, and either
+add a deterministic discrepancy test (if the app violates the invariant) or fix the test
+(if the test's assumption was wrong). Discrepancy properties use a **pinned** seed so that
+`it.fails` is deterministic.
+
 Every app-level random choice uses the seeded `Math.random`, so a seed replays the same
 draws, sit-outs and scores. (Ids from `uid()` include `Date.now()`, so tests never assert
 on raw ids of generated tournaments.)

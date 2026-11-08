@@ -16,6 +16,7 @@ jobs:
   check:
     name: Static checks
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -26,18 +27,22 @@ jobs:
   unit:
     name: Unit, property, integration & regression tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with: { node-version: 22, cache: npm }
       - run: npm ci
-      # Discrepancy tests run here as expected failures (it.fails): this job turns
-      # red if any documented discrepancy changes behaviour, so it gets reviewed.
+      # Deterministic (fixed fast-check seed). Documented discrepancies pass here
+      # only while they still reproduce as ASSERTION failures; a crash inside one,
+      # or a discrepancy that stops reproducing, turns this job red with a distinct
+      # "UNEXPECTED ERROR" / "NO LONGER REPRODUCES" message (test/harness/discrepancy.js).
       - run: npm test
 
   e2e:
     name: Browser tests (Playwright / Chromium)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -55,6 +60,7 @@ jobs:
   discrepancies:
     name: Known discrepancies (informational, needs owner review)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     continue-on-error: true
     steps:
       - uses: actions/checkout@v7
@@ -62,5 +68,6 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       # STRICT=1: each discrepancy runs as a normal test and FAILS, printing its
-      # reproduction. Non-blocking by design — see docs/AUDIT.md.
+      # reproduction for reviewers. Expected to be red; non-blocking by design.
+      # The pass/fail signal for discrepancies lives in the "unit" job above.
       - run: npm run test:discrepancies

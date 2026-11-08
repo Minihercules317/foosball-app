@@ -242,6 +242,7 @@ npm run test:e2e          # browser tests (run `npx playwright install chromium`
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — current behavior and data flow (compatibility baseline)
 - [docs/AUDIT.md](docs/AUDIT.md) — findings awaiting the owner's review
 - [docs/REFACTORING-ROADMAP.md](docs/REFACTORING-ROADMAP.md) — staged, low-risk improvement plan
+- [docs/HANDOFF-FOR-AI.md](docs/HANDOFF-FOR-AI.md) — rules for an AI assistant changing this app
 
 Tests use only fabricated players and events, never real club data.
 

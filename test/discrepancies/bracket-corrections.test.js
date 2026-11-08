@@ -67,7 +67,7 @@ describe('DISC-01 correcting a bracket result keeps the bracket structurally val
           if (!ready.length || ++guard > 200) break;
           d.playBracketMatch(t, ready[0]);
         }
-      }), { ...fcParams(25), seed: Number(process.env.FC_SEED || 20261108) }); // pinned: it.fails must fail deterministically
+      }), fcParams(25)); // seed pinned by fcParams (deterministic)
   });
 
   discrepancy('DISC-01', 'single-elim 8: after flipping a quarter-final, its new loser is in no ready match', () => {

@@ -13,11 +13,14 @@ npm run check                 # syntax / version-marker / data/latest.json shape
 npx playwright install chromium   # once, for browser tests
 npm run test:e2e              # browser tests in Chromium (~5 s)
 npm run test:discrepancies    # show the known discrepancies failing, with reproductions
-npm run test:deep             # 150 random nights per property (~5 min)
+npm run test:deep             # exploration: fresh random seeds, 150 nights per property (~5 min)
 npm run serve                 # preview the app at http://localhost:4173/
 ```
 
-All of them run in CI (`.github/workflows/ci.yml`) on every push and pull request.
+Routine CI (`.github/workflows/ci.yml`, every push and pull request) runs `check`, `npm test`
+and `test:e2e` as blocking jobs, plus a non-blocking "Known discrepancies" job.
+Randomized exploration runs separately (`.github/workflows/stress.yml`: manual or weekly)
+and never blocks anything.
 
 ## Layout
 
@@ -55,11 +58,26 @@ test/
 | `[DISC-xx]` | Discrepancy: asserts a *proposed* invariant that v7.28 violates (see [AUDIT.md](AUDIT.md)) |
 
 ### How discrepancy tests work
-They are **never weakened to pass**. In a normal run they are registered with Vitest's
-`it.fails`: the suite stays green *while the discrepancy exists*, and turns **red** the moment
-behavior changes, which forces a deliberate review (then convert the test to a normal `it`
-and update AUDIT.md). `npm run test:discrepancies` (`STRICT=1`) runs them as ordinary tests so
-you can see each failure and its reproduction. CI runs this as a non-blocking job.
+They are **never weakened to pass**. In routine runs, `discrepancy()` (test/harness/discrepancy.js)
+turns each one into a *check that the documented discrepancy still reproduces*:
+
+| What the body does | Routine result | Meaning |
+|---|---|---|
+| fails with an **assertion** failure | ✅ pass | discrepancy still present, as documented |
+| passes | ❌ `DISCREPANCY NO LONGER REPRODUCES` | behavior changed — review, update AUDIT.md, convert to a normal test |
+| throws anything else (TypeError, timeout…) | ❌ `UNEXPECTED ERROR` | broken test/harness, not a domain finding |
+
+So in CI, *expected* discrepancies are silent, while unexpected test or infrastructure failures
+are red with a distinct message. (Vitest's plain `it.fails` was not used because it also
+"passes" on crashes.)
+
+`npm run test:discrepancies` (`STRICT=1`) runs them as ordinary tests so every failure and its
+reproduction is printed; CI runs this as the informational, non-blocking "Known
+discrepancies" job (expected to be red).
+
+`exploratory()` is for proposed invariants that random search violates only rarely. It is
+skipped everywhere except `EXPLORE=1` (the stress workflow). When it finds a case, capture
+the seed as a deterministic `discrepancy` test (as was done for DISC-15).
 
 ## Reproducing a property-test failure
 fast-check prints the seed and path of the failing case:
@@ -67,12 +85,12 @@ fast-check prints the seed and path of the failing case:
 FC_SEED=<seed> FC_PATH=<path> npx vitest run test/properties/<file>
 SHRINK=1 FC_SEED=<seed> npx vitest run ...   # shrink to a minimal night (slow)
 ```
-Property tests in `test/properties/` draw a **new random seed on every run** so CI keeps
-exploring new nights. A red property test in CI is therefore a genuine new counterexample,
-not flakiness in the usual sense: copy the printed seed/path, reproduce locally, and either
-add a deterministic discrepancy test (if the app violates the invariant) or fix the test
-(if the test's assumption was wrong). Discrepancy properties use a **pinned** seed so that
-`it.fails` is deterministic.
+Routine runs use a **fixed fast-check seed** (`DEFAULT_SEED` in `test/harness/fcConfig.js`), so
+the same scenarios run every time and CI is deterministic. Exploration with fresh seeds
+(`FC_RANDOM=1`, used by `npm run test:deep` and the stress workflow) may find a new
+counterexample: copy the printed seed/path, reproduce locally with `FC_SEED`/`FC_PATH`, then
+either add a deterministic `discrepancy` test (the app violates the invariant — needs owner
+review) or fix the test (its assumption was wrong). Never "fix" it by changing the expectation.
 
 Every app-level random choice uses the seeded `Math.random`, so a seed replays the same
 draws, sit-outs and scores. (Ids from `uid()` include `Date.now()`, so tests never assert

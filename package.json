@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:deep": "PROP_RUNS=150 vitest run test/properties",
+    "test:deep": "FC_RANDOM=1 PROP_RUNS=150 vitest run test/properties",
     "test:discrepancies": "STRICT=1 vitest run test/discrepancies",
     "test:e2e": "playwright test",
     "check": "node scripts/check-syntax.mjs",

@@ -51,6 +51,7 @@ Most real risk sits in four areas:
 | DISC-12 | Med (DYP only) | Standings | DYP ranking rounds redraw partners every round, and the new teams get new ids. The team branch of `computeStandings` (l.9535) only counts matches between *current* teams, so earlier results disappear from standings. DYP tiered playoffs then fall back to roster order. Production data has only one DYP event, and it was bracket-only, so current impact is low. | Test |
 | DISC-13 | Med | Scheduling | Table assignment never considers other live matches *in the same event*. Generating round N+1 while round N is still live puts two matches on T1, and starting playoffs with a ranking match still live can schedule the same player twice. Whether overlapping rounds is a supported workflow is an owner question. | Test (2 cases) |
 | DISC-14 | Low | Merge | After merging players, `sitOutQueue` and `bonusPoolLocked.fieldIds` still reference the removed id. Neither affects scoring of finished events; the scoring-relevant references are covered by a passing contract test. | Test |
+| DISC-15 | Low (rules question) | Partners | In rare late rounds of small fields, the draw has more repeat partnerships than the minimum possible. Example: 7 players, round 10, 4 playing: the app picks two second-time pairs (2 repeats), although a third-time pair plus a brand-new pair (1 repeat) was available. The alternative is better even by the app's own comparison (`fairPairPlayers` l.6944 ranks by forbidden repeats, then rematches), but the greedy builder (l.6899) always takes the lowest-count partner first, so it never generates that pairing. Seen in 2 of 1,925 random 2–10-round nights (about 0.1%), both with 7 players in round 10. **Whether the app's choice is worse for players is a club-rules judgement.** | Test: `partners.test.js`, 2 pinned seeds (found by a time-bounded random search) |
 
 **Owner decisions needed:**
 - DISC-01–05: what a correction should do once later matches have been played: cascade and
@@ -59,6 +60,7 @@ Most real risk sits in four areas:
 - DISC-12: should DYP ranking-round standings be per player, like Monster?
 - DISC-13: is generating a round, or starting playoffs, while matches are live allowed?
 - DISC-08: how bad records should be handled.
+- DISC-15: is "fewest repeat pairs" the right goal, or is "no pair three times" preferred?
 
 ## B. Risks in intended workflows (characterized, not failing)
 
@@ -90,7 +92,7 @@ behavior.
   - Fair sit priority, no avoidable back-to-back sits, and a sit spread of ≤1 for players
     present all night.
 - Partner draws are repeat-free whenever a repeat-free draw exists, checked against an exact
-  bitmask-DP optimum. See DISC-15 for the rarer "minimum repeats" case.
+  bitmask-DP optimum. Once repeats can't be avoided, see DISC-15.
 - Single and double elimination with 3–24 entrants under random winners:
   - Every bracket terminates with distinct 1st/2nd/3rd.
   - In double elimination every non-champion exits after exactly 2 losses.
@@ -119,7 +121,26 @@ behavior.
   - Stored deltas are preserved on load.
   - The 900→2000 upgrade, the late-joiner sit rule, and the geography migration work.
 
-## D. Scope notes and method
+## D. Unconfirmed hypotheses (no reproduction; not to be treated as bugs)
+
+- **Losers-bracket layout.** The losers bracket is valid but not the standard layout. For
+  N=12, losers from WB round 2 can meet each other, and byes may be unevenly distributed, so
+  early rematches are possible. Clean-play invariants all hold (section C). (bracket subagent)
+- **Multi-event table collisions.** The table-share path (`fairPromoteAcrossEvents`, conflict
+  lock) is untested. Collisions across events are not ruled out.
+- **TV board re-renders during announcements.** The global 5-second tick re-renders the TV
+  board even while an announcement is playing, because it ignores `isTvBoardRefreshAllowed`.
+  Not tested; needs a browser with speech.
+- **Downloads in Safari/iOS.** `downloadJson` revokes the object URL immediately after
+  `click()`, which can break downloads there. Not tested.
+- **`deletePlayer` inside a finished bracket event** could break rendering or stats.
+  Rendering with missing players worked in exploratory runs.
+
+## E. Scope notes and method
+- Discrepancy tests run in routine CI as "still reproduces as an *assertion* failure" checks.
+  A crash, or a discrepancy that stops reproducing, fails CI with a distinct message (see
+  TESTING.md). Routine property tests use a fixed seed. Randomized exploration runs only in
+  the separate stress workflow.
 - Two subagents ran read-only investigations in parallel: bracket/scoring and
   persistence/security. Their findings were reproduced independently in this repo's harness
   before inclusion. One claim, "a single-event import is discarded by the auto-refresh tick",

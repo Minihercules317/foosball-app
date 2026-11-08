@@ -1,0 +1,39 @@
+name: Stress (randomized exploration)
+
+# Not part of routine CI. Explores NEW random scenarios (fresh seeds) to look for
+# rare counterexamples. A failure here is a lead to investigate (reproduce with the
+# printed seed/path), not a broken build.
+on:
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: 'Scenarios per property'
+        default: '150'
+  schedule:
+    - cron: '17 6 * * 1'   # Mondays 06:17 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  explore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Randomized property exploration
+        run: npx vitest run test/properties
+        env:
+          FC_RANDOM: '1'
+          PROP_RUNS: ${{ github.event.inputs.runs || '150' }}
+      - name: Exploratory discrepancy properties (DISC-15)
+        if: always()
+        continue-on-error: true
+        run: npx vitest run test/discrepancies/partners.test.js -t exploratory
+        env:
+          EXPLORE: '1'
+          STRICT: '1'
+          FC_RANDOM: '1'

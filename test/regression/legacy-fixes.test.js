@@ -4,6 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { useApp } from '../harness/useApp.js';
+import { loadApp } from '../harness/loadApp.js';
 import { runMonsterNight } from '../factories/driver.js';
 import { sideIds } from '../factories/oracles.js';
 
@@ -45,16 +46,18 @@ describe('legacy fixes stay fixed', () => {
     for (let i = 1; i < rest.length; i++) expect(rest[i].losses).toBeGreaterThanOrEqual(rest[i - 1].losses);
   });
 
-  it('"Wiping and full-recalc was overwriting stored event deltas": loading a backup keeps the file\'s per-event deltas', () => {
+  it('"Wiping and full-recalc was overwriting stored event deltas": loading a backup keeps the file\'s per-event deltas', async () => {
     const { app, d } = ctx;
     const { t } = runMonsterNight(app, d, { players: 8 });
     const backup = JSON.parse(JSON.stringify(d.exportAll().data));
     const pid = Object.keys(backup.tournaments[0].rankingDeltas)[0];
     backup.tournaments[0].rankingDeltas[pid] = 0; // historical value under older rules
-    app.reset();
-    app.call('applyFullBackupData', app.toWindow(backup), app.toWindow({ silent: true }));
-    expect(app.state.tournaments[0].rankingDeltas[pid]).toBe(0);
-    expect(app.state.players.find((p) => p.id === pid).rankingPoints).toBe(2000);
+    const device = await loadApp(); // a fresh, empty device (there is no in-place reset any more)
+    try {
+      device.call('applyFullBackupData', device.toWindow(backup), device.toWindow({ silent: true }));
+      expect(device.state.tournaments[0].rankingDeltas[pid]).toBe(0);
+      expect(device.state.players.find((p) => p.id === pid).rankingPoints).toBe(2000);
+    } finally { device.close(); }
     expect(t).toBeTruthy();
   });
 

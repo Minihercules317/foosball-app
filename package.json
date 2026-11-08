@@ -12,7 +12,8 @@
     "check": "node scripts/check-syntax.mjs",
     "serve": "node scripts/serve.mjs",
     "fixtures": "node scripts/generate-fixtures.mjs",
-    "ci": "npm run check && npm test && npm run test:e2e"
+    "ci": "npm run check && npm test && npm run test:e2e",
+    "replay": "node scripts/replay.mjs"
   },
   "engines": {
     "node": ">=20"

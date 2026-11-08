@@ -33,10 +33,12 @@ jobs:
       - uses: actions/setup-node@v7
         with: { node-version: 22, cache: npm }
       - run: npm ci
-      # Deterministic (fixed fast-check seed). Documented discrepancies pass here
-      # only while they still reproduce as ASSERTION failures; a crash inside one,
-      # or a discrepancy that stops reproducing, turns this job red with a distinct
-      # "UNEXPECTED ERROR" / "NO LONGER REPRODUCES" message (test/harness/discrepancy.js).
+      # Deterministic (fixed fast-check seed; every case in its own fresh window).
+      # A documented discrepancy passes here only while it still fails AT ITS
+      # DECLARED CHECKPOINT; any other failure (setup assertion, crash, page error,
+      # timeout) or a discrepancy that stops reproducing turns this job red
+      # (test/harness/discrepancy.js). test/selftest/ proves those classifications,
+      # replay and isolation with controlled fault injections on every run.
       - run: npm test
 
   e2e:
@@ -54,7 +56,7 @@ jobs:
         if: failure()
         with:
           name: playwright-traces
-          path: test-results/
+          path: test-results/playwright/
           retention-days: 7
 
   discrepancies:

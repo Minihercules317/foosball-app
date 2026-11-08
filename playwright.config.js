@@ -7,6 +7,9 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: 'test/e2e',
+  // Own subfolder: Playwright empties its outputDir on every run, and test-results/
+  // also holds Vitest's scenario fixtures and property-run records.
+  outputDir: 'test-results/playwright',
   timeout: 60_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,

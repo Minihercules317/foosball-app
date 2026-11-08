@@ -1,0 +1,8 @@
+{
+  "property": "DISC-01-correction",
+  "discrepancy": "DISC-01",
+  "checkpoint": "no-double-booking-after-correction",
+  "scenario": { "seed": 8, "n": 9, "format": "double-elim", "playFirst": 7 },
+  "foundBy": { "fcSeed": 20261108, "fcPath": "0", "note": "first generated case of the pinned DISC-01 property after per-case isolation (2026-11-08)" },
+  "observation": "after flipping the earliest result, player p_0002 is in two ready matches"
+}

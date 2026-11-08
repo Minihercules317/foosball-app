@@ -13,18 +13,54 @@
  *   - `prompt` / `confirm` / `alert` (scripted answers; default confirm=true)
  *   - `Math.random` -> seeded PRNG so every draw is reproducible
  *   - speechSynthesis / AudioContext / matchMedia (absent in jsdom)
+ *   - canvas getContext → inert 2D context (jsdom has no canvas implementation)
  *
- * Every test gets a fresh window (fresh `state`, fresh localStorage).
+ * Isolation: every test (test/harness/useApp.js) and every generated property case
+ * (test/harness/scenario.js) gets its OWN freshly booted window — fresh `state`,
+ * settings, localStorage/sessionStorage, timers, listeners and top-level globals.
+ * There is deliberately no in-place "reset": the app keeps state in dozens of
+ * top-level bindings, timers and listeners, and a partial reset was shown to leak
+ * settings and substituted functions between cases (independent review F3).
+ * Every window is registered while open; test/harness/setup.js fails any test that
+ * leaves one open, and test/selftest/isolation.test.js proves contamination does
+ * not leak.
+ *
+ * Test-only hooks (never touch index.html on disk):
+ *   - `html` option: boot an in-memory MUTATED copy (see mutateHtml) — used by
+ *     mutation probes that prove a test can tell correct from wrong behavior.
+ *   - LCFC_FAULT env var: inject a named fault after boot (test/harness/faults.js) —
+ *     used by self-tests that prove broken behavior turns the suite red.
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { JSDOM, VirtualConsole } from 'jsdom';
 import { mulberry32 } from '../factories/random.js';
+import { applyFaults } from './faults.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const INDEX_HTML_PATH = path.join(ROOT, 'index.html');
-const HTML = readFileSync(INDEX_HTML_PATH, 'utf8');
+export const PRODUCTION_HTML = readFileSync(INDEX_HTML_PATH, 'utf8');
+
+/** Windows booted and not yet closed (see test/harness/setup.js). */
+const OPEN_APPS = new Set();
+export const openApps = () => [...OPEN_APPS];
+
+/**
+ * Return an in-memory copy of index.html with exact text replacements applied.
+ * Each `find` must occur EXACTLY once, so a mutation can never silently miss
+ * (which would make a mutation probe pass vacuously).
+ * @param {Array<[string, string]>} pairs
+ */
+export function mutateHtml(pairs, html = PRODUCTION_HTML) {
+  let out = html;
+  for (const [find, replace] of pairs) {
+    const n = out.split(find).length - 1;
+    if (n !== 1) throw new Error(`mutateHtml: expected exactly 1 occurrence, found ${n}: ${find.slice(0, 80)}`);
+    out = out.replace(find, () => replace);
+  }
+  return out;
+}
 
 export const STORAGE_KEY = 'foosmanager_v1';
 export const OPERATOR_MODE_KEY = 'lcfc_operator_mode_v1';
@@ -55,6 +91,7 @@ function makeFetch(snapshot) {
  * @param {object} [opts.localStorage]        extra raw localStorage entries
  * @param {object|number|string} [opts.snapshot] data/latest.json response (object | 404 | 500 | 'network-error')
  * @param {string} [opts.url]                 page URL (e.g. add ?local=1)
+ * @param {string} [opts.html]                in-memory page source (mutation probes); default: index.html
  */
 export async function loadApp(opts = {}) {
   const {
@@ -64,6 +101,7 @@ export async function loadApp(opts = {}) {
     localStorage: extraStorage = {},
     snapshot = 404,
     url = 'http://lcfc.test/index.html',
+    html = PRODUCTION_HTML,
   } = opts;
 
   const errors = [];
@@ -77,7 +115,7 @@ export async function loadApp(opts = {}) {
 
   const dialogs = { confirm: [], prompt: [], log: [] };
 
-  const dom = new JSDOM(HTML, {
+  const dom = new JSDOM(html, {
     url,
     runScripts: 'dangerously',
     pretendToBeVisual: true,
@@ -98,6 +136,10 @@ export async function loadApp(opts = {}) {
         addEventListener() {}, removeEventListener() {},
       }));
       window.scrollTo = () => {};
+      // jsdom has no canvas: getContext() returns null, so the app's own canvas
+      // drawing (e.g. clearing an empty chart) would throw where a browser works.
+      // Provide an inert 2D context (every method a no-op) — like the Chart stub.
+      window.HTMLCanvasElement.prototype.getContext = function getContext() { return inert2dContext(this); };
       window.HTMLElement.prototype.scrollIntoView = function () {};
       window.confirm = (msg) => {
         dialogs.log.push({ type: 'confirm', msg });
@@ -117,6 +159,7 @@ export async function loadApp(opts = {}) {
   });
 
   const { window } = dom;
+  let closed = false;
   // Let the async snapshot boot (fetch -> json -> apply) settle.
   await settle(window);
 
@@ -157,24 +200,35 @@ export async function loadApp(opts = {}) {
     openTournament: (id) => {
       window.eval('state').currentTournamentId = id;
     },
-    /** Re-seed Math.random inside the app (for per-run reproducibility). */
-    reseed: (s) => { window.Math.random = mulberry32(s); },
-    /** Clear club data in memory + storage without rebooting (fast property runs). */
-    reset: ({ seed: s } = {}) => {
-      const st = window.eval('state');
-      st.players = window.JSON.parse('[]');
-      st.tournaments = window.JSON.parse('[]');
-      st.currentTournamentId = null;
-      delete st._fairLastEventId;
-      window.localStorage.removeItem(STORAGE_KEY);
-      window.document.getElementById('toast-container').innerHTML = '';
-      dialogs.confirm.length = 0; dialogs.prompt.length = 0; dialogs.log.length = 0;
-      errors.length = 0;
-      if (s != null) window.Math.random = mulberry32(s);
+    get closed() { return closed; },
+    /** Close the window: stops its timers and drops its listeners and storage. */
+    close: () => {
+      if (closed) return;
+      closed = true;
+      OPEN_APPS.delete(app);
+      window.close();
     },
-    close: () => window.close(),
   };
+  OPEN_APPS.add(app);
+  applyFaults(app);
   return app;
+}
+
+/** A 2D-context stand-in: methods are no-ops returning further stand-ins; measureText → {width:0}. */
+function inert2dContext(canvas) {
+  const values = { canvas };
+  const fn = () => new Proxy(function () {}, handler);
+  const handler = {
+    get(target, prop) {
+      if (prop in values) return values[prop];
+      if (prop === 'width' || prop === 'height' || prop === 'actualBoundingBoxAscent') return 0;
+      if (prop === Symbol.toPrimitive || prop === 'then') return undefined;
+      return fn();
+    },
+    set(target, prop, v) { values[prop] = v; return true; },
+    apply() { return fn(); },
+  };
+  return new Proxy({}, handler);
 }
 
 /** Wait for pending microtasks/timeouts inside the window to flush. */

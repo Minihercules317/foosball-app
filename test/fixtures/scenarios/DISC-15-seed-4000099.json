@@ -1,0 +1,8 @@
+{
+  "property": "DISC-15-exploration",
+  "discrepancy": "DISC-15",
+  "checkpoint": "repeats-within-optimum",
+  "scenario": { "seed": 4000099, "type": "monster", "players": 7, "tables": 2, "ops": [{ "op": "round" }, { "op": "round" }, { "op": "round" }, { "op": "round" }, { "op": "round" }, { "op": "round" }, { "op": "round" }, { "op": "round" }, { "op": "round" }, { "op": "round" }] },
+  "foundBy": { "note": "bounded random search during the original audit; app and driver streams both seeded with scenario.seed" },
+  "observation": "round 10: 2 repeat partnerships chosen, exact optimum 1"
+}

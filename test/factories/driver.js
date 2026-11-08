@@ -196,6 +196,10 @@ export function createDriver(app, { seed = 1 } = {}) {
         if (!ready.length) break;
         const m = ready[0];
         d.playBracketMatch(t, m, pickWinner ? pickWinner(m) : rng.bool());
+        // Fail fast (and clearly) if scoring did not record a result, instead of
+        // spinning until maxMatches: a played match must have a winner.
+        const after = d.bracketMatches(t).find((x) => x.id === m.id);
+        if (!after?.winner) throw new Error(`driver: bracket match ${m.id} has no winner after being played — scoring did not record the result`);
         if (++n > maxMatches) throw new Error('bracket did not terminate');
       }
       return n;

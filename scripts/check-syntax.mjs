@@ -1,7 +1,9 @@
 // Static checks that run without a browser:
 //  1. every inline <script> in index.html parses (catches a broken edit before deploy)
 //  2. version markers agree (README "Versioning": APP_VERSION, build comment, lcfc-build meta, <title>)
-//  3. data/latest.json (if present) is valid JSON with the full-backup shape the app expects
+//  3. data/latest.json (if present) is valid JSON with the full-backup shape the app expects.
+//     PARTIAL validation: it rejects the three record shapes demonstrated to break boot
+//     (AUDIT DISC-08: null tournament, missing playerIds, non-string name) — not a full schema.
 // Read-only: never modifies any file.
 import { readFileSync, existsSync } from 'node:fs';
 import vm from 'node:vm';
@@ -36,7 +38,8 @@ if (existsSync('data/latest.json')) {
     const shapeOk = d && (d.type === 'full' || (Array.isArray(d.players) && Array.isArray(d.tournaments)));
     if (!shapeOk) fail('data/latest.json is not a full backup ({type:"full", players[], tournaments[]})');
     else {
-      const badT = d.tournaments.filter((t) => !t || typeof t !== 'object' || !t.id || !Array.isArray(t.playerIds));
+      const badT = d.tournaments.filter((t) => !t || typeof t !== 'object' || !t.id || !Array.isArray(t.playerIds)
+        || (t.name != null && typeof t.name !== 'string'));
       const badP = d.players.filter((p) => !p || !p.id || typeof p.name !== 'string');
       if (badT.length || badP.length) fail(`data/latest.json has ${badT.length} malformed tournaments and ${badP.length} malformed players (these break app boot — see AUDIT DISC-08)`);
       else ok(`data/latest.json shape ok (${d.players.length} players, ${d.tournaments.length} events)`);

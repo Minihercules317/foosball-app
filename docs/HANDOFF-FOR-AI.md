@@ -14,10 +14,13 @@ don't silently break anything. Read it fully before your first change.
    explicitly asks, and say clearly which tests will change and why.
 3. **Run the tests before every upload of `index.html`:**
    ```bash
-   npm ci            # first time only
-   npm run ci        # static checks + all tests + browser tests (~2 min)
+   npm ci                                         # first time only (Node ^20.19 or >=22.12)
+   npx playwright install --with-deps chromium    # first time only, per machine
+   npm run ci                                     # static checks + all tests + browser tests (~3 min)
    ```
    If anything is red, do not ship. Explain the failure to the owner in plain words.
+   The browser tests load the real Tailwind/Chart.js CDNs, so they need internet access; a CDN
+   outage can turn them red without any change in the repo (re-run before concluding anything).
 4. **Never weaken a test to make it pass.** If a test fails after your change, either your
    change broke something (fix the change), or the owner asked for a behavior change (then
    update that specific test, and say so in the commit message and to the owner).
@@ -28,23 +31,31 @@ don't silently break anything. Read it fully before your first change.
 ## 2. What the tests do (in one paragraph)
 
 The tests load the **unchanged** `index.html` into a simulated browser (jsdom) and call the
-app's own functions: `generateRound()`, `submitScore()`, `startPlayoffs()`, and so on. They
-play thousands of synthetic club nights (random arrivals, departures, scores) and check
-rules such as "nobody plays two matches at once", "sit-outs are fair", "partners don't repeat
-when avoidable", "ranking points are applied exactly once", and "export → import keeps
-everything". A few Playwright tests do the same in real Chrome. See
-[TESTING.md](TESTING.md) for details.
+app's own functions: `generateRound()`, `submitScore()`, `startPlayoffs()`, and so on. Each
+routine run plays 55 generated synthetic club nights and brackets in its property tests (always the same ones — fixed
+seed; random arrivals, departures, scores) plus fixed scenarios, and checks rules such as
+"nobody plays two matches at once", "sit-outs are fair", "partners don't repeat when avoidable",
+"ranking points are applied exactly once", and "export → import keeps everything (in memory)".
+The weekly stress run tries 150 *new* random cases per rule. A few Playwright tests do the same
+in real Chrome. A `test/selftest/` folder tests the test machinery itself (that failures are
+classified correctly, that every random case can be replayed alone, and that tests can't leak
+state into each other). See [TESTING.md](TESTING.md) for details.
 
 ## 3. Reading results
 
 | You see | It means | Do |
 |---|---|---|
-| All green | Nothing covered by tests changed | Ship (after a quick manual look) |
+| All green | The checks passed for the scenarios they exercise. It does **not** prove nothing changed: see "Known gaps" in TESTING.md (multi-event play, corrections, real downloads…) | Ship after a quick manual look at anything your change touched that isn't covered |
 | A `[contract]`, `[char]` or property test red | Your change altered existing behavior | Undo or fix the change, unless the owner asked for exactly that behavior change |
 | `DISCREPANCY NO LONGER REPRODUCES` | You changed behavior that the audit flagged as a possible bug | Good if intended. Update docs/AUDIT.md and turn the `discrepancy(...)` into a normal `it(...)` asserting the new, approved behavior |
-| `UNEXPECTED ERROR` inside a `[DISC-xx]` test | The test crashed: a harness problem, or an app function was renamed or removed | Fix the cause. Do not delete the test |
+| `UNEXPECTED FAILURE` inside a `[DISC-xx]` test | The test failed somewhere *other* than its documented checkpoint: a setup step broke, something crashed, or an app function was renamed or removed. **This is not the known finding** | Read the message (it says which). Fix the cause. Do not delete the test |
+| `CHECKPOINT NEVER REACHED` | The scenario no longer reaches the situation it documents | Your change altered the steps leading there; investigate |
+| `UNEXPECTED PAGE ERRORS` | The app threw or logged an error during the test | Treat as a real bug in your change |
+| `ISOLATION: … window(s) were left open` | A test you wrote didn't close a window it booted | Close it (see TESTING.md tips) |
+| A `selftest/` test red | The test machinery itself is broken — other results can't be trusted | Fix this first |
 | Red in the "Known discrepancies" CI job only | Expected. That job lists open findings | Nothing to do |
-| Red in the weekly "Stress" workflow | A new random scenario broke an invariant | Reproduce with the printed seed (TESTING.md). Report it to the owner. Don't auto-fix rules |
+| Red in the weekly "Stress" workflow | A rule failed on a new random case, a case ran out of time, or fewer cases ran than requested | Open the run's summary and the `stress-scenarios` artifact; replay with `npm run replay -- <fixture>` (TESTING.md). Report it to the owner. Don't auto-fix rules |
+| Yellow warning "DISC-15 reproduced by exploration" in Stress | A new example of the already-known partner-rotation finding | Nothing urgent; the fixture is in the artifact if the owner wants it |
 
 ## 4. Common tasks
 
@@ -86,9 +97,12 @@ file can stop the app from loading on members' phones (AUDIT DISC-08).
 
 See [AUDIT.md](AUDIT.md), section A. The most important ones for club nights:
 - Correcting a playoff score after later matches were played can corrupt the bracket (DISC-01…05).
-- Opening "Edit score" on a finished best-of-3 match erases it, even if you cancel (DISC-03).
+- Opening "Edit score" on a finished best-of-3 match clears it in memory, even if you cancel (DISC-03).
+  (The saved copy initially still holds the old result; a later save may persist the loss — untested.)
 - Imports are not saved until something else saves (DISC-06).
 - Turning Operator mode off and reloading replaces local data with the club file (R-01).
+- In a single-elimination event with a bronze match, the bronze-match loser is ranked last of
+  the non-podium players, behind the quarter-final losers (DISC-16, a rules question).
 
 Until the owner decides, a safe operating tip for club nights: **export a backup before
 correcting playoff scores, and avoid opening "Edit score" on finished best-of-3 matches.**
@@ -102,10 +116,14 @@ docs/ARCHITECTURE.md       how the app behaves today (baseline)
 docs/AUDIT.md              findings, severity, owner decisions needed
 docs/TESTING.md            running, reading and writing tests
 docs/REFACTORING-ROADMAP.md  safe, staged improvement plan
-test/                      all tests (see TESTING.md for layout)
+docs/REVIEW-REMEDIATION.md  how the independent review's findings were fixed, with evidence
+test/                      all tests (see TESTING.md for layout); test/selftest = tests of the tests
 scripts/check-syntax.mjs   static checks (npm run check)
+scripts/stress.mjs         randomized exploration with verified run counts (stress.yml)
+scripts/replay.mjs         replay one saved scenario: npm run replay -- <fixture.json>
 scripts/serve.mjs          local preview: npm run serve → http://localhost:4173/
-.github/workflows/         ci.yml (every push/PR), stress.yml (weekly/manual exploration)
+.github/workflows/         ci.yml (every push/PR; also calls stress.yml with 3 cases),
+                           stress.yml (weekly/manual exploration, 150 cases per property)
 ```
 
 GitHub Pages serves the repo root. The extra folders (`docs/`, `test/`, `scripts/`) are

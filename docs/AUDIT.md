@@ -14,7 +14,8 @@ Each discrepancy needs a decision from the app's owner (see "Owner decision" lin
 ## Summary
 
 The core of what runs every week holds up well. These checks produced **no failures**
-across hundreds of randomized club nights:
+across hundreds of randomized club nights (re-verified 2026-11-08 with 150 fresh random cases
+per property, each case in its own fresh window — see TESTING.md "Stress exploration"):
 - Monster DYP ranking rounds: sit-out fairness, partner rotation (checked against an exact
   optimum solver), match structure and per-round table assignment.
 - Clean bracket play: single and double elimination, 3–24 entrants.
@@ -39,19 +40,20 @@ Most real risk sits in four areas:
 |---|---|---|---|---|
 | DISC-01 | **High** | Brackets | Correcting a bracket result clears only the next match downstream. Later rounds keep stale entrants, so a player can be in two ready matches at once, or an eliminated player stays scheduled. Lines: `submitBracketScore` l.9370–9388, `clearBracketMatch` l.8608–8626. A related path: cleared matches keep `_byePropagated`, so a losers-bracket bye doesn't re-advance. | Test: `bracket-corrections.test.js` (random property + single-elim-8 repro) |
 | DISC-02 | **High** | Brackets | Bronze and grand-final results survive a change to their feeder, because only the side's entity is cleared, not `winner`. Example: re-scoring a semi-final in a 4-player bracket gives 1st=E4, 2nd=E1, 3rd=E4 while the event stays "finished". | Test |
-| DISC-03 | **High** (Monster) | Scoring | **Opening** "Edit score" on a finished best-of-3/5 match wipes its result at once (`openPlayoffScore` l.10400, `openScoreModal` l.9055). Closing the dialog doesn't restore it. In a bracket, the downstream invalidation is also skipped (winner is already null at submit), so the re-entered semi-final winner becomes champion of a final they never played. Monster playoffs are always Bo3, so this sits in the weekly workflow. | Test (3 cases) |
+| DISC-03 | **High** (Monster) | Scoring | **Opening** "Edit score" on a finished best-of-3/5 match wipes its result in memory at once (`openPlayoffScore` l.10400, `openScoreModal` l.9055). Closing the dialog doesn't restore it. (The persisted copy initially still holds the old result; cancelling alone was not shown to delete it from disk. Whether a later save persists the cleared result was not tested.) In a bracket, the downstream invalidation is also skipped (winner is already null at submit), so the re-entered semi-final winner becomes champion of a final they never played. Monster playoffs are always Bo3, so this sits in the weekly workflow. | Test (3 cases) |
 | DISC-04 | Med | Brackets | Fixing a typo without changing the winner (5–1 → 5–2) still clears the next match's result, while placements still show the old champion. | Test |
 | DISC-05 | Med | Ranking | Club ranking is applied once (`rankingApplied`) and never re-applied after a correction or "Replace bracket". Stored deltas then credit the old podium until someone manually runs "Recalculate". | Test |
 | DISC-06 | **High** | Import | No import path calls `saveState()` (l.10580–10661). The toast says "Data replaced" or "Imported event", but a reload, another tab's save, or the 5-second refresh tick restores the old data. The import only sticks if some later action happens to save. | Test (full replace + single event) |
 | DISC-07 | Med | Import / ranking | Importing an event that already exists and choosing Cancel ("keep both") creates a copy with identical `rankingDeltas`. Those points are counted twice. | Test |
 | DISC-08 | Med (High if it occurs) | Robustness | A single malformed record (a `null` tournament, a missing `playerIds`, a non-string name) throws during the first render (`renderHome` l.5430 / `escapeHtml` l.12715) before auto-refresh and the snapshot fetch start. A member device that loaded a bad `latest.json` saves it locally and can't recover, even after the file is fixed, until site data is cleared. | Test (3 cases) |
 | DISC-09 | Med | Ranking | Deleting a finished official event (`confirmDeleteTournament`, not operator-gated) leaves its deltas in the operator's player totals. Members rebuild totals from the remaining events' deltas, so the operator's leaderboard and the published one disagree. Manually edited `rankingPoints` are lost the same way on any import. | Test |
-| DISC-10 | Low–Med | Security | Ids are put into `onclick="fn('${id}')"` and `value="${id}"` without escaping (Players list l.4968–4975, roster l.5773, match and bracket cards l.8487–8504, l.9954+, and others). An id containing `"` injects markup at boot. Normal `uid()` ids are safe, so exploiting it needs a crafted import or `latest.json`. Names, by contrast, are escaped everywhere (see the passing `integration/security.test.js`). | Test |
+| DISC-10 | Low–Med | Security | Ids are put into `onclick="fn('${id}')"` and `value="${id}"` without escaping (Players list l.4968–4975, roster l.5773, match and bracket cards l.8487–8504, l.9954+, and others). An id containing `"` injects markup at boot. Normal `uid()` ids are safe, so exploiting it needs a crafted import or `latest.json`. The independent review executed injected JavaScript this way in Chromium. Names, by contrast, are escaped in the 14 views exercised by `integration/security.test.js` (not proven for every view). | Test |
 | DISC-11 | Low–Med | Scoring | With the OT box ticked, the target is hard-coded to 8 (`quickRaceTo` l.9096). With race to 5, the 7–5 that the README and the error message both give as an example is rejected. With race to 10, 8–6 is accepted. | Test |
 | DISC-12 | Med (DYP only) | Standings | DYP ranking rounds redraw partners every round, and the new teams get new ids. The team branch of `computeStandings` (l.9535) only counts matches between *current* teams, so earlier results disappear from standings. DYP tiered playoffs then fall back to roster order. Production data has only one DYP event, and it was bracket-only, so current impact is low. | Test |
 | DISC-13 | Med | Scheduling | Table assignment never considers other live matches *in the same event*. Generating round N+1 while round N is still live puts two matches on T1, and starting playoffs with a ranking match still live can schedule the same player twice. Whether overlapping rounds is a supported workflow is an owner question. | Test (2 cases) |
 | DISC-14 | Low | Merge | After merging players, `sitOutQueue` and `bonusPoolLocked.fieldIds` still reference the removed id. Neither affects scoring of finished events; the scoring-relevant references are covered by a passing contract test. | Test |
-| DISC-15 | Low (rules question) | Partners | In rare late rounds of small fields, the draw has more repeat partnerships than the minimum possible. Example: 7 players, round 10, 4 playing: the app picks two second-time pairs (2 repeats), although a third-time pair plus a brand-new pair (1 repeat) was available. The alternative is better even by the app's own comparison (`fairPairPlayers` l.6944 ranks by forbidden repeats, then rematches), but the greedy builder (l.6899) always takes the lowest-count partner first, so it never generates that pairing. Seen in 2 of 1,925 random 2–10-round nights (about 0.1%), both with 7 players in round 10. **Whether the app's choice is worse for players is a club-rules judgement.** | Test: `partners.test.js`, 2 pinned seeds (found by a time-bounded random search) |
+| DISC-15 | Low (rules question) | Partners | In rare late rounds of small fields, the draw has more repeat partnerships than the minimum possible. Example: 7 players, round 10, 4 playing: the app picks two second-time pairs (2 repeats), although a third-time pair plus a brand-new pair (1 repeat) was available. The alternative is better even by the app's own comparison (`fairPairPlayers` l.6944 ranks by forbidden repeats, then rematches), but the greedy builder (l.6899) always takes the lowest-count partner first, so it never generates that pairing. Seen in 2 of 1,925 random 2–10-round nights (about 0.1%), both with 7 players in round 10 (audit estimate; not independently replicated). **Whether the app's choice is worse for players is a club-rules judgement.** | Test: `partners.test.js`, 2 pinned scenario fixtures (found by a time-bounded random search) |
+| DISC-16 | Low–Med (rules question) | Ranking | Non-podium places sort by "fewer bracket losses first" (`getEventFinishPlaces` sort at l.4309; comment at l.4238 "fewer bracket losses = deeper run"). In double elimination every non-podium entry has 2 losses, so this never matters there. In **single elimination with a bronze match**, the bronze-match loser — a semi-finalist, 2 losses — is placed **last** (8th of 8), behind all quarter-final losers (1 loss each). Places feed seed points (tier 3–4 vs 5–8). Found while repairing the non-podium regression guard (review F7); a mutation probe confirms that reversing the loss key moves the bronze loser to 4th. | Test: `ranking-places.test.js` |
 
 **Owner decisions needed:**
 - DISC-01–05: what a correction should do once later matches have been played: cascade and
@@ -61,6 +63,7 @@ Most real risk sits in four areas:
 - DISC-13: is generating a round, or starting playoffs, while matches are live allowed?
 - DISC-08: how bad records should be handled.
 - DISC-15: is "fewest repeat pairs" the right goal, or is "no pair three times" preferred?
+- DISC-16: where should a single-elimination bronze-match loser finish — 4th, or after the quarter-final losers?
 
 ## B. Risks in intended workflows (characterized, not failing)
 
@@ -86,7 +89,7 @@ behavior.
 
 ## C. Verified as working (passing tests)
 
-- Ranking rounds, across 150 random nights with late arrivals, departures, returns,
+- Ranking rounds, across 150 random nights (stress run 2026-11-08) with late arrivals, departures, returns,
   interrupted rounds and 1–4 tables:
   - Valid teams; nobody double-booked; sit-outs = active players mod 4.
   - Fair sit priority, no avoidable back-to-back sits, and a sit spread of ≤1 for players
@@ -112,12 +115,15 @@ behavior.
   - Operator devices and `?local=1` skip the snapshot.
   - A 404, 500, network error or invalid snapshot keeps local data.
   - A storage event from another tab refreshes the view.
-- Display names (player, tournament and team) are escaped across home, players, stats, event
-  tabs, TV board and profile.
+- Display names (player and tournament) render as text in the 14 views exercised: home,
+  players list, player profile, stats (week, career, ranking, Club DNA, awards), event tabs
+  (players, matches, standings, bracket) and TV board. Each view is checked to have actually
+  rendered the names; other views are not covered.
 - Regression guards from the code comments' "previously fixed" notes all hold:
   - Pending feeds aren't treated as byes.
   - Partners share a place.
-  - Non-podium order is correct.
+  - In Monster double elimination, non-podium places follow ranking-round standings. (The
+    "fewer losses first" direction only matters for single-elim bronze losers — see DISC-16.)
   - Stored deltas are preserved on load.
   - The 900→2000 upgrade, the late-joiner sit rule, and the geography migration work.
 
@@ -137,10 +143,15 @@ behavior.
   Rendering with missing players worked in exploratory runs.
 
 ## E. Scope notes and method
-- Discrepancy tests run in routine CI as "still reproduces as an *assertion* failure" checks.
-  A crash, or a discrepancy that stops reproducing, fails CI with a distinct message (see
-  TESTING.md). Routine property tests use a fixed seed. Randomized exploration runs only in
-  the separate stress workflow.
+- Discrepancy tests run in routine CI as "still fails at its declared checkpoint" checks: only
+  an assertion inside the named final observation counts. Setup failures, crashes, page errors,
+  timeouts, or a discrepancy that stops reproducing fail CI with a distinct message (see
+  TESTING.md; proven by `test/selftest/`). Routine property tests use a fixed seed, every case in
+  its own fresh window. Randomized exploration runs in the separate stress workflow.
+- Revised 2026-11-08 after an independent review of the test infrastructure; see
+  [REVIEW-REMEDIATION.md](REVIEW-REMEDIATION.md). DISC-01's random property now replays from a
+  saved scenario fixture; DISC-16 was added; the claims about name escaping and non-podium
+  order were narrowed to what the tests show.
 - Two subagents ran read-only investigations in parallel: bracket/scoring and
   persistence/security. Their findings were reproduced independently in this repo's harness
   before inclusion. One claim, "a single-event import is discarded by the auto-refresh tick",

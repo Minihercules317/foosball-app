@@ -73,3 +73,13 @@ jobs:
       # reproduction for reviewers. Expected to be red; non-blocking by design.
       # The pass/fail signal for discrepancies lives in the "unit" job above.
       - run: npm run test:discrepancies
+
+  stress-smoke:
+    name: Stress workflow (bounded, fixed seed)
+    # The real stress workflow file with a tiny deterministic workload: proves the
+    # run count reaches every property and that failures fail the job. The full
+    # random exploration stays in the weekly/manual run of stress.yml.
+    uses: ./.github/workflows/stress.yml
+    with:
+      runs: '3'
+      seed: '20261108'

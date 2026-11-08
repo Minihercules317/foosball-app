@@ -6,14 +6,15 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:deep": "FC_RANDOM=1 PROP_RUNS=150 vitest run test/properties",
+    "test:deep": "node scripts/stress.mjs --runs 150",
     "test:discrepancies": "STRICT=1 vitest run test/discrepancies",
     "test:e2e": "playwright test",
     "check": "node scripts/check-syntax.mjs",
     "serve": "node scripts/serve.mjs",
     "fixtures": "node scripts/generate-fixtures.mjs",
     "ci": "npm run check && npm test && npm run test:e2e",
-    "replay": "node scripts/replay.mjs"
+    "replay": "node scripts/replay.mjs",
+    "test:stress": "node scripts/stress.mjs"
   },
   "engines": {
     "node": ">=20"

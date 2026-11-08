@@ -1,14 +1,35 @@
 name: Stress (randomized exploration)
 
-# Not part of routine CI. Explores NEW random scenarios (fresh seeds) to look for
-# rare counterexamples. A failure here is a lead to investigate (reproduce with the
-# printed seed/path), not a broken build.
+# Not part of routine CI's test jobs. Explores NEW random scenarios (fresh seeds,
+# 150 per property by default) to look for rare counterexamples.
+#
+# Fail-closed: the job is RED if any property fails, is cut off by its time budget,
+# does not run, or executes fewer cases than requested (scripts/stress.mjs checks
+# the per-property run records). Every failing case writes a replayable scenario
+# fixture (seed, fast-check path, scenario JSON, replay command) to
+# test-results/scenarios/, uploaded as the "stress-scenarios" artifact.
+# A new instance of the KNOWN discrepancy DISC-15 is reported (warning + summary +
+# fixture) without failing; anything else unexpected fails.
+#
+# Also callable (workflow_call): CI runs this same workflow on every push with a
+# small fixed workload, so the stress plumbing itself is exercised continuously.
 on:
   workflow_dispatch:
     inputs:
       runs:
-        description: 'Scenarios per property'
+        description: 'Scenarios per property (applies to every property, incl. DISC-15 exploration)'
         default: '150'
+      seed:
+        description: 'Fixed fast-check seed (blank = fresh random seed per property)'
+        default: ''
+  workflow_call:
+    inputs:
+      runs:
+        type: string
+        default: '150'
+      seed:
+        type: string
+        default: ''
   schedule:
     - cron: '17 6 * * 1'   # Mondays 06:17 UTC
 
@@ -17,23 +38,30 @@ permissions:
 
 jobs:
   explore:
+    name: Explore (${{ inputs.runs || '150' }} cases per property)
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Measured 2026-11-08: the 150-case workload took 5.6 min wall on a 24-core machine
+    # (23.5 CPU-min); expect roughly 10–20 min on a 4-vCPU runner. Per-property budgets
+    # (bracket 30 min, others 20 min at 150 cases) stop a slow run with an "INTERRUPTED"
+    # report naming the seed and in-flight case well before this job limit.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with: { node-version: 22, cache: npm }
       - run: npm ci
-      - name: Randomized property exploration
-        run: npx vitest run test/properties
+      - name: Randomized exploration (all properties + DISC-15), verified run counts
+        run: node scripts/stress.mjs --runs "$RUNS" ${SEED:+--seed "$SEED"}
         env:
-          FC_RANDOM: '1'
-          PROP_RUNS: ${{ github.event.inputs.runs || '150' }}
-      - name: Exploratory discrepancy properties (DISC-15)
+          RUNS: ${{ inputs.runs || '150' }}
+          SEED: ${{ inputs.seed || '' }}
+      - name: Upload scenario fixtures and run records
         if: always()
-        continue-on-error: true
-        run: npx vitest run test/discrepancies/partners.test.js -t exploratory
-        env:
-          EXPLORE: '1'
-          STRICT: '1'
-          FC_RANDOM: '1'
+        uses: actions/upload-artifact@v7
+        with:
+          name: stress-scenarios-${{ github.run_attempt }}
+          path: |
+            test-results/scenarios/
+            test-results/property-runs/
+          if-no-files-found: ignore
+          retention-days: 30

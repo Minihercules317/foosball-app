@@ -266,6 +266,26 @@ Ops:    PIN · Import/export · Control center · Recalculate ranking
 
 ---
 
+## Development & testing
+
+The app is still just `index.html` — no build step. The repo also contains an automated
+test suite that runs the real `index.html` (unchanged) in a simulated browser and in Chromium:
+
+```bash
+npm ci && npm test        # ~1 min
+npm run test:e2e          # browser tests (run `npx playwright install chromium` once)
+```
+
+- [docs/TESTING.md](docs/TESTING.md) — how to run and extend the tests
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — current behavior and data flow (compatibility baseline)
+- [docs/AUDIT.md](docs/AUDIT.md) — findings awaiting the owner's review
+- [docs/REFACTORING-ROADMAP.md](docs/REFACTORING-ROADMAP.md) — staged, low-risk improvement plan
+- [docs/HANDOFF-FOR-AI.md](docs/HANDOFF-FOR-AI.md) — rules for an AI assistant changing this app
+
+Tests use only fabricated players and events, never real club data.
+
+---
+
 ## Club
 
 **Lake Champlain Foosball Club (LCFC)**  

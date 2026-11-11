@@ -1,9 +1,43 @@
 // Regenerates test/fixtures/synthetic-club.json: a fully FABRICATED club backup
 // produced by running the real app logic (jsdom harness) over several seeded nights.
 // Usage: node scripts/generate-fixtures.mjs
-import { writeFileSync } from 'node:fs';
+//
+// node scripts/generate-fixtures.mjs --historical <index.html of v7.28>
+//   writes test/fixtures/historical/doubles-bracket-only-v7.28.json instead: the saved device
+//   state of a FABRICATED bracket-only Doubles event played and scored by the OLD app
+//   (git show 71c4a586:index.html > /some/tmp/index-v7.28.html). Used by the recalculation
+//   regression check (test/regression/checks.js). The old page is only read into memory.
+import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { loadApp } from '../test/harness/loadApp.js';
-import { createDriver } from '../test/factories/driver.js';
+import { createDriver, runBracketOnlyTeamEvent } from '../test/factories/driver.js';
+
+const hist = process.argv.indexOf('--historical');
+if (hist > 0) {
+  const html = readFileSync(process.argv[hist + 1], 'utf8');
+  const appVersion = html.match(/const APP_VERSION = '([^']+)'/)?.[1];
+  if (appVersion !== '7.28') throw new Error(`--historical expects the v7.28 index.html, got v${appVersion}`);
+  const app = await loadApp({ seed: 728, html });
+  const d = createDriver(app, { seed: 728 });
+  const { t } = runBracketOnlyTeamEvent(app, d, { type: 'doubles', format: 'double-elim', upset: true, name: 'Synthetic Doubles (v7.28 history)' });
+  t.createdAt = Date.UTC(2026, 9, 6, 23);
+  app.call('saveState');
+  const out = {
+    provenance: {
+      what: 'localStorage state of a fabricated bracket-only Doubles event, played and scored by the old app',
+      appVersion,
+      indexHtmlSha256: createHash('sha256').update(html).digest('hex'),
+      scenario: 'runBracketOnlyTeamEvent({ type: "doubles", format: "double-elim", upset: true }), harness seed 728',
+      generatedBy: 'node scripts/generate-fixtures.mjs --historical <v7.28 index.html>',
+    },
+    data: app.stored(),
+  };
+  mkdirSync('test/fixtures/historical', { recursive: true });
+  writeFileSync('test/fixtures/historical/doubles-bracket-only-v7.28.json', JSON.stringify(out, null, 2) + '\n');
+  console.log(`wrote test/fixtures/historical/doubles-bracket-only-v7.28.json (v${appVersion}, ${out.data.players.length} players, ${out.data.tournaments.length} event)`);
+  app.close();
+  process.exit(0);
+}
 
 const app = await loadApp({ seed: 2026 });
 const d = createDriver(app, { seed: 2026 });

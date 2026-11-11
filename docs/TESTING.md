@@ -49,6 +49,8 @@ test/
   factories/          seeded PRNG, fabricated players, operator driver, night scripts, oracles
   fixtures/
     synthetic-club.json        fabricated 3-night club backup (npm run fixtures regenerates)
+    historical/*.json          fabricated event really played by an OLDER app version (stored old
+                               ranking deltas); `npm run fixtures -- --historical <v7.28 index.html>`
     scenarios/*.json           saved, replayable scenarios (DISC-01, DISC-15 counterexamples)
   unit/ properties/ integration/ regression/ discrepancies/   (as labelled below)
   properties/defs/    property definitions (non-test modules, so replay can import them)
@@ -217,8 +219,22 @@ broken must exit non-zero with fixtures) and by CI's `stress-smoke` job, which c
 is refused) that reintroduces a guarded bug or reverses a rule, then runs the same check body as
 the regression test. Each check must fail on its main assertion, not on a `precondition:`.
 Covered: non-podium order (reversed standings tie-break), partners sharing a place, late joiners
-(rookies preferred to sit), stored deltas on backup load (wipe + recalculate), and loss-key
-direction (only the single-elim bronze case distinguishes it — DISC-16).
+(rookies preferred to sit), stored deltas on backup load (wipe + recalculate), loss-key
+direction (only the single-elim bronze case distinguishes it — DISC-16), and bracket-only team
+ranking (bracket-seed backfill removed = the v7.28 behavior; see below).
+
+### Bracket-only team events rank by bracket seed (owner-confirmed, v7.32)
+
+`test/regression/team-seed-ranking.test.js` pins a rule the owner confirmed on 2026-11-11: in a
+team event that goes straight to a bracket (Doubles; DYP or Monster started bracket-only), a
+team's **expected finish is its bracket seed**. Up to v7.28 the app averaged the partners'
+individual club-rank positions instead, which inflated every seed adjustment. The expected
+numbers are derived by hand from the README formula (the derivation is in
+`test/regression/checks.js`), not read from the app. Five tests, all 8 players / 4 teams:
+Doubles upset, Doubles "everyone finishes as seeded" (adjustment must be 0), DYP single-elim,
+Monster with shuffled seeds, and a recalculation of a fabricated Doubles event that v7.28 really
+scored (`test/fixtures/historical/`), which must come out with the corrected numbers. All five
+fail against v7.28 and against the mutation probe, on the ranking assertion.
 
 ## Writing a new test
 ```js
@@ -261,7 +277,7 @@ Tips:
   (round properties check one round of one event at a time). Highest-priority gap.
 - Score corrections across Bo1/3/5, undo/clear, descendants and grand-final reset, with reload and
   ranking-history checks (beyond DISC-01…05).
-- Independent ranking examples (heterogeneous starting points, both bonus splits, ties, zero floor,
+- Independent ranking examples beyond the 4-team bracket-only cases above (both bonus splits, ties, zero floor,
   event-date edits). Recalculation agreeing with the incremental path is consistency evidence,
   not an independent oracle.
 - Real-browser export/download → import → reload; malformed input; storage failures. jsdom tests

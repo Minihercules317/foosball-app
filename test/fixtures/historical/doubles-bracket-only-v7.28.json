@@ -1,0 +1,897 @@
+{
+  "provenance": {
+    "what": "localStorage state of a fabricated bracket-only Doubles event, played and scored by the old app",
+    "appVersion": "7.28",
+    "indexHtmlSha256": "1430cfa07079ae7e1a2bf0858bdd8b70c6854dba55d577095163a7268dbf770a",
+    "scenario": "runBracketOnlyTeamEvent({ type: \"doubles\", format: \"double-elim\", upset: true }), harness seed 728",
+    "generatedBy": "node scripts/generate-fixtures.mjs --historical <v7.28 index.html>"
+  },
+  "data": {
+    "players": [
+      {
+        "id": "p_0001",
+        "name": "Hollis Stubbs",
+        "skill": 2,
+        "rankingPoints": 1902,
+        "rankingDelta": 102,
+        "region": "",
+        "homeState": ""
+      },
+      {
+        "id": "p_0002",
+        "name": "Orrin Fixturo",
+        "skill": 5,
+        "rankingPoints": 1907,
+        "rankingDelta": 102,
+        "region": "",
+        "homeState": ""
+      },
+      {
+        "id": "p_0003",
+        "name": "Hollis Synthby",
+        "skill": 3,
+        "rankingPoints": 1986,
+        "rankingDelta": 31,
+        "region": "",
+        "homeState": ""
+      },
+      {
+        "id": "p_0004",
+        "name": "Cael Fakeham",
+        "skill": 3,
+        "rankingPoints": 2146,
+        "rankingDelta": 31,
+        "region": "",
+        "homeState": ""
+      },
+      {
+        "id": "p_0005",
+        "name": "Fenna Fakeham",
+        "skill": 4,
+        "rankingPoints": 2435,
+        "rankingDelta": 0,
+        "region": "",
+        "homeState": ""
+      },
+      {
+        "id": "p_0006",
+        "name": "Azzo Fabrikant",
+        "skill": 1,
+        "rankingPoints": 1875,
+        "rankingDelta": 0,
+        "region": "",
+        "homeState": ""
+      },
+      {
+        "id": "p_0007",
+        "name": "Kestra Fabrikant",
+        "skill": 2,
+        "rankingPoints": 1878,
+        "rankingDelta": 63,
+        "region": "",
+        "homeState": ""
+      },
+      {
+        "id": "p_0008",
+        "name": "Gid Placehold",
+        "skill": 1,
+        "rankingPoints": 1898,
+        "rankingDelta": 63,
+        "region": "",
+        "homeState": ""
+      }
+    ],
+    "tournaments": [
+      {
+        "id": "mwc9tr0yvvfhrx",
+        "name": "Synthetic Doubles (v7.28 history)",
+        "type": "doubles",
+        "format": "double-elim",
+        "raceTo": 5,
+        "bestOf": 1,
+        "tables": 2,
+        "drawStyle": "random",
+        "monsterPositions": false,
+        "colorBand": "spec-ec-doubles",
+        "sandbox": false,
+        "playerIds": [
+          "p_0006",
+          "p_0004",
+          "p_0005",
+          "p_0008",
+          "p_0001",
+          "p_0003",
+          "p_0007",
+          "p_0002"
+        ],
+        "absentIds": [],
+        "teams": [
+          {
+            "id": "team_p_0001_p_0002",
+            "playerIds": [
+              "p_0001",
+              "p_0002"
+            ],
+            "name": "Hollis Stubbs + Orrin Fixturo"
+          },
+          {
+            "id": "team_p_0003_p_0004",
+            "playerIds": [
+              "p_0003",
+              "p_0004"
+            ],
+            "name": "Hollis Synthby + Cael Fakeham"
+          },
+          {
+            "id": "team_p_0005_p_0006",
+            "playerIds": [
+              "p_0005",
+              "p_0006"
+            ],
+            "name": "Fenna Fakeham + Azzo Fabrikant"
+          },
+          {
+            "id": "team_p_0007_p_0008",
+            "playerIds": [
+              "p_0007",
+              "p_0008"
+            ],
+            "name": "Kestra Fabrikant + Gid Placehold"
+          }
+        ],
+        "rounds": [],
+        "currentRound": 0,
+        "playoffs": {
+          "type": "double-elim",
+          "size": 4,
+          "rounds": [
+            {
+              "number": 1,
+              "name": "Winners SF",
+              "matches": [
+                {
+                  "id": "mwc9tr26dxl4pv",
+                  "a": {
+                    "seed": 1,
+                    "entity": {
+                      "id": "team_p_0005_p_0006",
+                      "name": "Fenna Fakeham + Azzo Fabrikant",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0005",
+                        "p_0006"
+                      ],
+                      "seed": 1
+                    },
+                    "score": null
+                  },
+                  "b": {
+                    "seed": 4,
+                    "entity": {
+                      "id": "team_p_0001_p_0002",
+                      "name": "Hollis Stubbs + Orrin Fixturo",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0001",
+                        "p_0002"
+                      ],
+                      "seed": 4
+                    },
+                    "score": null
+                  },
+                  "winner": "b",
+                  "loser": "a",
+                  "scoreA": 1,
+                  "scoreB": 5,
+                  "bracket": "winners",
+                  "coinToss": {
+                    "headsSide": "b",
+                    "result": "heads",
+                    "serveSide": "b",
+                    "flippedAt": 1794410743614
+                  },
+                  "table": 1,
+                  "timerStartAt": 1794410773615,
+                  "games": [
+                    {
+                      "scoreA": 1,
+                      "scoreB": 5
+                    }
+                  ],
+                  "seriesA": 0,
+                  "seriesB": 1,
+                  "timerEndedAt": 1794410743649
+                },
+                {
+                  "id": "mwc9tr26dm5zxb",
+                  "a": {
+                    "seed": 2,
+                    "entity": {
+                      "id": "team_p_0003_p_0004",
+                      "name": "Hollis Synthby + Cael Fakeham",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0003",
+                        "p_0004"
+                      ],
+                      "seed": 2
+                    },
+                    "score": null
+                  },
+                  "b": {
+                    "seed": 3,
+                    "entity": {
+                      "id": "team_p_0007_p_0008",
+                      "name": "Kestra Fabrikant + Gid Placehold",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0007",
+                        "p_0008"
+                      ],
+                      "seed": 3
+                    },
+                    "score": null
+                  },
+                  "winner": "b",
+                  "loser": "a",
+                  "scoreA": 3,
+                  "scoreB": 5,
+                  "bracket": "winners",
+                  "coinToss": {
+                    "headsSide": "a",
+                    "result": "heads",
+                    "serveSide": "a",
+                    "flippedAt": 1794410743614
+                  },
+                  "table": 2,
+                  "timerStartAt": 1794410773615,
+                  "games": [
+                    {
+                      "scoreA": 3,
+                      "scoreB": 5
+                    }
+                  ],
+                  "seriesA": 0,
+                  "seriesB": 1,
+                  "timerEndedAt": 1794410743682
+                }
+              ]
+            },
+            {
+              "number": 2,
+              "name": "Winners Final",
+              "matches": [
+                {
+                  "id": "mwc9tr26n6qr8r",
+                  "a": {
+                    "seed": 4,
+                    "entity": {
+                      "id": "team_p_0001_p_0002",
+                      "name": "Hollis Stubbs + Orrin Fixturo",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0001",
+                        "p_0002"
+                      ],
+                      "seed": 4
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26dxl4pv",
+                    "fromLoser": false
+                  },
+                  "b": {
+                    "seed": 3,
+                    "entity": {
+                      "id": "team_p_0007_p_0008",
+                      "name": "Kestra Fabrikant + Gid Placehold",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0007",
+                        "p_0008"
+                      ],
+                      "seed": 3
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26dm5zxb",
+                    "fromLoser": false
+                  },
+                  "winner": "a",
+                  "loser": "b",
+                  "scoreA": 5,
+                  "scoreB": 1,
+                  "bracket": "winners",
+                  "coinToss": {
+                    "headsSide": "a",
+                    "result": "heads",
+                    "serveSide": "a",
+                    "flippedAt": 1794410743682
+                  },
+                  "table": 1,
+                  "timerStartAt": 1794410773682,
+                  "games": [
+                    {
+                      "scoreA": 5,
+                      "scoreB": 1
+                    }
+                  ],
+                  "seriesA": 1,
+                  "seriesB": 0,
+                  "timerEndedAt": 1794410743711
+                }
+              ]
+            }
+          ],
+          "winnersRounds": [
+            {
+              "number": 1,
+              "name": "Winners SF",
+              "matches": [
+                {
+                  "id": "mwc9tr26dxl4pv",
+                  "a": {
+                    "seed": 1,
+                    "entity": {
+                      "id": "team_p_0005_p_0006",
+                      "name": "Fenna Fakeham + Azzo Fabrikant",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0005",
+                        "p_0006"
+                      ],
+                      "seed": 1
+                    },
+                    "score": null
+                  },
+                  "b": {
+                    "seed": 4,
+                    "entity": {
+                      "id": "team_p_0001_p_0002",
+                      "name": "Hollis Stubbs + Orrin Fixturo",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0001",
+                        "p_0002"
+                      ],
+                      "seed": 4
+                    },
+                    "score": null
+                  },
+                  "winner": "b",
+                  "loser": "a",
+                  "scoreA": 1,
+                  "scoreB": 5,
+                  "bracket": "winners",
+                  "coinToss": {
+                    "headsSide": "b",
+                    "result": "heads",
+                    "serveSide": "b",
+                    "flippedAt": 1794410743614
+                  },
+                  "table": 1,
+                  "timerStartAt": 1794410773615,
+                  "games": [
+                    {
+                      "scoreA": 1,
+                      "scoreB": 5
+                    }
+                  ],
+                  "seriesA": 0,
+                  "seriesB": 1,
+                  "timerEndedAt": 1794410743649
+                },
+                {
+                  "id": "mwc9tr26dm5zxb",
+                  "a": {
+                    "seed": 2,
+                    "entity": {
+                      "id": "team_p_0003_p_0004",
+                      "name": "Hollis Synthby + Cael Fakeham",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0003",
+                        "p_0004"
+                      ],
+                      "seed": 2
+                    },
+                    "score": null
+                  },
+                  "b": {
+                    "seed": 3,
+                    "entity": {
+                      "id": "team_p_0007_p_0008",
+                      "name": "Kestra Fabrikant + Gid Placehold",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0007",
+                        "p_0008"
+                      ],
+                      "seed": 3
+                    },
+                    "score": null
+                  },
+                  "winner": "b",
+                  "loser": "a",
+                  "scoreA": 3,
+                  "scoreB": 5,
+                  "bracket": "winners",
+                  "coinToss": {
+                    "headsSide": "a",
+                    "result": "heads",
+                    "serveSide": "a",
+                    "flippedAt": 1794410743614
+                  },
+                  "table": 2,
+                  "timerStartAt": 1794410773615,
+                  "games": [
+                    {
+                      "scoreA": 3,
+                      "scoreB": 5
+                    }
+                  ],
+                  "seriesA": 0,
+                  "seriesB": 1,
+                  "timerEndedAt": 1794410743682
+                }
+              ]
+            },
+            {
+              "number": 2,
+              "name": "Winners Final",
+              "matches": [
+                {
+                  "id": "mwc9tr26n6qr8r",
+                  "a": {
+                    "seed": 4,
+                    "entity": {
+                      "id": "team_p_0001_p_0002",
+                      "name": "Hollis Stubbs + Orrin Fixturo",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0001",
+                        "p_0002"
+                      ],
+                      "seed": 4
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26dxl4pv",
+                    "fromLoser": false
+                  },
+                  "b": {
+                    "seed": 3,
+                    "entity": {
+                      "id": "team_p_0007_p_0008",
+                      "name": "Kestra Fabrikant + Gid Placehold",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0007",
+                        "p_0008"
+                      ],
+                      "seed": 3
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26dm5zxb",
+                    "fromLoser": false
+                  },
+                  "winner": "a",
+                  "loser": "b",
+                  "scoreA": 5,
+                  "scoreB": 1,
+                  "bracket": "winners",
+                  "coinToss": {
+                    "headsSide": "a",
+                    "result": "heads",
+                    "serveSide": "a",
+                    "flippedAt": 1794410743682
+                  },
+                  "table": 1,
+                  "timerStartAt": 1794410773682,
+                  "games": [
+                    {
+                      "scoreA": 5,
+                      "scoreB": 1
+                    }
+                  ],
+                  "seriesA": 1,
+                  "seriesB": 0,
+                  "timerEndedAt": 1794410743711
+                }
+              ]
+            }
+          ],
+          "losersRounds": [
+            {
+              "number": 1,
+              "name": "Losers R1",
+              "matches": [
+                {
+                  "id": "mwc9tr26pwa3f0",
+                  "a": {
+                    "seed": 1,
+                    "entity": {
+                      "id": "team_p_0005_p_0006",
+                      "name": "Fenna Fakeham + Azzo Fabrikant",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0005",
+                        "p_0006"
+                      ],
+                      "seed": 1
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26dxl4pv",
+                    "fromLoser": true
+                  },
+                  "b": {
+                    "seed": 2,
+                    "entity": {
+                      "id": "team_p_0003_p_0004",
+                      "name": "Hollis Synthby + Cael Fakeham",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0003",
+                        "p_0004"
+                      ],
+                      "seed": 2
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26dm5zxb",
+                    "fromLoser": true
+                  },
+                  "winner": "b",
+                  "loser": "a",
+                  "scoreA": 1,
+                  "scoreB": 5,
+                  "bracket": "losers",
+                  "coinToss": {
+                    "headsSide": "b",
+                    "result": "heads",
+                    "serveSide": "b",
+                    "flippedAt": 1794410743682
+                  },
+                  "table": 2,
+                  "timerStartAt": 1794410773682,
+                  "games": [
+                    {
+                      "scoreA": 1,
+                      "scoreB": 5
+                    }
+                  ],
+                  "seriesA": 0,
+                  "seriesB": 1,
+                  "timerEndedAt": 1794410743741
+                }
+              ]
+            },
+            {
+              "number": 2,
+              "name": "Losers Final",
+              "matches": [
+                {
+                  "id": "mwc9tr26c636dq",
+                  "a": {
+                    "seed": 2,
+                    "entity": {
+                      "id": "team_p_0003_p_0004",
+                      "name": "Hollis Synthby + Cael Fakeham",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0003",
+                        "p_0004"
+                      ],
+                      "seed": 2
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26pwa3f0",
+                    "fromLoser": false
+                  },
+                  "b": {
+                    "seed": 3,
+                    "entity": {
+                      "id": "team_p_0007_p_0008",
+                      "name": "Kestra Fabrikant + Gid Placehold",
+                      "type": "team",
+                      "playerIds": [
+                        "p_0007",
+                        "p_0008"
+                      ],
+                      "seed": 3
+                    },
+                    "score": null,
+                    "fromMatch": "mwc9tr26n6qr8r",
+                    "fromLoser": true
+                  },
+                  "winner": "b",
+                  "loser": "a",
+                  "scoreA": 2,
+                  "scoreB": 5,
+                  "bracket": "losers",
+                  "coinToss": {
+                    "headsSide": "b",
+                    "result": "heads",
+                    "serveSide": "b",
+                    "flippedAt": 1794410743741
+                  },
+                  "table": 1,
+                  "timerStartAt": 1794410773741,
+                  "games": [
+                    {
+                      "scoreA": 2,
+                      "scoreB": 5
+                    }
+                  ],
+                  "seriesA": 0,
+                  "seriesB": 1,
+                  "timerEndedAt": 1794410743773
+                }
+              ]
+            }
+          ],
+          "grandFinal": {
+            "id": "mwc9tr2690w39k",
+            "a": {
+              "seed": 4,
+              "entity": {
+                "id": "team_p_0001_p_0002",
+                "name": "Hollis Stubbs + Orrin Fixturo",
+                "type": "team",
+                "playerIds": [
+                  "p_0001",
+                  "p_0002"
+                ],
+                "seed": 4
+              },
+              "score": null,
+              "fromMatch": "mwc9tr26n6qr8r",
+              "fromLoser": false
+            },
+            "b": {
+              "seed": 3,
+              "entity": {
+                "id": "team_p_0007_p_0008",
+                "name": "Kestra Fabrikant + Gid Placehold",
+                "type": "team",
+                "playerIds": [
+                  "p_0007",
+                  "p_0008"
+                ],
+                "seed": 3
+              },
+              "score": null,
+              "fromMatch": "mwc9tr26c636dq",
+              "fromLoser": false
+            },
+            "winner": "a",
+            "loser": "b",
+            "scoreA": 5,
+            "scoreB": 1,
+            "bracket": "gf",
+            "isGrandFinal": true,
+            "coinToss": {
+              "headsSide": "b",
+              "result": "heads",
+              "serveSide": "b",
+              "flippedAt": 1794410743773
+            },
+            "table": 1,
+            "timerStartAt": 1794410773773,
+            "games": [
+              {
+                "scoreA": 5,
+                "scoreB": 1
+              }
+            ],
+            "seriesA": 1,
+            "seriesB": 0,
+            "timerEndedAt": 1794410743803
+          },
+          "grandFinal2": {
+            "id": "mwc9tr260bvml5",
+            "a": {
+              "entity": null,
+              "fromMatch": null,
+              "fromLoser": false
+            },
+            "b": {
+              "entity": null,
+              "fromMatch": null,
+              "fromLoser": false
+            },
+            "winner": null,
+            "loser": null,
+            "scoreA": null,
+            "scoreB": null,
+            "bracket": "gf2",
+            "isGrandFinal": true,
+            "isReset": true,
+            "void": true
+          },
+          "bronze": null,
+          "placements": {
+            "first": {
+              "id": "team_p_0001_p_0002",
+              "name": "Hollis Stubbs + Orrin Fixturo",
+              "type": "team",
+              "playerIds": [
+                "p_0001",
+                "p_0002"
+              ],
+              "seed": 4
+            },
+            "second": {
+              "id": "team_p_0007_p_0008",
+              "name": "Kestra Fabrikant + Gid Placehold",
+              "type": "team",
+              "playerIds": [
+                "p_0007",
+                "p_0008"
+              ],
+              "seed": 3
+            },
+            "third": {
+              "id": "team_p_0003_p_0004",
+              "name": "Hollis Synthby + Cael Fakeham",
+              "type": "team",
+              "playerIds": [
+                "p_0003",
+                "p_0004"
+              ],
+              "seed": 2
+            }
+          },
+          "gfResetRequired": false,
+          "gfResetActive": false,
+          "seededBy": "club-ranking",
+          "bonusPoolLocked": {
+            "bonusPool": 156,
+            "fieldSize": 8,
+            "fieldPoints": 15635,
+            "shares": [
+              78,
+              47,
+              31
+            ],
+            "mode": "50-30-20",
+            "lockedAt": 1794410743614
+          }
+        },
+        "createdAt": 1791327600000,
+        "status": "finished",
+        "bonusPoolLocked": {
+          "fieldIds": [
+            "p_0005",
+            "p_0006",
+            "p_0001",
+            "p_0002",
+            "p_0003",
+            "p_0004",
+            "p_0007",
+            "p_0008"
+          ],
+          "fieldSize": 8,
+          "fieldPoints": 15635,
+          "bonusPool": 156,
+          "shares": [
+            78,
+            47,
+            31
+          ],
+          "fr": [
+            0.5,
+            0.3,
+            0.2
+          ],
+          "mode": "50-30-20",
+          "lockedAt": 1794410743614
+        },
+        "placements": {
+          "first": {
+            "id": "team_p_0001_p_0002",
+            "name": "Hollis Stubbs + Orrin Fixturo",
+            "type": "team",
+            "playerIds": [
+              "p_0001",
+              "p_0002"
+            ],
+            "seed": 4
+          },
+          "second": {
+            "id": "team_p_0007_p_0008",
+            "name": "Kestra Fabrikant + Gid Placehold",
+            "type": "team",
+            "playerIds": [
+              "p_0007",
+              "p_0008"
+            ],
+            "seed": 3
+          },
+          "third": {
+            "id": "team_p_0003_p_0004",
+            "name": "Hollis Synthby + Cael Fakeham",
+            "type": "team",
+            "playerIds": [
+              "p_0003",
+              "p_0004"
+            ],
+            "seed": 2
+          }
+        },
+        "rankingApplied": true,
+        "rankingAppliedAt": 1794410743804,
+        "rankingDeltas": {
+          "p_0001": 102,
+          "p_0002": 102,
+          "p_0007": 63,
+          "p_0008": 63,
+          "p_0003": 31,
+          "p_0004": 31,
+          "p_0005": 0,
+          "p_0006": 0
+        },
+        "rankingDeltaDetail": {
+          "p_0001": {
+            "place": 1,
+            "expected": 8,
+            "seedDelta": 24,
+            "bonus": 78,
+            "total": 102
+          },
+          "p_0002": {
+            "place": 1,
+            "expected": 8,
+            "seedDelta": 24,
+            "bonus": 78,
+            "total": 102
+          },
+          "p_0007": {
+            "place": 2,
+            "expected": 6,
+            "seedDelta": 16,
+            "bonus": 47,
+            "total": 63
+          },
+          "p_0008": {
+            "place": 2,
+            "expected": 6,
+            "seedDelta": 16,
+            "bonus": 47,
+            "total": 63
+          },
+          "p_0003": {
+            "place": 3,
+            "expected": 3,
+            "seedDelta": 0,
+            "bonus": 31,
+            "total": 31
+          },
+          "p_0004": {
+            "place": 3,
+            "expected": 3,
+            "seedDelta": 0,
+            "bonus": 31,
+            "total": 31
+          },
+          "p_0005": {
+            "place": 4,
+            "expected": 3,
+            "seedDelta": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "p_0006": {
+            "place": 4,
+            "expected": 3,
+            "seedDelta": 0,
+            "bonus": 0,
+            "total": 0
+          }
+        },
+        "rankingBonusShare": [
+          78,
+          47,
+          31
+        ],
+        "rankingBonusPool": 156
+      }
+    ]
+  }
+}

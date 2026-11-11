@@ -220,3 +220,44 @@ export function runMonsterNight(app, d, { players = 8, rounds = 3, tables = 2, s
   d.playBracketToCompletion(t);
   return { t, ids };
 }
+
+/**
+ * Fabricated club ranking points for 8 players (p_0001 … p_0008). Offsets from 1800
+ * are 5 × (2^k − 1), so every pair of players has a DIFFERENT sum: whatever teams are
+ * formed or drawn, "team strength" (sum of partner points) is never tied.
+ * Total 15,635 → bonus pool 1% = 156.
+ */
+export const TEAM_EVENT_POINTS = [1800, 1805, 1955, 2115, 2435, 1875, 1815, 1835];
+
+/**
+ * Convenience: a bracket-only TEAM event (no ranking rounds) of 4 teams with a scripted
+ * result. Doubles uses fixed teams (p1+p2, p3+p4, p5+p6, p7+p8); DYP / Monster draw their
+ * teams inside startBracketTournament(). `upset: true` → the team with the HIGHER seed
+ * number wins every match; `false` → the lower seed number wins every match ("chalk").
+ * Returns the event plus each team's bracket seed as stored on the bracket sides.
+ */
+export function runBracketOnlyTeamEvent(app, d, { type = 'doubles', format = 'double-elim', upset = true, name } = {}) {
+  const ids = d.addPlayers(TEAM_EVENT_POINTS.length);
+  ids.forEach((id, i) => { d.player(id).rankingPoints = TEAM_EVENT_POINTS[i]; });
+  app.call('saveState');
+  const t = d.createTournament({ type, format, name });
+  d.addToEvent(t, ids);
+  if (type === 'doubles') d.formTeams(t, ids);
+  d.startBracket(t);
+  const teamKey = (ent) => (ent?.playerIds || []).slice().sort().join('+');
+  const seedOf = new Map();
+  for (const m of d.bracketMatches(t)) {
+    for (const side of [m.a, m.b]) {
+      const seed = Number(side?.seed ?? side?.entity?.seed);
+      if (side?.entity && seed > 0) seedOf.set(teamKey(side.entity), seed);
+    }
+  }
+  d.playBracketToCompletion(t, {
+    pickWinner: (m) => {
+      const a = seedOf.get(teamKey(m.a.entity)); const b = seedOf.get(teamKey(m.b.entity));
+      if (!(a > 0) || !(b > 0)) throw new Error(`driver: no bracket seed for a side of match ${m.id}`);
+      return upset ? a > b : a < b;
+    },
+  });
+  return { t, ids, seedOf, teamKey };
+}

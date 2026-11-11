@@ -15,6 +15,7 @@ import { createDriver } from '../factories/driver.js';
 import { resetIds } from '../factories/players.js';
 import {
   checkPartnersSharePlace, checkNonPodiumFollowsStandings, checkBackupKeepsStoredDeltas, checkLateJoinersDoNotSit,
+  TEAM_SEED_CASES, checkBracketOnlyTeamRanking, checkHistoricalEventRecalculates,
 } from '../regression/checks.js';
 import { bronzeLoserScenario } from '../discrepancies/defs.js';
 import { runMonsterNight } from '../factories/driver.js';
@@ -30,6 +31,10 @@ const MUTATIONS = {
   preferRookiesToSit: [['const pool = veterans.length ? veterans : rookies;', 'const pool = rookies.length ? rookies : veterans;']],
   wipeDeltasOnBackupLoad: [['      state.currentTournamentId = null;\n      // Preserve rankingDeltas',
     '      state.currentTournamentId = null;\n      state.tournaments.forEach(t => { if (t) { t.rankingApplied = false; delete t.rankingDeltas; delete t.rankingDeltaDetail; } });\n      // Preserve rankingDeltas']],
+  // v7.28 behavior: no team seeds are read from the bracket, so a bracket-only team's expected
+  // finish falls back to the average of the partners' individual club-rank positions.
+  noBracketSeedBackfill: [['      // Backfill seeds from bracket sides when playoffTeams missing/incomplete (old imports)\n      try {\n        if (t.playoffs) {',
+    '      // MUTATION: seed backfill disabled\n      try {\n        if (false) {']],
 };
 
 const opened = [];
@@ -91,6 +96,19 @@ describe('mutation probes: each regression check catches a reintroduced bug', ()
   it('stored deltas on backup load: wipe-and-recalculate is caught', async () => {
     const { app, d, boot } = await mutatedApp('wipeDeltasOnBackupLoad');
     expectCaught(await failureOf(() => checkBackupKeepsStoredDeltas(app, d, boot)));
+  });
+
+  for (const c of TEAM_SEED_CASES) {
+    it(`bracket-only team ranking (${c.type} ${c.format}, ${c.upset ? 'upset' : 'chalk'}): removing the bracket-seed backfill is caught`, async () => {
+      const { app, d } = await mutatedApp('noBracketSeedBackfill');
+      expectCaught(await failureOf(() => checkBracketOnlyTeamRanking(app, d, c)));
+    });
+  }
+
+  it('historical recalculation: removing the bracket-seed backfill is caught', async () => {
+    const html = mutateHtml(MUTATIONS.noBracketSeedBackfill);
+    const boot = async (opts) => { const a = await loadApp({ ...opts, html }); opened.push(a); return a; };
+    expectCaught(await failureOf(() => checkHistoricalEventRecalculates(boot)));
   });
 
   it('loss-key direction: only the single-elim bronze case (DISC-16) distinguishes it', async () => {

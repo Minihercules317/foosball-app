@@ -169,7 +169,9 @@ behavior.
   - Operator devices and `?local=1` skip the snapshot.
   - A 404, 500, network error or invalid snapshot keeps local data.
   - A storage event from another tab refreshes the view.
-- Display names (player and tournament) render as text in the 14 views exercised: home,
+- Display names (player and tournament) render as text in the 14 views exercised: home
+  (a finished event's card both collapsed — title and podium, the v7.37 default — and
+  expanded — recap, podium, "Open event"; only the names those parts show are expected),
   players list, player profile, stats (week, career, ranking, Club DNA, awards), event tabs
   (players, matches, standings, bracket) and TV board. Each view is checked to have actually
   rendered the names; other views are not covered.

@@ -1,0 +1,834 @@
+{
+ "discrepancy": "DISC-15",
+ "source": "test/fixtures/scenarios/DISC-15-seed-4000099.json",
+ "provenance": {
+  "appVersion": "7.37",
+  "indexHtml": "index.html at 3cff231 (byte-identical to upstream 72ce308)",
+  "how": "Replayed the source scenario (rounds 1-9 only, same seed) against v7.37 with replayNight(); data = the saved device state after round 9. Round-10 players and v7.37 choice from the full 10-round replay. Fabricated players (test/factories/players.js).",
+  "generated": "2026-11-12"
+ },
+ "tournamentId": "mwe3f1mlwwp3tv",
+ "round10": {
+  "players": [
+   "p_0007",
+   "p_0005",
+   "p_0001",
+   "p_0002"
+  ],
+  "v737Teams": [
+   [
+    "p_0007",
+    "p_0005"
+   ],
+   [
+    "p_0001",
+    "p_0002"
+   ]
+  ],
+  "v737Repeats": 2,
+  "optimum": 1
+ },
+ "data": {
+  "players": [
+   {
+    "id": "p_0001",
+    "name": "Quin Placehold",
+    "skill": 5,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0002",
+    "name": "Ivo Fixturo",
+    "skill": 6,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0003",
+    "name": "Xandr Synthby",
+    "skill": 2,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0004",
+    "name": "Zeb Dummond",
+    "skill": 1,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0005",
+    "name": "Brin Synthby",
+    "skill": 2,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0006",
+    "name": "Xandr Stubbs",
+    "skill": 1,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0007",
+    "name": "Sela Seedwell",
+    "skill": 2,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   }
+  ],
+  "tournaments": [
+   {
+    "id": "mwe3f1mlwwp3tv",
+    "name": "Synthetic Night",
+    "type": "monster",
+    "format": "swiss",
+    "raceTo": 5,
+    "bestOf": 1,
+    "tables": 2,
+    "drawStyle": "random",
+    "monsterPositions": false,
+    "colorBand": "spec-ec-monster",
+    "sandbox": false,
+    "playerIds": [
+     "p_0005",
+     "p_0002",
+     "p_0001",
+     "p_0007",
+     "p_0006",
+     "p_0003",
+     "p_0004"
+    ],
+    "absentIds": [],
+    "teams": [
+     {
+      "id": "mwe3f22am8kwty",
+      "playerIds": [
+       "p_0006",
+       "p_0004"
+      ],
+      "name": "Xandr Stubbs + Zeb Dummond",
+      "positions": null
+     },
+     {
+      "id": "mwe3f22ao656wi",
+      "playerIds": [
+       "p_0003",
+       "p_0005"
+      ],
+      "name": "Xandr Synthby + Brin Synthby",
+      "positions": null
+     }
+    ],
+    "rounds": [
+     {
+      "number": 1,
+      "matches": [
+       {
+        "id": "mwe3f1o3sh40os",
+        "entityA": {
+         "id": "mwe3f1nu6x7l76",
+         "name": "Ivo Fixturo + Sela Seedwell",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0007"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1nu1x0ov4",
+         "name": "Quin Placehold + Xandr Stubbs",
+         "type": "team",
+         "playerIds": [
+          "p_0001",
+          "p_0006"
+         ],
+         "positions": null
+        },
+        "scoreA": 0,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "tails",
+         "serveSide": "a",
+         "flippedAt": 1794520912179
+        },
+        "timerStartAt": 1794520942179,
+        "games": [
+         {
+          "scoreA": 0,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520912196
+       }
+      ],
+      "sitOutIds": [
+       "p_0003",
+       "p_0004",
+       "p_0005"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1nu6x7l76",
+        "playerIds": [
+         "p_0002",
+         "p_0007"
+        ],
+        "name": "Ivo Fixturo + Sela Seedwell",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1nu1x0ov4",
+        "playerIds": [
+         "p_0001",
+         "p_0006"
+        ],
+        "name": "Quin Placehold + Xandr Stubbs",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 2,
+      "matches": [
+       {
+        "id": "mwe3f1pfwdj311",
+        "entityA": {
+         "id": "mwe3f1pa1lsd8u",
+         "name": "Brin Synthby + Xandr Stubbs",
+         "type": "team",
+         "playerIds": [
+          "p_0005",
+          "p_0006"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1pahbee9s",
+         "name": "Xandr Synthby + Zeb Dummond",
+         "type": "team",
+         "playerIds": [
+          "p_0003",
+          "p_0004"
+         ],
+         "positions": null
+        },
+        "scoreA": 3,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "tails",
+         "serveSide": "b",
+         "flippedAt": 1794520912227
+        },
+        "timerStartAt": 1794520942227,
+        "games": [
+         {
+          "scoreA": 3,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520912246
+       }
+      ],
+      "sitOutIds": [
+       "p_0002",
+       "p_0001",
+       "p_0007"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1pahbee9s",
+        "playerIds": [
+         "p_0003",
+         "p_0004"
+        ],
+        "name": "Xandr Synthby + Zeb Dummond",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1pa1lsd8u",
+        "playerIds": [
+         "p_0005",
+         "p_0006"
+        ],
+        "name": "Brin Synthby + Xandr Stubbs",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 3,
+      "matches": [
+       {
+        "id": "mwe3f1qtgrc4uy",
+        "entityA": {
+         "id": "mwe3f1qoggi6j8",
+         "name": "Sela Seedwell + Brin Synthby",
+         "type": "team",
+         "playerIds": [
+          "p_0007",
+          "p_0005"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1qoihymiz",
+         "name": "Ivo Fixturo + Quin Placehold",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0001"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 1,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "tails",
+         "serveSide": "b",
+         "flippedAt": 1794520912277
+        },
+        "timerStartAt": 1794520942277,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 1
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520912298
+       }
+      ],
+      "sitOutIds": [
+       "p_0006",
+       "p_0003",
+       "p_0004"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1qoggi6j8",
+        "playerIds": [
+         "p_0007",
+         "p_0005"
+        ],
+        "name": "Sela Seedwell + Brin Synthby",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1qoihymiz",
+        "playerIds": [
+         "p_0002",
+         "p_0001"
+        ],
+        "name": "Ivo Fixturo + Quin Placehold",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 4,
+      "matches": [
+       {
+        "id": "mwe3f1se8b0kb4",
+        "entityA": {
+         "id": "mwe3f1s80qsnq1",
+         "name": "Xandr Synthby + Sela Seedwell",
+         "type": "team",
+         "playerIds": [
+          "p_0003",
+          "p_0007"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1s8cbu5an",
+         "name": "Zeb Dummond + Xandr Stubbs",
+         "type": "team",
+         "playerIds": [
+          "p_0004",
+          "p_0006"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 1,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "heads",
+         "serveSide": "b",
+         "flippedAt": 1794520912334
+        },
+        "timerStartAt": 1794520942334,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 1
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520912358
+       }
+      ],
+      "sitOutIds": [
+       "p_0005",
+       "p_0002",
+       "p_0001"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1s8cbu5an",
+        "playerIds": [
+         "p_0004",
+         "p_0006"
+        ],
+        "name": "Zeb Dummond + Xandr Stubbs",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1s80qsnq1",
+        "playerIds": [
+         "p_0003",
+         "p_0007"
+        ],
+        "name": "Xandr Synthby + Sela Seedwell",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 5,
+      "matches": [
+       {
+        "id": "mwe3f1u3y8etc3",
+        "entityA": {
+         "id": "mwe3f1tw26nu3l",
+         "name": "Ivo Fixturo + Zeb Dummond",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0004"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1tw7ca40l",
+         "name": "Quin Placehold + Brin Synthby",
+         "type": "team",
+         "playerIds": [
+          "p_0001",
+          "p_0005"
+         ],
+         "positions": null
+        },
+        "scoreA": 0,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "tails",
+         "serveSide": "a",
+         "flippedAt": 1794520912395
+        },
+        "timerStartAt": 1794520942395,
+        "games": [
+         {
+          "scoreA": 0,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520912420
+       }
+      ],
+      "sitOutIds": [
+       "p_0007",
+       "p_0006",
+       "p_0003"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1tw26nu3l",
+        "playerIds": [
+         "p_0002",
+         "p_0004"
+        ],
+        "name": "Ivo Fixturo + Zeb Dummond",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1tw7ca40l",
+        "playerIds": [
+         "p_0001",
+         "p_0005"
+        ],
+        "name": "Quin Placehold + Brin Synthby",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 6,
+      "matches": [
+       {
+        "id": "mwe3f1w07v6ni1",
+        "entityA": {
+         "id": "mwe3f1vs2640ic",
+         "name": "Quin Placehold + Sela Seedwell",
+         "type": "team",
+         "playerIds": [
+          "p_0001",
+          "p_0007"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1vs4ankj0",
+         "name": "Xandr Stubbs + Xandr Synthby",
+         "type": "team",
+         "playerIds": [
+          "p_0006",
+          "p_0003"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 2,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "heads",
+         "serveSide": "b",
+         "flippedAt": 1794520912464
+        },
+        "timerStartAt": 1794520942464,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 2
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520912490
+       }
+      ],
+      "sitOutIds": [
+       "p_0004",
+       "p_0005",
+       "p_0002"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1vs4ankj0",
+        "playerIds": [
+         "p_0006",
+         "p_0003"
+        ],
+        "name": "Xandr Stubbs + Xandr Synthby",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1vs2640ic",
+        "playerIds": [
+         "p_0001",
+         "p_0007"
+        ],
+        "name": "Quin Placehold + Sela Seedwell",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 7,
+      "matches": [
+       {
+        "id": "mwe3f1xy3dgpzx",
+        "entityA": {
+         "id": "mwe3f1xs0utytd",
+         "name": "Zeb Dummond + Brin Synthby",
+         "type": "team",
+         "playerIds": [
+          "p_0004",
+          "p_0005"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1xseb5auq",
+         "name": "Ivo Fixturo + Xandr Synthby",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0003"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 4,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "heads",
+         "serveSide": "b",
+         "flippedAt": 1794520912534
+        },
+        "timerStartAt": 1794520942534,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 4
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520912563
+       }
+      ],
+      "sitOutIds": [
+       "p_0001",
+       "p_0007",
+       "p_0006"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1xs0utytd",
+        "playerIds": [
+         "p_0004",
+         "p_0005"
+        ],
+        "name": "Zeb Dummond + Brin Synthby",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1xseb5auq",
+        "playerIds": [
+         "p_0002",
+         "p_0003"
+        ],
+        "name": "Ivo Fixturo + Xandr Synthby",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 8,
+      "matches": [
+       {
+        "id": "mwe3f2072vuswe",
+        "entityA": {
+         "id": "mwe3f1zyigovly",
+         "name": "Quin Placehold + Sela Seedwell",
+         "type": "team",
+         "playerIds": [
+          "p_0001",
+          "p_0007"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f1zyu2t9js",
+         "name": "Ivo Fixturo + Xandr Stubbs",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0006"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 4,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "heads",
+         "serveSide": "b",
+         "flippedAt": 1794520912615
+        },
+        "timerStartAt": 1794520942615,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 4
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520912642
+       }
+      ],
+      "sitOutIds": [
+       "p_0003",
+       "p_0004",
+       "p_0005"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f1zyigovly",
+        "playerIds": [
+         "p_0001",
+         "p_0007"
+        ],
+        "name": "Quin Placehold + Sela Seedwell",
+        "positions": null
+       },
+       {
+        "id": "mwe3f1zyu2t9js",
+        "playerIds": [
+         "p_0002",
+         "p_0006"
+        ],
+        "name": "Ivo Fixturo + Xandr Stubbs",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 9,
+      "matches": [
+       {
+        "id": "mwe3f22ipb9853",
+        "entityA": {
+         "id": "mwe3f22am8kwty",
+         "name": "Xandr Stubbs + Zeb Dummond",
+         "type": "team",
+         "playerIds": [
+          "p_0006",
+          "p_0004"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f22ao656wi",
+         "name": "Xandr Synthby + Brin Synthby",
+         "type": "team",
+         "playerIds": [
+          "p_0003",
+          "p_0005"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 0,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "tails",
+         "serveSide": "a",
+         "flippedAt": 1794520912698
+        },
+        "timerStartAt": 1794520942698,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 0
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520912731
+       }
+      ],
+      "sitOutIds": [
+       "p_0002",
+       "p_0001",
+       "p_0007"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f22am8kwty",
+        "playerIds": [
+         "p_0006",
+         "p_0004"
+        ],
+        "name": "Xandr Stubbs + Zeb Dummond",
+        "positions": null
+       },
+       {
+        "id": "mwe3f22ao656wi",
+        "playerIds": [
+         "p_0003",
+         "p_0005"
+        ],
+        "name": "Xandr Synthby + Brin Synthby",
+        "positions": null
+       }
+      ]
+     }
+    ],
+    "currentRound": 9,
+    "playoffs": null,
+    "createdAt": 1794520912125,
+    "status": "active",
+    "sitOutQueue": [
+     "p_0006",
+     "p_0003",
+     "p_0004",
+     "p_0005",
+     "p_0002",
+     "p_0001",
+     "p_0007"
+    ],
+    "currentSitOutIds": []
+   }
+  ]
+ }
+}

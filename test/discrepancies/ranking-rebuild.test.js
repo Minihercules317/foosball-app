@@ -22,6 +22,14 @@
  * fails as UNEXPECTED — either way the change is surfaced, not silently absorbed.
  *
  * This is NOT about the 2,000 starting value itself (owner-confirmed and intended).
+ *
+ * v7.42 status (2026-11-12): UNEXPECTED FAILURE at the rule-6 setup assertion, as anticipated
+ * above. confirmDeleteTournament now runs rebuildPlayerRankingPointsFromEventDeltas() itself, so
+ * the deleted night's players drop back to 2,000 + their remaining deltas on deletion. The
+ * mechanism this check documents is UNCHANGED in v7.42 (submitBracketScore still treats an
+ * ordinary finish as a correction and rebuilds every player from retained deltas), but deletion
+ * no longer leaves the data state the scenario relies on. The test is left as is, red, pending
+ * the owner's decision on rule 6 (docs/AUDIT.md, DISC-09/DISC-17).
  */
 import { describe, expect } from 'vitest';
 import { useApp } from '../harness/useApp.js';

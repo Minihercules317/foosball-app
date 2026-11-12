@@ -1,0 +1,834 @@
+{
+ "discrepancy": "DISC-15",
+ "source": "test/fixtures/scenarios/DISC-15-seed-6000155.json",
+ "provenance": {
+  "appVersion": "7.37",
+  "indexHtml": "index.html at 3cff231 (byte-identical to upstream 72ce308)",
+  "how": "Replayed the source scenario (rounds 1-9 only, same seed) against v7.37 with replayNight(); data = the saved device state after round 9. Round-10 players and v7.37 choice from the full 10-round replay. Fabricated players (test/factories/players.js).",
+  "generated": "2026-11-12"
+ },
+ "tournamentId": "mwe3f2tv7woltq",
+ "round10": {
+  "players": [
+   "p_0007",
+   "p_0006",
+   "p_0005",
+   "p_0001"
+  ],
+  "v737Teams": [
+   [
+    "p_0007",
+    "p_0006"
+   ],
+   [
+    "p_0005",
+    "p_0001"
+   ]
+  ],
+  "v737Repeats": 2,
+  "optimum": 1
+ },
+ "data": {
+  "players": [
+   {
+    "id": "p_0001",
+    "name": "Rook Fabrikant",
+    "skill": 3,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0002",
+    "name": "Nyx Testwood",
+    "skill": 6,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0003",
+    "name": "Yara Fabrikant",
+    "skill": 5,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0004",
+    "name": "Lio Mockley",
+    "skill": 6,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0005",
+    "name": "Juno Fabrikant",
+    "skill": 1,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0006",
+    "name": "Ivo Fakeham",
+    "skill": 6,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   },
+   {
+    "id": "p_0007",
+    "name": "Lio Stubbs",
+    "skill": 6,
+    "rankingPoints": 2000,
+    "rankingDelta": 0,
+    "region": "",
+    "homeState": ""
+   }
+  ],
+  "tournaments": [
+   {
+    "id": "mwe3f2tv7woltq",
+    "name": "Synthetic Night",
+    "type": "monster",
+    "format": "swiss",
+    "raceTo": 5,
+    "bestOf": 1,
+    "tables": 2,
+    "drawStyle": "random",
+    "monsterPositions": false,
+    "colorBand": "spec-ec-monster",
+    "sandbox": false,
+    "playerIds": [
+     "p_0006",
+     "p_0005",
+     "p_0004",
+     "p_0007",
+     "p_0002",
+     "p_0001",
+     "p_0003"
+    ],
+    "absentIds": [],
+    "teams": [
+     {
+      "id": "mwe3f392s5d39o",
+      "playerIds": [
+       "p_0002",
+       "p_0004"
+      ],
+      "name": "Nyx Testwood + Lio Mockley",
+      "positions": null
+     },
+     {
+      "id": "mwe3f39263c441",
+      "playerIds": [
+       "p_0001",
+       "p_0003"
+      ],
+      "name": "Rook Fabrikant + Yara Fabrikant",
+      "positions": null
+     }
+    ],
+    "rounds": [
+     {
+      "number": 1,
+      "matches": [
+       {
+        "id": "mwe3f2utif4l1c",
+        "entityA": {
+         "id": "mwe3f2uo04tk9h",
+         "name": "Nyx Testwood + Juno Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0005"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f2uolt2fy6",
+         "name": "Ivo Fakeham + Lio Stubbs",
+         "type": "team",
+         "playerIds": [
+          "p_0006",
+          "p_0007"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 1,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "tails",
+         "serveSide": "a",
+         "flippedAt": 1794520913717
+        },
+        "timerStartAt": 1794520943717,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 1
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520913734
+       }
+      ],
+      "sitOutIds": [
+       "p_0003",
+       "p_0004",
+       "p_0001"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f2uo04tk9h",
+        "playerIds": [
+         "p_0002",
+         "p_0005"
+        ],
+        "name": "Nyx Testwood + Juno Fabrikant",
+        "positions": null
+       },
+       {
+        "id": "mwe3f2uolt2fy6",
+        "playerIds": [
+         "p_0006",
+         "p_0007"
+        ],
+        "name": "Ivo Fakeham + Lio Stubbs",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 2,
+      "matches": [
+       {
+        "id": "mwe3f2w2j2pcge",
+        "entityA": {
+         "id": "mwe3f2vxb19dk0",
+         "name": "Nyx Testwood + Rook Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0001"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f2vxm7e7yi",
+         "name": "Yara Fabrikant + Lio Mockley",
+         "type": "team",
+         "playerIds": [
+          "p_0003",
+          "p_0004"
+         ],
+         "positions": null
+        },
+        "scoreA": 3,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "heads",
+         "serveSide": "a",
+         "flippedAt": 1794520913762
+        },
+        "timerStartAt": 1794520943762,
+        "games": [
+         {
+          "scoreA": 3,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520913781
+       }
+      ],
+      "sitOutIds": [
+       "p_0006",
+       "p_0005",
+       "p_0007"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f2vxm7e7yi",
+        "playerIds": [
+         "p_0003",
+         "p_0004"
+        ],
+        "name": "Yara Fabrikant + Lio Mockley",
+        "positions": null
+       },
+       {
+        "id": "mwe3f2vxb19dk0",
+        "playerIds": [
+         "p_0002",
+         "p_0001"
+        ],
+        "name": "Nyx Testwood + Rook Fabrikant",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 3,
+      "matches": [
+       {
+        "id": "mwe3f2xfn5al7j",
+        "entityA": {
+         "id": "mwe3f2xayvxg9g",
+         "name": "Lio Stubbs + Rook Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0007",
+          "p_0001"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f2xa0vezc8",
+         "name": "Ivo Fakeham + Juno Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0006",
+          "p_0005"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 0,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "tails",
+         "serveSide": "b",
+         "flippedAt": 1794520913811
+        },
+        "timerStartAt": 1794520943811,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 0
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520913833
+       }
+      ],
+      "sitOutIds": [
+       "p_0002",
+       "p_0003",
+       "p_0004"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f2xa0vezc8",
+        "playerIds": [
+         "p_0006",
+         "p_0005"
+        ],
+        "name": "Ivo Fakeham + Juno Fabrikant",
+        "positions": null
+       },
+       {
+        "id": "mwe3f2xayvxg9g",
+        "playerIds": [
+         "p_0007",
+         "p_0001"
+        ],
+        "name": "Lio Stubbs + Rook Fabrikant",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 4,
+      "matches": [
+       {
+        "id": "mwe3f2yzkqkc60",
+        "entityA": {
+         "id": "mwe3f2ytubhp1m",
+         "name": "Lio Mockley + Nyx Testwood",
+         "type": "team",
+         "playerIds": [
+          "p_0004",
+          "p_0002"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f2yt29m259",
+         "name": "Yara Fabrikant + Lio Stubbs",
+         "type": "team",
+         "playerIds": [
+          "p_0003",
+          "p_0007"
+         ],
+         "positions": null
+        },
+        "scoreA": 2,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "heads",
+         "serveSide": "a",
+         "flippedAt": 1794520913867
+        },
+        "timerStartAt": 1794520943867,
+        "games": [
+         {
+          "scoreA": 2,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520913895
+       }
+      ],
+      "sitOutIds": [
+       "p_0001",
+       "p_0006",
+       "p_0005"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f2yt29m259",
+        "playerIds": [
+         "p_0003",
+         "p_0007"
+        ],
+        "name": "Yara Fabrikant + Lio Stubbs",
+        "positions": null
+       },
+       {
+        "id": "mwe3f2ytubhp1m",
+        "playerIds": [
+         "p_0004",
+         "p_0002"
+        ],
+        "name": "Lio Mockley + Nyx Testwood",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 5,
+      "matches": [
+       {
+        "id": "mwe3f30vegfp6v",
+        "entityA": {
+         "id": "mwe3f30q73l9k6",
+         "name": "Ivo Fakeham + Lio Mockley",
+         "type": "team",
+         "playerIds": [
+          "p_0006",
+          "p_0004"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f30q439jam",
+         "name": "Juno Fabrikant + Rook Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0005",
+          "p_0001"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 0,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "tails",
+         "serveSide": "b",
+         "flippedAt": 1794520913935
+        },
+        "timerStartAt": 1794520943935,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 0
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520913962
+       }
+      ],
+      "sitOutIds": [
+       "p_0007",
+       "p_0002",
+       "p_0003"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f30q439jam",
+        "playerIds": [
+         "p_0005",
+         "p_0001"
+        ],
+        "name": "Juno Fabrikant + Rook Fabrikant",
+        "positions": null
+       },
+       {
+        "id": "mwe3f30q73l9k6",
+        "playerIds": [
+         "p_0006",
+         "p_0004"
+        ],
+        "name": "Ivo Fakeham + Lio Mockley",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 6,
+      "matches": [
+       {
+        "id": "mwe3f32rxqqzcc",
+        "entityA": {
+         "id": "mwe3f32mhqmlxz",
+         "name": "Yara Fabrikant + Nyx Testwood",
+         "type": "team",
+         "playerIds": [
+          "p_0003",
+          "p_0002"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f32m7x6ron",
+         "name": "Lio Stubbs + Juno Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0007",
+          "p_0005"
+         ],
+         "positions": null
+        },
+        "scoreA": 1,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "tails",
+         "serveSide": "b",
+         "flippedAt": 1794520914003
+        },
+        "timerStartAt": 1794520944003,
+        "games": [
+         {
+          "scoreA": 1,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520914030
+       }
+      ],
+      "sitOutIds": [
+       "p_0004",
+       "p_0001",
+       "p_0006"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f32mhqmlxz",
+        "playerIds": [
+         "p_0003",
+         "p_0002"
+        ],
+        "name": "Yara Fabrikant + Nyx Testwood",
+        "positions": null
+       },
+       {
+        "id": "mwe3f32m7x6ron",
+        "playerIds": [
+         "p_0007",
+         "p_0005"
+        ],
+        "name": "Lio Stubbs + Juno Fabrikant",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 7,
+      "matches": [
+       {
+        "id": "mwe3f34s0vrkkb",
+        "entityA": {
+         "id": "mwe3f34jidjndm",
+         "name": "Lio Mockley + Rook Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0004",
+          "p_0001"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f34jdwgtyq",
+         "name": "Ivo Fakeham + Yara Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0006",
+          "p_0003"
+         ],
+         "positions": null
+        },
+        "scoreA": 5,
+        "scoreB": 4,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "tails",
+         "serveSide": "a",
+         "flippedAt": 1794520914076
+        },
+        "timerStartAt": 1794520944076,
+        "games": [
+         {
+          "scoreA": 5,
+          "scoreB": 4
+         }
+        ],
+        "seriesA": 1,
+        "seriesB": 0,
+        "winner": "a",
+        "loser": "b",
+        "timerEndedAt": 1794520914106
+       }
+      ],
+      "sitOutIds": [
+       "p_0005",
+       "p_0007",
+       "p_0002"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f34jidjndm",
+        "playerIds": [
+         "p_0004",
+         "p_0001"
+        ],
+        "name": "Lio Mockley + Rook Fabrikant",
+        "positions": null
+       },
+       {
+        "id": "mwe3f34jdwgtyq",
+        "playerIds": [
+         "p_0006",
+         "p_0003"
+        ],
+        "name": "Ivo Fakeham + Yara Fabrikant",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 8,
+      "matches": [
+       {
+        "id": "mwe3f37241spjw",
+        "entityA": {
+         "id": "mwe3f36t2yyl6u",
+         "name": "Ivo Fakeham + Nyx Testwood",
+         "type": "team",
+         "playerIds": [
+          "p_0006",
+          "p_0002"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f36twahyoz",
+         "name": "Juno Fabrikant + Lio Stubbs",
+         "type": "team",
+         "playerIds": [
+          "p_0005",
+          "p_0007"
+         ],
+         "positions": null
+        },
+        "scoreA": 1,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "b",
+         "result": "heads",
+         "serveSide": "b",
+         "flippedAt": 1794520914158
+        },
+        "timerStartAt": 1794520944158,
+        "games": [
+         {
+          "scoreA": 1,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520914186
+       }
+      ],
+      "sitOutIds": [
+       "p_0003",
+       "p_0004",
+       "p_0001"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f36twahyoz",
+        "playerIds": [
+         "p_0005",
+         "p_0007"
+        ],
+        "name": "Juno Fabrikant + Lio Stubbs",
+        "positions": null
+       },
+       {
+        "id": "mwe3f36t2yyl6u",
+        "playerIds": [
+         "p_0006",
+         "p_0002"
+        ],
+        "name": "Ivo Fakeham + Nyx Testwood",
+        "positions": null
+       }
+      ]
+     },
+     {
+      "number": 9,
+      "matches": [
+       {
+        "id": "mwe3f399cd5l7o",
+        "entityA": {
+         "id": "mwe3f392s5d39o",
+         "name": "Nyx Testwood + Lio Mockley",
+         "type": "team",
+         "playerIds": [
+          "p_0002",
+          "p_0004"
+         ],
+         "positions": null
+        },
+        "entityB": {
+         "id": "mwe3f39263c441",
+         "name": "Rook Fabrikant + Yara Fabrikant",
+         "type": "team",
+         "playerIds": [
+          "p_0001",
+          "p_0003"
+         ],
+         "positions": null
+        },
+        "scoreA": 0,
+        "scoreB": 5,
+        "table": 1,
+        "status": "done",
+        "coinToss": {
+         "headsSide": "a",
+         "result": "heads",
+         "serveSide": "a",
+         "flippedAt": 1794520914237
+        },
+        "timerStartAt": 1794520944237,
+        "games": [
+         {
+          "scoreA": 0,
+          "scoreB": 5
+         }
+        ],
+        "seriesA": 0,
+        "seriesB": 1,
+        "winner": "b",
+        "loser": "a",
+        "timerEndedAt": 1794520914269
+       }
+      ],
+      "sitOutIds": [
+       "p_0006",
+       "p_0005",
+       "p_0007"
+      ],
+      "teams": [
+       {
+        "id": "mwe3f392s5d39o",
+        "playerIds": [
+         "p_0002",
+         "p_0004"
+        ],
+        "name": "Nyx Testwood + Lio Mockley",
+        "positions": null
+       },
+       {
+        "id": "mwe3f39263c441",
+        "playerIds": [
+         "p_0001",
+         "p_0003"
+        ],
+        "name": "Rook Fabrikant + Yara Fabrikant",
+        "positions": null
+       }
+      ]
+     }
+    ],
+    "currentRound": 9,
+    "playoffs": null,
+    "createdAt": 1794520913683,
+    "status": "active",
+    "sitOutQueue": [
+     "p_0002",
+     "p_0003",
+     "p_0004",
+     "p_0001",
+     "p_0006",
+     "p_0005",
+     "p_0007"
+    ],
+    "currentSitOutIds": []
+   }
+  ]
+ }
+}

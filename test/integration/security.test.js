@@ -1,7 +1,8 @@
 /**
  * Display-name escaping: player / tournament names come from operator input,
  * imported files and data/latest.json. They must render as text in the views
- * exercised here. (Ids are a separate, known gap — see test/discrepancies DISC-10.)
+ * exercised here. (Ids are separate: the DISC-10 markup scenario is a v7.42 regression test;
+ * ids inside inline-handler JavaScript strings are still open — docs/AUDIT.md A3.)
  *
  * Every view is opened through the app's own navigation with its REAL id
  * (stats tabs: index.html setStatsTab's list; tournament tabs: the .tab-btn
@@ -120,6 +121,12 @@ function checkHomeCard(app, d, t, { expanded }) {
   for (const n of recapNames) expect(recap.textContent, `${where}: recap shows ${JSON.stringify(n)} as text`).toContain(n);
 }
 
+/** Names Club DNA highlights, per the app's own computeClubDNA() (trimmed, like playerNames). */
+function clubDnaNames(app) {
+  const dna = app.call('computeClubDNA');
+  return [...new Set(['mostTitles', 'mostPodiums', 'rankHigh', 'rankLow'].map((k) => dna?.[k]?.name).filter(Boolean).map((n) => n.trim()))];
+}
+
 /** The views covered, with the panel that must be visible and text that must appear in it. */
 function securityViews(app, d, t, ids) {
   const doc = app.window.document;
@@ -148,7 +155,21 @@ function securityViews(app, d, t, ids) {
     statsTab('week'),
     statsTab('career'),
     statsTab('ranking'),
-    statsTab('club-dna', [ADVERSARIAL_NAMES[3]]), // Club DNA shows only a few highlighted players
+    // Club DNA shows only a few highlighted players (most titles / most podiums / highest and
+    // lowest ranked). WHICH players depends on the night's results — v7.42's new Monster draw
+    // changed them, so a hard-coded name went stale — so, as Home does with the recap, the
+    // names come from the app's own computeClubDNA(): every highlighted name must be shown as text.
+    // (In this night none of them is HTML-shaped, so for this tab escaping rests on the global
+    // injection check below, as it did on v7.37, where the required name was the Unicode one.)
+    { ...statsTab('club-dna', clubDnaNames(app)),
+      check: () => {
+        const names = clubDnaNames(app);
+        expect(names.length, 'stats tab "club-dna": highlights at least one player (non-vacuous)').toBeGreaterThan(0);
+        const field = new Set(ids.map((id) => d.player(id).name.trim()));
+        for (const n of names) expect(field.has(n), `stats tab "club-dna": ${JSON.stringify(n)} is a player of the adversarial night`).toBe(true);
+        expect(names.some((n) => ADVERSARIAL_NAMES.map((a) => a.trim()).includes(n) || n === BOLD),
+          'stats tab "club-dna": an adversarial name is highlighted (non-vacuous)').toBe(true);
+      } },
     statsTab('awards', [EVENT_NAME, ...playerNames]),
     ...['players', 'matches', 'standings', 'bracket'].map((tab) => ({
       label: `event tab "${tab}"`, panel: `tab-${tab}`, mustShow: playerNames,

@@ -101,8 +101,11 @@ See [AUDIT.md](AUDIT.md), section A. The most important ones for club nights:
   duplicates, "Edit score" wiping Bo3 results, same-winner fixes, ranking after corrections,
   unsaved imports) were resolved in v7.34 and are now regression tests (AUDIT.md section A2).
 - Finishing any bracket rebuilds every player's club points from stored event deltas, so points
-  not backed by a retained delta (e.g. from a deleted event) disappear (DISC-17, owner-accepted
-  for now).
+  not backed by a retained delta disappear (DISC-17, owner-accepted for now).
+- **v7.42 (open, AUDIT.md A3):** (Q1) deleting a ranked event now removes its points at once,
+  which contradicts owner rule 6 (DISC-09 / DISC-17 red on purpose). (Q2) In bracket-only
+  Doubles/DYP/Monster events, expected finish no longer follows the bracket seed (4 team-seed
+  regression tests red). Do not "fix" these tests; wait for the owner.
 - Turning Operator mode off and reloading replaces local data with the club file (R-01).
 - In a single-elimination event with a bronze match, the bronze-match loser is ranked last of
   the non-podium players, behind the quarter-final losers (DISC-16, a rules question).

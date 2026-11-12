@@ -52,11 +52,14 @@ test/
     historical/*.json          fabricated event really played by an OLDER app version (stored old
                                ranking deltas); `npm run fixtures -- --historical <v7.28 index.html>`
     scenarios/*.json           saved, replayable scenarios (DISC-01 v7.34 counterexample, DISC-15 seeds;
-                               DISC-01-resolved-v734.json = the v7.28 counterexample, now a regression test)
+                               DISC-01-resolved-v734.json = the v7.28 counterexample, now a regression test;
+                               DISC-15-seed-*-round10-history-v737.json = the exact v7.37 state before each
+                               DISC-15 round 10, used by the v7.42 regression tests)
   unit/ properties/ integration/ regression/ discrepancies/   (as labelled below)
   properties/defs/    property definitions (non-test modules, so replay can import them)
   regression/checks.js  regression check bodies, shared with the mutation probes
   regression/resolved-discrepancies.test.js  former discrepancy checks resolved in v7.34
+  regression/resolved-discrepancies-v742.test.js  … resolved in v7.42 (DISC-07, -08, -10, -15 pinned)
   selftest/           tests OF THE TEST INFRASTRUCTURE (classifier, replay, isolation, mutations, stress)
   selftest/probes/    deliberately failing probes, run only in a child process by selftest/
   selftest/fixtures/  synthetic replay fixture (deliberately wrong claim) used by selftest/replay.test.js
@@ -73,7 +76,7 @@ test/
 | `[regression]` / `regression/` | Protects a previously fixed bug; each is mutation-probed (below) |
 | property tests | Invariants checked over generated scenarios |
 | `[DISC-xx]` | Discrepancy: asserts a *proposed* invariant that the current app (v7.34) violates (see [AUDIT.md](AUDIT.md)) |
-| `[regression] [DISC-xx]` | A discrepancy resolved by an app release, kept as an ordinary test (`regression/resolved-discrepancies.test.js`) |
+| `[regression] [DISC-xx]` | A discrepancy resolved by an app release, kept as an ordinary test (`regression/resolved-discrepancies*.test.js`, one file per release) |
 | `selftest/` | Proves the harness itself: classifier, replay, isolation, mutation sensitivity, stress plumbing |
 
 ## Isolation guarantees
@@ -126,7 +129,8 @@ failure), and no unexpected page errors were recorded. Everything else fails:
 | timeout | ❌ Vitest timeout (nothing is caught) |
 
 Mark setup assertions with a `'setup: …'` message so failures read clearly. `allowPageErrors`
-must list exact patterns (DISC-08 allows only the specific boot crash it documents).
+must list exact patterns (DISC-08, resolved in v7.42, allowed only the specific boot crash it
+documented; its regression version allows none).
 
 Proven by `test/selftest/classifier.test.js`: 22 probes run as real registered tests in a child
 Vitest process (including the review's reproduction — `submitScore` replaced by a no-op before
@@ -143,10 +147,14 @@ self-test uses a synthetic fixture with a deliberately wrong claim instead of th
 When a self-test needs a known discrepancy, inject one — never point it at an open app defect.
 
 **When a discrepancy stops reproducing** (`DISCREPANCY NO LONGER REPRODUCES`): check the app state
-the scenario leaves (not just the pass), record the fix in AUDIT.md (section A2), and move the
-check unchanged to `test/regression/resolved-discrepancies.test.js` (setup assertions →
+the scenario leaves (not just the pass), record the fix in AUDIT.md (A2 for v7.34, A3 for v7.42), and move the
+check unchanged to `test/regression/resolved-discrepancies*.test.js` (setup assertions →
 `precondition:`, checkpoint → ordinary assertion). If only some of its checks stopped
-reproducing, keep the finding open with a fresh counterexample (DISC-01).
+reproducing, keep the finding open with a fresh counterexample (DISC-01) or keep exploring
+(DISC-15). **Exception:** if the change contradicts an owner-confirmed rule (DISC-09 vs rule 6 in
+v7.42), leave the check unchanged and red and ask the owner. To keep a self-test that needed
+the old defect, re-inject it as a named fault in `test/harness/faults.js` (verbatim old code).
+Never rely on the live app still being broken.
 
 `npm run test:discrepancies` (`STRICT=1`) runs them as ordinary tests so every failure and its
 reproduction is printed; CI runs this as the informational, non-blocking "Known discrepancies" job.

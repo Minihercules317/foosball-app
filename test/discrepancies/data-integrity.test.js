@@ -1,6 +1,8 @@
 /**
  * DISCREPANCIES — persistence, import, data integrity, security.
- * (DISC-06 was resolved in v7.34; its checks moved to test/regression/resolved-discrepancies.test.js.)
+ * (DISC-06 was resolved in v7.34 → test/regression/resolved-discrepancies.test.js; DISC-07, DISC-08
+ * and DISC-10 in v7.42 → test/regression/resolved-discrepancies-v742.test.js. DISC-09 no longer
+ * reproduces on v7.42 either, but it is left here unchanged until the owner decides; see its note.)
  * Requires domain-owner review; see docs/AUDIT.md. Expected to fail against the
  * current index.html AT THEIR DECLARED CHECKPOINT (run `npm run test:discrepancies`
  * to see the failures). Windows are booted per test and closed in afterEach.
@@ -23,43 +25,13 @@ async function clubWithNight(seed = 5) {
   return { app, d, t, ids };
 }
 
-describe('DISC-07 importing an event that already exists', () => {
-  discrepancy('DISC-07', 're-importing the same event (keep both) never changes anyone\'s ranking points', { checkpoint: 'points-unchanged' }, async (disc) => {
-    const { app, d, t } = await clubWithNight(7);
-    const payload = d.exportTournament(t).data;
-    const before = pointsOf(app);
-    await d.importJson(payload, [false]); // "already exists. Replace it?" → Cancel = import as copy
-    expect(app.state.tournaments.length, 'setup: the copy was imported').toBe(2);
-    disc.observe('points-unchanged', () => expect(pointsOf(app)).toEqual(before));
-  });
-});
-
-describe('DISC-08 robustness to malformed stored data', () => {
-  // Each case allows EXACTLY the boot-crash errors that constitute this discrepancy
-  // (observed 2026-11-08); any other page error still fails the test.
-  for (const [label, tournaments, expectedErrors] of [
-    ['a null tournament entry', [null], [
-      /^Error: Failed to load state TypeError: Cannot read properties of null \(reading 'rankingApplied'\)/,
-      /^Error: Uncaught \[TypeError: Cannot read properties of null \(reading 'placements'\)\]/]],
-    ['a tournament without playerIds', [{ id: 'tx', name: 'Broken', type: 'monster', rounds: [] }], [
-      /^Error: Uncaught \[TypeError: Cannot read properties of undefined \(reading 'length'\)\]/]],
-    ['a numeric tournament name', [{ id: 'tx', name: 42, type: 'monster', playerIds: [], rounds: [] }], [
-      /^Error: Uncaught \[TypeError: str\.replace is not a function\]/]],
-  ]) {
-    discrepancy('DISC-08', `app still finishes booting with ${label} (snapshot check + auto-refresh start)`, {
-      checkpoint: 'boot-completed',
-      allowPageErrors: expectedErrors, // the boot crash IS this discrepancy
-    }, async (disc) => {
-      const app = await boot({ operator: false, data: { players: [], tournaments },
-        snapshot: { type: 'full', players: [], tournaments: [] } });
-      disc.observe('boot-completed', () => {
-        expect(app.eval('appRefreshTimer'), 'auto-refresh never started').toBeTruthy();
-        expect(app.eval('clubSnapshotMeta.status'), 'snapshot never fetched').not.toBe('pending');
-      });
-    });
-  }
-});
-
+// v7.42 status (2026-11-12): routine CI reports DISCREPANCY NO LONGER REPRODUCES. v7.42's
+// confirmDeleteTournament rebuilds every player's points from the remaining events' stored
+// deltas, so operator totals now equal what members load. That is the OPPOSITE of owner rule 6
+// ("a deleted event's contribution may stay until a recalculation"; docs/AUDIT.md). Until the
+// owner confirms the new behavior, this check stays unchanged and red in routine CI, together
+// with DISC-17's setup assertion. Do not convert it, and do not rewrite either one to endorse
+// immediate removal.
 describe('DISC-09 deleting a ranked event', () => {
   discrepancy('DISC-09', 'operator ranking equals what members see after the backup is published', { checkpoint: 'member-points-match' }, async (disc) => {
     const { app, d } = await clubWithNight(8);
@@ -75,17 +47,6 @@ describe('DISC-09 deleting a ranked event', () => {
     const member = await boot({ operator: false, snapshot: d.exportAll().data });
     expect(member.eval('clubSnapshotMeta.status'), 'setup: member loaded the published backup').toBe('ok');
     disc.observe('member-points-match', () => expect(pointsOf(member)).toEqual(operatorPoints));
-  });
-});
-
-describe('DISC-10 ids from imported data are not escaped in HTML attributes', () => {
-  discrepancy('DISC-10', 'a crafted player id cannot inject markup into the Players list', { checkpoint: 'no-injected-element' }, async (disc) => {
-    const evilId = 'x"><img id="injected" src="data:,">';
-    const player = { id: evilId, name: 'Crafted', skill: 3, rankingPoints: 2000, rankingDelta: 0, region: '', homeState: '' };
-    // Delivered via localStorage here; in production the vector is an imported file or data/latest.json.
-    const app = await boot({ data: { players: [player], tournaments: [] } });
-    expect(app.state.players.map((p) => p.id), 'setup: crafted player loaded').toEqual([evilId]);
-    disc.observe('no-injected-element', () => expect(!!app.window.document.getElementById('injected'), 'markup injected at boot').toBe(false));
   });
 });
 

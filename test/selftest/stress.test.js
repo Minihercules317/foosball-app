@@ -14,6 +14,8 @@ import { checkProperty, defineProperty, RUN_RECORD_DIR } from '../harness/scenar
 import { runDiscrepancy } from '../harness/discrepancy.js';
 import { ROOT } from './nested.js';
 
+const V737_DRAW = 'reintroduce-disc15-v737-draw';
+
 /** Run a command in a child process (no inherited Vitest/CI env); resolves {code, log}. */
 function runChild(args, extraEnv) {
   const env = Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^(VITEST|CI$|GITHUB_|TEST$|NODE_ENV$|LCFC_FAULT$|EXPLORE$|STRICT$|FC_|PROP_|SHRINK$)/.test(k)));
@@ -153,13 +155,16 @@ describe('exploration continues past a known observation (checkProperty + explor
 });
 
 describe('real stress command: DISC-15 known counterexample on case 1 (review F6 reproduction, child process)', () => {
-  // fast-check seed 1671: the FIRST DISC-15 case is a real DISC-15 instance against the unmodified
-  // index.html (scenario seed 13, 7 players, round 8: 2 repeats, optimum 1). Before the fix this
-  // printed "1 / 3 … Result: passed".
+  // fast-check seed 1671: the FIRST DISC-15 case (scenario seed 13, 7 players, round 8: 2 repeats,
+  // optimum 1) was a real DISC-15 instance against v7.28–v7.37. Before the F6 fix this printed
+  // "1 / 3 … Result: passed". v7.42 no longer reproduces it, so the self-test re-injects the v7.37
+  // draw (LCFC_FAULT=reintroduce-disc15-v737-draw in test/harness/faults.js, verbatim v7.37 code) — the same way
+  // classifier.test.js re-injects the DISC-03 defect — instead of depending on a live app bug.
+  // The control below runs the same command on the unmodified app.
   it('runs all 3 cases of every property, reports the finding, and the finding replays', async () => {
     const out = path.join('test-results', 'selftest', `stress-f6-${process.pid}`);
     rmSync(path.join(ROOT, out), { recursive: true, force: true });
-    const { code, log } = await runChild(['scripts/stress.mjs', '--runs', '3', '--seed', '1671'], { LCFC_RESULTS_DIR: out });
+    const { code, log } = await runChild(['scripts/stress.mjs', '--runs', '3', '--seed', '1671'], { LCFC_RESULTS_DIR: out, LCFC_FAULT: V737_DRAW });
     const records = readdirSync(path.join(ROOT, out, 'property-runs')).map((f) => JSON.parse(readFileSync(path.join(ROOT, out, 'property-runs', f), 'utf8')));
     const disc15 = records.find((r) => r.property === 'DISC-15-exploration');
     expect(log, 'precondition: seed 1671 must hit DISC-15 on case 1 (fast-check path 0)').toMatch(/KNOWN DISCREPANCY FOUND: DISC-15 .*DISC-15-exploration__1671__0\.json/);
@@ -171,9 +176,26 @@ describe('real stress command: DISC-15 known counterexample on case 1 (review F6
     expect(log).toContain('| DISC-15-exploration | passed (1 known finding(s)) | 1671 | 3 / 3 |');
     expect(log).toContain('DISC-15-exploration: known discrepancy reproduced on case 1 of 3 (exploration continued)');
     expect(log).toContain('**Result: passed**');
-    const replay = await runChild(['scripts/replay.mjs', disc15.knownFindings[0].fixture], {});
+    const replay = await runChild(['scripts/replay.mjs', disc15.knownFindings[0].fixture], { LCFC_FAULT: V737_DRAW });
     expect(replay.code, replay.log.slice(-2000)).toBe(1);
     expect(replay.log).toContain('[DISC-15 @ repeats-within-optimum] round 8: 2 repeats, optimum 1');
+    // Sensitivity: the finding is the injected v7.37 draw — the same fixture holds on v7.42.
+    const clean = await runChild(['scripts/replay.mjs', disc15.knownFindings[0].fixture], {});
+    expect(clean.code, clean.log.slice(-2000)).toBe(0);
+    rmSync(path.join(ROOT, out), { recursive: true, force: true });
+  }, 300_000);
+
+  it('control: the same command on the unmodified app runs all 3 cases, finds nothing, and passes (exploration does not need the old defect)', async () => {
+    const out = path.join('test-results', 'selftest', `stress-f6-clean-${process.pid}`);
+    rmSync(path.join(ROOT, out), { recursive: true, force: true });
+    const { code, log } = await runChild(['scripts/stress.mjs', '--runs', '3', '--seed', '1671'], { LCFC_RESULTS_DIR: out });
+    const records = readdirSync(path.join(ROOT, out, 'property-runs')).map((f) => JSON.parse(readFileSync(path.join(ROOT, out, 'property-runs', f), 'utf8')));
+    expect(code, log.slice(-3000)).toBe(0);
+    expect(records.map((r) => r.property).sort()).toEqual(STRESS_PROPERTIES.map((p) => p.id).sort());
+    for (const r of records) expect([r.property, r.outcome, r.executed, r.requested, r.knownFindings || []]).toEqual([r.property, 'passed', 3, 3, []]);
+    expect(log).not.toContain('KNOWN DISCREPANCY FOUND');
+    expect(log).toContain('| DISC-15-exploration | passed | 1671 | 3 / 3 |');
+    expect(log).toContain('**Result: passed**');
     rmSync(path.join(ROOT, out), { recursive: true, force: true });
   }, 300_000);
 });

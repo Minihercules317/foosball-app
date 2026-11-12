@@ -19,6 +19,13 @@ from the app's owner (see "Owner decisions needed").
 > recorded as **DISC-17** (owner-accepted for now). Line numbers in rows that were not re-checked
 > still refer to v7.28.
 
+> **v7.42 update (2026-11-12, rolling branch `engineering/upstream-current`).** Upstream v7.42
+> (`2ad3b9f`) resolves DISC-07, DISC-08 and the DISC-10 markup-injection scenario, plus both
+> pinned DISC-15 counterexamples (exploration continues). DISC-09 also no longer reproduces, but
+> only because v7.42 **contradicts owner rule 6**, so it stays open pending the owner, with DISC-17.
+> v7.42 also **breaks the owner-confirmed team-seed ranking rule** for bracket-only team events.
+> See section **A3**, which includes the exact owner questions.
+
 ## Summary
 
 The core of what runs every week holds up well. These checks produced **no failures**
@@ -47,17 +54,14 @@ Most real risk sits in four areas:
 | ID | Sev | Area | Finding | How established |
 |---|---|---|---|---|
 | DISC-01 | **High** | Brackets | Correcting a bracket result clears only the next match downstream. Later rounds keep stale entrants, so a player can be in two ready matches at once, or an eliminated player stays scheduled. Lines: `submitBracketScore` l.9370–9388, `clearBracketMatch` l.8608–8626. A related path: cleared matches keep `_byePropagated`, so a losers-bracket bye doesn't re-advance. | Test: `bracket-corrections.test.js` (random property + saved v7.34 counterexample `DISC-01-correction.json`: seed 15, 6 players, double elim, p_0005 in two ready matches). **Partially resolved in v7.34:** the single-elim-8 repro and the v7.28 saved scenario (seed 8) now hold and are regression tests (A2); the randomized double-booking still reproduces, so the finding stays open. |
-| DISC-07 | Med | Import / ranking | Importing an event that already exists and choosing Cancel ("keep both") creates a copy with identical `rankingDeltas`. Those points are counted twice. | Test |
-| DISC-08 | Med (High if it occurs) | Robustness | A single malformed record (a `null` tournament, a missing `playerIds`, a non-string name) throws during the first render (`renderHome` l.5430 / `escapeHtml` l.12715) before auto-refresh and the snapshot fetch start. A member device that loaded a bad `latest.json` saves it locally and can't recover, even after the file is fixed, until site data is cleared. | Test (3 cases) |
-| DISC-09 | Med | Ranking | Deleting a finished official event (`confirmDeleteTournament`, not operator-gated) leaves its deltas in the operator's player totals. Members rebuild totals from the remaining events' deltas, so the operator's leaderboard and the published one disagree. Manually edited `rankingPoints` are lost the same way on any import. | Test |
-| DISC-10 | Low–Med | Security | Ids are put into `onclick="fn('${id}')"` and `value="${id}"` without escaping (Players list l.4968–4975, roster l.5773, match and bracket cards l.8487–8504, l.9954+, and others). An id containing `"` injects markup at boot. Normal `uid()` ids are safe, so exploiting it needs a crafted import or `latest.json`. The independent review executed injected JavaScript this way in Chromium. Names, by contrast, are escaped in the 14 views exercised by `integration/security.test.js` (not proven for every view). | Test |
+| DISC-09 | Med | Ranking | Deleting a finished official event (`confirmDeleteTournament`, not operator-gated) leaves its deltas in the operator's player totals. Members rebuild totals from the remaining events' deltas, so the operator's leaderboard and the published one disagree. Manually edited `rankingPoints` are lost the same way on any import. | Test. **v7.42: no longer reproduces** — deletion now rebuilds totals from the remaining deltas, which contradicts owner rule 6. Kept open and unchanged pending the owner (A3, Q1). |
 | DISC-11 | Low–Med | Scoring | With the OT box ticked, the target is hard-coded to 8 (`quickRaceTo` l.9096). With race to 5, the 7–5 that the README and the error message both give as an example is rejected. With race to 10, 8–6 is accepted. | Test |
 | DISC-12 | Med (DYP only) | Standings | DYP ranking rounds redraw partners every round, and the new teams get new ids. The team branch of `computeStandings` (l.9535) only counts matches between *current* teams, so earlier results disappear from standings. DYP tiered playoffs then fall back to roster order. Production data has only one DYP event, and it was bracket-only, so current impact is low. | Test |
 | DISC-13 | Med | Scheduling | Table assignment never considers other live matches *in the same event*. Generating round N+1 while round N is still live puts two matches on T1, and starting playoffs with a ranking match still live can schedule the same player twice. Whether overlapping rounds is a supported workflow is an owner question. | Test (2 cases) |
 | DISC-14 | Low | Merge | After merging players, `sitOutQueue` and `bonusPoolLocked.fieldIds` still reference the removed id. Neither affects scoring of finished events; the scoring-relevant references are covered by a passing contract test. | Test |
-| DISC-15 | Low (rules question) | Partners | In rare late rounds of small fields, the draw has more repeat partnerships than the minimum possible. Example: 7 players, round 10, 4 playing: the app picks two second-time pairs (2 repeats), although a third-time pair plus a brand-new pair (1 repeat) was available. The alternative is better even by the app's own comparison (`fairPairPlayers` l.6944 ranks by forbidden repeats, then rematches), but the greedy builder (l.6899) always takes the lowest-count partner first, so it never generates that pairing. Seen in 2 of 1,925 random 2–10-round nights (about 0.1%), both with 7 players in round 10 (audit estimate; not independently replicated). **Whether the app's choice is worse for players is a club-rules judgement.** | Test: `partners.test.js`, 2 pinned scenario fixtures (found by a time-bounded random search) |
+| DISC-15 | Low (rules question) | Partners | In rare late rounds of small fields, the draw has more repeat partnerships than the minimum possible. Example: 7 players, round 10, 4 playing: the app picks two second-time pairs (2 repeats), although a third-time pair plus a brand-new pair (1 repeat) was available. The alternative is better even by the app's own comparison (`fairPairPlayers` l.6944 ranks by forbidden repeats, then rematches), but the greedy builder (l.6899) always takes the lowest-count partner first, so it never generates that pairing. Seen in 2 of 1,925 random 2–10-round nights (about 0.1%), both with 7 players in round 10 (audit estimate; not independently replicated). **Whether the app's choice is worse for players is a club-rules judgement.** | **Partially resolved in v7.42** (A3): both pinned counterexamples hold, including their exact v7.37 round-10 histories, and are regression tests. Random exploration continues in the stress workflow (`partners.test.js`, `exploratory`). v7.42 ranks *consecutive* partnerships before total repeats, so the invariant is not guaranteed by construction. Passing these two cases shows nothing about general optimality, consecutive partners or sit-outs (Monster DYP fairness investigation paused). |
 | DISC-16 | Low–Med (rules question) | Ranking | Non-podium places sort by "fewer bracket losses first" (`getEventFinishPlaces` sort at l.4309; comment at l.4238 "fewer bracket losses = deeper run"). In double elimination every non-podium entry has 2 losses, so this never matters there. In **single elimination with a bronze match**, the bronze-match loser — a semi-finalist, 2 losses — is placed **last** (8th of 8), behind all quarter-final losers (1 loss each). Places feed seed points (tier 3–4 vs 5–8). Found while repairing the non-podium regression guard (review F7); a mutation probe confirms that reversing the loss key moves the bronze loser to 4th. | Test: `ranking-places.test.js` |
-| DISC-17 | Med (owner-accepted for now) | Ranking | **v7.34 automatic ranking rebuild on ordinary bracket completion.** The submission that finishes a bracket runs `updatePlacementsFromBracket` (l.10572) → `tryApplyRankingOnFinish`, which sets `rankingApplied`; `submitBracketScore` (l.9687) then sees `prevWinner \|\| t.rankingApplied` and handles the ordinary finish like a correction: `reapplyRankingAfterBracketCorrection` (l.9571) drops this event's deltas and calls `rebuildPlayerRankingPointsFromEventDeltas` (l.3867), which resets **every** player to 2,000 and replays the **stored** `rankingDeltas` of the remaining events in `createdAt` order (it does not recompute them from results), then applies this event again. Any points not represented by a retained event delta are lost — for every player, not just this event's. Affected data states: (a) the contribution of a **deleted** ranked event, which the owner confirmed may stay in the totals until a recalculation (rule 6) — an unrelated bracket finish now acts as an unrequested partial recalculation; (b) any `rankingPoints` value not backed by stored deltas — e.g. balances set outside the event-delta mechanism, as the team-seed test fixture did until 2026-11-11 (its four tests went red on v7.34 for exactly this reason). Not affected: merges (they already run a full recalculation). Corrections take the same path by design (DISC-05 fix); imports in v7.34 also rebuild. **This is separate from the confirmed rule that every player starts at 2,000.** | Test: `ranking-rebuild.test.js` — delete a ranked Monster night, finish an unrelated 4-player Singles bracket (one submission per match); checkpoint `points-change-only-by-event-delta` fails because the night's players drop back to 2,000. |
+| DISC-17 | Med (owner-accepted for now) | Ranking | **v7.34 automatic ranking rebuild on ordinary bracket completion.** The submission that finishes a bracket runs `updatePlacementsFromBracket` (l.10572) → `tryApplyRankingOnFinish`, which sets `rankingApplied`; `submitBracketScore` (l.9687) then sees `prevWinner \|\| t.rankingApplied` and handles the ordinary finish like a correction: `reapplyRankingAfterBracketCorrection` (l.9571) drops this event's deltas and calls `rebuildPlayerRankingPointsFromEventDeltas` (l.3867), which resets **every** player to 2,000 and replays the **stored** `rankingDeltas` of the remaining events in `createdAt` order (it does not recompute them from results), then applies this event again. Any points not represented by a retained event delta are lost — for every player, not just this event's. Affected data states: (a) the contribution of a **deleted** ranked event, which the owner confirmed may stay in the totals until a recalculation (rule 6) — an unrelated bracket finish now acts as an unrequested partial recalculation; (b) any `rankingPoints` value not backed by stored deltas — e.g. balances set outside the event-delta mechanism, as the team-seed test fixture did until 2026-11-11 (its four tests went red on v7.34 for exactly this reason). Not affected: merges (they already run a full recalculation). Corrections take the same path by design (DISC-05 fix); imports in v7.34 also rebuild. **This is separate from the confirmed rule that every player starts at 2,000.** | Test: `ranking-rebuild.test.js` — delete a ranked Monster night, finish an unrelated 4-player Singles bracket (one submission per match); checkpoint `points-change-only-by-event-delta` fails because the night's players drop back to 2,000.  **v7.42:** setup fails as UNEXPECTED (deletion now removes the night's points immediately). The mechanism itself is unchanged (`submitBracketScore` l.10079 → `reapplyRankingAfterBracketCorrection` l.9963). See A3, Q1. |
 
 **Owner decisions needed:**
 - DISC-01: v7.34 cascades and invalidates downstream matches; the random property still finds
@@ -65,8 +69,9 @@ Most real risk sits in four areas:
 - DISC-11: what "OT" means.
 - DISC-12: should DYP ranking-round standings be per player, like Monster?
 - DISC-13: is generating a round, or starting playoffs, while matches are live allowed?
-- DISC-08: how bad records should be handled.
-- DISC-15: is "fewest repeat pairs" the right goal, or is "no pair three times" preferred?
+- DISC-15: is "fewest repeat pairs" the right goal, or is "no pair three times" preferred? (v7.42
+  resolves both pinned cases by choosing a third-time pair plus a new pair, and it now puts
+  "no back-to-back partners" ahead of both.)
 - DISC-16: where should a single-elimination bronze-match loser finish — 4th, or after the quarter-final losers?
 - DISC-17: **accepted for now (owner, 2026-11-11)** — tracked, not to be fixed in this cycle. How
   to evaluate a future change: if the rebuild is removed or made incremental, the test reports
@@ -78,6 +83,8 @@ Most real risk sits in four areas:
 - DISC-09: owner rule 6 (below) says a deleted event's contribution may stay in the totals until
   a recalculation. Whether DISC-09's proposed invariant (operator totals = published totals right
   after a deletion) is still wanted is an owner question; the test is unchanged.
+- **v7.42 (2026-11-12): two ranking questions, Q1 (rule 6 / DISC-09 / DISC-17) and Q2 (team seed),
+  are in section A3.** Their tests are red on purpose until answered.
 
 **Owner-confirmed ranking rules (2026-11-11).** (1) Every player starts at 2,000 club points;
 (2) this equal baseline is intentional; (3) points are derived from tournament results, not from
@@ -86,6 +93,90 @@ tournaments chronologically; (5) Recalculate has been used to correct records af
 duplicate player identities; (6) deleted tournaments can leave their ranking contributions in
 the current totals until a recalculation. Test fixtures follow these rules: starting points come
 from recorded (fabricated) events, never from hand-set balances (TESTING.md).
+
+## A3. v7.42 evaluation (upstream `2ad3b9f`, 2026-11-12)
+
+### Resolved in v7.42 (now regression tests in `test/regression/resolved-discrepancies-v742.test.js`)
+
+Each check below failed at its checkpoint on v7.37 and reported `DISCREPANCY NO LONGER REPRODUCES` on
+v7.42. Each was also checked against app state on both versions, and the regression copies were
+run against the v7.37 `index.html`, where all nine fail at their main assertion, not a precondition.
+
+| Check(s) | v7.42 change | Confirmed in app state | Regression test adds |
+|---|---|---|---|
+| DISC-07 | `importTournamentObject`: an imported copy gets `importedCopy: true` and empty `rankingDeltas`; Recalculate keeps copies neutral | 6 players off 2,000; points unchanged after import, after reload, and after Recalculate. All three changed on v7.37 | non-vacuity precondition; reload and Recalculate assertions |
+| DISC-08 ×3 | `escapeHtml` stringifies non-strings; null and partial tournament records tolerated at boot | auto-refresh starts, snapshot `ok`, **zero** page errors. v7.37 crashed at boot | page errors are no longer allowed (the discrepancy had to allow the crash) |
+| DISC-10 (markup scenario only) | ids in attributes go through new `escapeAttr` (also escapes `'`) | no `#injected` element; the Players list renders the crafted player, and its `onclick` carries the full id as an attribute value | positive rendering control |
+| DISC-15 ×2 pinned | new draw (`fairPairPlayers` exact search for ≤ 10 players, consecutive-partner rule, sit-out ring) | the whole-night replays now diverge from v7.37 from round 6 on, but every round stays within the optimum, and round 10 still forces a repeat. On the **exact v7.37 round-10 history** (new fixtures `DISC-15-seed-*-round10-history-v737.json`), v7.42 picks 1 repeat (optimum) in 20/20 seeds; v7.37 picked 2 in 20/20 | the exact-history check (layer 2) |
+
+**Not resolved by v7.42: DISC-10 in a JavaScript-string context.** `escapeAttr` turns `'` into
+`&#39;`, but the HTML parser decodes that back before an inline handler runs. A player id like
+`q');window.__pwned=1;//` therefore still runs script when its Players-list row is clicked
+(`onclick="openPlayerProfile('…')"`). Seen on both v7.37 and v7.42, via localStorage. The
+delivery route is the same as DISC-10 (crafted import or `latest.json`; player ids are kept as
+is). This is **not** covered by any test. The DISC-10 regression proves only the markup scenario.
+
+Former rows (v7.28 descriptions and line numbers), kept for history:
+
+| ID | Sev | Area | Finding (v7.28) | How established |
+|---|---|---|---|---|
+| DISC-07 | Med | Import / ranking | Importing an event that already exists and choosing Cancel ("keep both") creates a copy with identical `rankingDeltas`. Those points are counted twice. | Test |
+| DISC-08 | Med (High if it occurs) | Robustness | A single malformed record (a `null` tournament, a missing `playerIds`, a non-string name) throws during the first render (`renderHome` l.5430 / `escapeHtml` l.12715) before auto-refresh and the snapshot fetch start. A member device that loaded a bad `latest.json` saves it locally and can't recover, even after the file is fixed, until site data is cleared. | Test (3 cases) |
+| DISC-10 | Low–Med | Security | Ids are put into `onclick="fn('${id}')"` and `value="${id}"` without escaping (Players list l.4968–4975, roster l.5773, match and bracket cards l.8487–8504, l.9954+, and others). An id containing `"` injects markup at boot. Normal `uid()` ids are safe, so exploiting it needs a crafted import or `latest.json`. The independent review executed injected JavaScript this way in Chromium. Names, by contrast, are escaped in the 14 views exercised by `integration/security.test.js` (not proven for every view). | Test |
+
+### Q1 — Owner rule 6 vs v7.42 deletion (DISC-09, DISC-17)
+
+v7.42's `confirmDeleteTournament` (l.5351) now calls `rebuildPlayerRankingPointsFromEventDeltas`:
+every player is reset to 2,000 and the **stored** deltas of the remaining events are replayed.
+Nothing is recomputed from results, so Recalculate can still differ if stored deltas are out of
+date. Verified (fabricated data): after deleting a ranked night, its 8 players go back to 2,000 +
+their remaining deltas (e.g. 2,088 → 2,000, 1,984 → 2,000). Totals equal 2,000 + the retained
+deltas, operator totals equal what a member device loads, and Recalculate leaves them unchanged.
+There is only one deletion path (`confirmDeleteTournament`).
+
+- DISC-09's invariant now holds, and DISC-17's setup assertion (rule 6) now fails. DISC-17's
+  mechanism is unchanged: an ordinary finish still rebuilds every player from retained deltas.
+  With deletion rebuilding, no owner-legitimate path to the affected data state was found (a
+  delete followed by an unrelated finish changes points only by that event's Δ). A balance not
+  backed by deltas is still erased by any ordinary finish (+50 set by hand: 2,138 → 2,088), but
+  rule 3 says such balances are not legitimate.
+- **Question:** *Do you approve that deleting a ranked event removes its points immediately, on
+  the operator device, without Recalculate (replacing rule 6)?* If yes: convert DISC-09 into a
+  regression test, and retire DISC-17 or give it a new legitimate scenario. If no: v7.42's
+  deletion change is a regression. Until then both tests stay red, unchanged.
+
+### Q2 — Team-seed rule for bracket-only team events (4 regression tests red)
+
+Owner rule (2026-11-11): in a bracket-only Doubles / DYP / Monster event, a team's expected finish
+is its **bracket seed**. v7.42 adds `expectedPlaceLocked`, frozen in `lockBonusPoolSnapshot` when
+the bracket is created (l.5752). It takes seeds from `playoffTeams`, which bracket-only events do
+not have (the tests assert this), so every player gets an **individual club-rank position 1–8**.
+`applyRankingPointsForTournament` prefers the lock over the bracket seeds (l.4385), and the
+team's expected place becomes the rounded average of the partners' individual positions. That is
+the pre-v7.32 formula the owner rejected: it compares a team place (1–4) with positions up to 8.
+
+| Case (16,404-pt field, pool 164) | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| Doubles double-elim, upset: approved Δ → v7.42 Δ (v7.42 expected place) | −16 → **0** (3) | +25 → **+33** (4) | +57 → **+65** (5) | +98 → **+106** (7) |
+| Doubles double-elim, chalk | +82 → **+98** (3) | +49 → **+57** (4) | +33 → **+41** (5) | 0 → **+8** (7) |
+| DYP single-elim, upset | −16 → **0** (4) | +25 → **+41** (5) | +57 → **+65** (5) | +98 → **+106** (5) |
+| Monster double-elim (shuffled seeds), upset | −16 → **+8** (5) | +25 → **+33** (4) | +57 → **+65** (5) | +98 → **+106** (5) |
+
+Approved expected place = the seed (1–4). Every player gains 8–24 extra points, and club totals
+move by the same amounts (e.g. Doubles upset, seed-1 team at 2,108 / 2,038: approved 2,092 /
+2,022, v7.42 2,108 / 2,038). **Recalculate does not correct it**: the lock is stored on the event
+and reused, so v7.42 gives identical (wrong-rule) Δ before and after Recalculate. **History is
+read inconsistently**: events without a lock (all pre-v7.42 events, e.g. the v7.28 fixture) still
+recalculate with the bracket seed (that test passes). Two events with identical results can
+therefore get different Δ depending on the version that created them. Monster events with ranking
+rounds (`playoffTeams` seeded) and Singles are unaffected.
+
+- Assessment: **regression of an owner-approved rule**, probably unintended (the lock code's own
+  comment says "seeds + club RP order", and bracket-only seeds live on the bracket sides, which
+  the lock never reads).
+- **Question:** *For a bracket-only Doubles / DYP / Monster event, should expected finish remain
+  the team's bracket seed (confirmed 2026-11-11), or the frozen average of the partners'
+  individual club-rank positions (v7.42)?* The four tests stay unchanged and red until answered.
 
 ## A2. Resolved in v7.34 (now regression tests)
 

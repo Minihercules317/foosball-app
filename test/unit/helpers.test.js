@@ -134,10 +134,21 @@ describe('bracket seeding', () => {
 });
 
 describe('misc', () => {
-  it('[char] escapeHtml escapes & < > " but NOT single quote; non-strings throw', () => {
+  // v7.42 (DISC-08 fix): non-strings are converted with String() instead of throwing
+  // (up to v7.37 `escapeHtml(42)` threw "str.replace is not a function" and crashed boot).
+  // Blank input ('' / null / undefined) still renders as ''; 0 is no longer blanked.
+  it('[char] escapeHtml escapes & < > " but NOT single quote; blank → \'\'; non-strings are stringified, then escaped', () => {
     expect(call('escapeHtml', `<a href="x">&'</a>`)).toBe('&lt;a href=&quot;x&quot;&gt;&amp;\'&lt;/a&gt;');
-    expect(call('escapeHtml', null)).toBe('');
-    expect(() => call('escapeHtml', 42)).toThrow();
+    expect([null, undefined, ''].map((v) => call('escapeHtml', v))).toEqual(['', '', '']);
+    expect([42, 0, false].map((v) => call('escapeHtml', v))).toEqual(['42', '0', 'false']);
+    expect(call('escapeHtml', ['<b>"x"</b>']), 'escaping applies after String()').toBe('&lt;b&gt;&quot;x&quot;&lt;/b&gt;');
+  });
+
+  // v7.42 (DISC-10 fix): ids in HTML attributes go through escapeAttr, which ALSO escapes '.
+  it('[char] escapeAttr escapes & < > " and single quote; blank → \'\'; non-strings are stringified', () => {
+    expect(call('escapeAttr', `x"><img src=x onerror='1'>&`)).toBe('x&quot;&gt;&lt;img src=x onerror=&#39;1&#39;&gt;&amp;');
+    expect([null, undefined, ''].map((v) => call('escapeAttr', v))).toEqual(['', '', '']);
+    expect(call('escapeAttr', 7)).toBe('7');
   });
 
   it('[contract] pairKey is order-independent', () => {

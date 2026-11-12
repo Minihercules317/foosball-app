@@ -126,7 +126,7 @@ See [TESTING.md](TESTING.md) for where each lives. All pass against v7.28 unless
 | 6 | Clean bracket play (3–24 entrants, SE/DE) terminates with distinct 1st/2nd/3rd; DE exit = exactly 2 losses; no double-booking; unique live tables | ✅ property-tested |
 | 6b | …after a score **correction** | ❌ DISC-01 (random brackets; DISC-02/04 and the pinned DISC-01 cases resolved in v7.34) |
 | 7 | Completed results stay stable unless explicitly edited | ✅ since v7.34 (DISC-03 resolved; regression-tested) |
-| 8 | Ranking applied once; repeated triggers / reload / snapshot load do not double count | ✅ (but ❌ DISC-07 on import-as-copy) |
+| 8 | Ranking applied once; repeated triggers / reload / snapshot load do not double count | ✅ (DISC-07 import-as-copy double count resolved in v7.42) |
 | 9 | Recalculation deterministic, idempotent, independent of storage order; equals incremental totals | ✅ |
 | 10 | Export → snapshot/import round-trip preserves players, events and ranking | ✅ (DISC-06 import persistence resolved in v7.34) |
 | 11 | Reload restores exactly what was saved; member devices keep local data if the snapshot is missing/invalid | ✅ |

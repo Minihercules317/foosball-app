@@ -13,8 +13,10 @@
  *       they pass with only the defect injected (positive control) and report NO LONGER
  *       REPRODUCES with no fault at all (sensitivity control). None of this depends on a
  *       live application bug.
- *     - in the REAL discrepancy suite only the five discrepancies that never score a
- *       match may still count as reproduced — every other one fails with a label.
+ *     - in the REAL discrepancy suite only the discrepancies that never score a match may
+ *       still count as reproduced — every other one fails with a label. Since v7.42 that is
+ *       DISC-13 alone: DISC-08 (×3) and DISC-10, the other non-scoring ones, were resolved and
+ *       moved to test/regression/resolved-discrepancies-v742.test.js.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { runVitest } from './nested.js';
@@ -119,20 +121,19 @@ describe('fault injection into the real discrepancy suite (child process)', () =
   });
   it('with scoring broken, ONLY the discrepancies that never score a match still count as reproduced', () => {
     const stillReproduce = ran(runs.fault).filter((t) => t.status === 'passed').map((t) => t.fullName.replace(/^.*?(\[DISC-\d+\])/, '$1').slice(0, 60)).sort();
+    // Up to v7.37 this list also held DISC-08 (×3) and DISC-10 (resolved in v7.42, moved to
+    // test/regression/resolved-discrepancies-v742.test.js).
     expect(stillReproduce).toEqual([
-      '[DISC-08] app still finishes booting with a null tournament ',
-      '[DISC-08] app still finishes booting with a numeric tourname',
-      '[DISC-08] app still finishes booting with a tournament witho',
-      '[DISC-10] a crafted player id cannot inject markup into the ',
       '[DISC-13] generating the next round before the current one f',
     ]);
   });
   it('every other discrepancy fails, with a classifier label rather than a bare error', () => {
     const all = ran(runs.fault);
     const failed = all.filter((t) => t.status === 'failed');
-    expect(failed.length + 5, 'each test either still reproduces (the 5 above) or failed').toBe(all.length);
-    // 13 at v7.34 (open discrepancies that score a match); the floor only guards against an
-    // empty or truncated run — the exact partition is asserted by the line above.
+    expect(failed.length + 1, 'each test either still reproduces (the 1 above) or failed').toBe(all.length);
+    // 13 at v7.34, 10 at v7.42 (open discrepancies that score a match, plus DISC-09, which is
+    // kept although it no longer reproduces). The floor only guards against an empty or
+    // truncated run; the exact partition is asserted by the line above.
     expect(failed.length).toBeGreaterThanOrEqual(10);
     for (const t of failed) expect(t.message, t.fullName).toMatch(/UNEXPECTED FAILURE|NO LONGER REPRODUCES|CHECKPOINT NEVER REACHED/);
   });

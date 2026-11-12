@@ -1,0 +1,7 @@
+{
+  "property": "selftest-replay-discrepancy",
+  "discrepancy": "SELFTEST-REPLAY",
+  "checkpoint": "round1-sit-outs-match-claim",
+  "scenario": { "seed": 4242, "players": 7, "rounds": 1, "claimedSitOuts": 2 },
+  "note": "SYNTHETIC fixture for test/selftest/replay.test.js. 7 players on a Monster night always leave 3 sitting out (7 mod 4), so the deliberately wrong claim of 2 makes this tagged observation fail deterministically. It replaces the committed DISC-01 fixture in that self-test (v7.34 maintenance), so replay is proven without depending on a live application bug."
+}

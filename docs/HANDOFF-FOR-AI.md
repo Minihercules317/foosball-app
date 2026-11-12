@@ -96,16 +96,19 @@ file can stop the app from loading on members' phones (AUDIT DISC-08).
 ## 6. Open findings that need the owner's decision
 
 See [AUDIT.md](AUDIT.md), section A. The most important ones for club nights:
-- Correcting a playoff score after later matches were played can corrupt the bracket (DISC-01…05).
-- Opening "Edit score" on a finished best-of-3 match clears it in memory, even if you cancel (DISC-03).
-  (The saved copy initially still holds the old result; a later save may persist the loss — untested.)
-- Imports are not saved until something else saves (DISC-06).
+- Correcting a playoff score after later matches were played can still leave a player
+  double-booked in rare brackets (DISC-01, partially resolved in v7.34). DISC-02…06 (podium
+  duplicates, "Edit score" wiping Bo3 results, same-winner fixes, ranking after corrections,
+  unsaved imports) were resolved in v7.34 and are now regression tests (AUDIT.md section A2).
+- Finishing any bracket rebuilds every player's club points from stored event deltas, so points
+  not backed by a retained delta (e.g. from a deleted event) disappear (DISC-17, owner-accepted
+  for now).
 - Turning Operator mode off and reloading replaces local data with the club file (R-01).
 - In a single-elimination event with a bronze match, the bronze-match loser is ranked last of
   the non-podium players, behind the quarter-final losers (DISC-16, a rules question).
 
 Until the owner decides, a safe operating tip for club nights: **export a backup before
-correcting playoff scores, and avoid opening "Edit score" on finished best-of-3 matches.**
+correcting playoff scores.**
 
 ## 7. Map of the repo
 

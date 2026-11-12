@@ -124,10 +124,10 @@ See [TESTING.md](TESTING.md) for where each lives. All pass against v7.28 unless
 | 4 | Sit priority: a sitter never has more prior sits than a playing veteran; spread ≤ 1 for players present all night; no avoidable back-to-back sits | ✅ property-tested (150 random nights) |
 | 5 | Partner draws are repeat-free whenever a repeat-free draw exists | ✅ property-tested against an exact solver |
 | 6 | Clean bracket play (3–24 entrants, SE/DE) terminates with distinct 1st/2nd/3rd; DE exit = exactly 2 losses; no double-booking; unique live tables | ✅ property-tested |
-| 6b | …after a score **correction** | ❌ DISC-01/02/04 |
-| 7 | Completed results stay stable unless explicitly edited | ❌ DISC-03 (opening the edit dialog clears Bo3 results) |
+| 6b | …after a score **correction** | ❌ DISC-01 (random brackets; DISC-02/04 and the pinned DISC-01 cases resolved in v7.34) |
+| 7 | Completed results stay stable unless explicitly edited | ✅ since v7.34 (DISC-03 resolved; regression-tested) |
 | 8 | Ranking applied once; repeated triggers / reload / snapshot load do not double count | ✅ (but ❌ DISC-07 on import-as-copy) |
 | 9 | Recalculation deterministic, idempotent, independent of storage order; equals incremental totals | ✅ |
-| 10 | Export → snapshot/import round-trip preserves players, events and ranking | ✅ in memory (❌ DISC-06: import is not persisted) |
+| 10 | Export → snapshot/import round-trip preserves players, events and ranking | ✅ (DISC-06 import persistence resolved in v7.34) |
 | 11 | Reload restores exactly what was saved; member devices keep local data if the snapshot is missing/invalid | ✅ |
 | 12 | Sandbox events never affect ranking | ✅ |

@@ -9,13 +9,20 @@ import fc from 'fast-check';
 import { useApp } from '../../harness/useApp.js';
 import { discrepancy } from '../../harness/discrepancy.js';
 import { checkProperty, defineProperty, runScenario } from '../../harness/scenario.js';
+import { FAULTS } from '../../harness/faults.js';
 
 const ctx = useApp();
 const CP = 'final-observation';
 
-/** The real DISC-03 Monster-playoff scenario; `fault` runs right before the prerequisite match. */
+/**
+ * The DISC-03 Monster-playoff scenario, played through the real app with the v7.28 defect
+ * RE-INJECTED (test-only fault 'reintroduce-disc03-open-wipe'; v7.34 fixed the real one), so
+ * this probe has a deterministic discrepancy that does not depend on a live application bug.
+ * `fault` runs right before the prerequisite match.
+ */
 function disc03(disc, fault = () => {}) {
   const { d, app } = ctx;
+  FAULTS['reintroduce-disc03-open-wipe'](app);
   const ids = d.addPlayers(8);
   const t = d.createTournament({ type: 'monster', tables: 2 });
   d.addToEvent(t, ids);
@@ -37,7 +44,7 @@ const tinyProp = (run) => defineProperty({
 });
 
 // ---- the only probes allowed to pass ----
-discrepancy('PROBE', 'EXPECTED: real DISC-03 reproduces at its checkpoint', { checkpoint: CP }, (disc) => disc03(disc));
+discrepancy('PROBE', 'EXPECTED: DISC-03 scenario with the v7.28 defect re-injected reproduces at its checkpoint', { checkpoint: CP }, (disc) => disc03(disc));
 
 discrepancy('PROBE', 'EXPECTED: observation inside a property case (fast-check wrapped)', { checkpoint: CP },
   (disc) => checkProperty(tinyProp(({ disc: dd }) => dd.observe(CP, () => expect(1).toBe(2))), { disc }));

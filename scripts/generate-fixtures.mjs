@@ -12,6 +12,15 @@ import { createHash } from 'node:crypto';
 import { loadApp } from '../test/harness/loadApp.js';
 import { createDriver, runBracketOnlyTeamEvent } from '../test/factories/driver.js';
 
+/**
+ * Hand-set club points the committed v7.28 fixture was generated with (they were the
+ * team-seed tests' starting balances until the v7.34 maintenance). Kept here ONLY so the
+ * --historical fixture regenerates byte-for-byte; the tests themselves now derive starting
+ * points from a recorded history (TEAM_EVENT_HISTORY in test/factories/driver.js), per the
+ * owner-confirmed 2,000-point baseline. Offsets from 1800 are 5 × (2^k − 1).
+ */
+const V728_FIXTURE_START_POINTS = [1800, 1805, 1955, 2115, 2435, 1875, 1815, 1835];
+
 const hist = process.argv.indexOf('--historical');
 if (hist > 0) {
   const html = readFileSync(process.argv[hist + 1], 'utf8');
@@ -19,7 +28,7 @@ if (hist > 0) {
   if (appVersion !== '7.28') throw new Error(`--historical expects the v7.28 index.html, got v${appVersion}`);
   const app = await loadApp({ seed: 728, html });
   const d = createDriver(app, { seed: 728 });
-  const { t } = runBracketOnlyTeamEvent(app, d, { type: 'doubles', format: 'double-elim', upset: true, name: 'Synthetic Doubles (v7.28 history)' });
+  const { t } = runBracketOnlyTeamEvent(app, d, { type: 'doubles', format: 'double-elim', upset: true, name: 'Synthetic Doubles (v7.28 history)', legacyStartPoints: V728_FIXTURE_START_POINTS });
   t.createdAt = Date.UTC(2026, 9, 6, 23);
   app.call('saveState');
   const out = {

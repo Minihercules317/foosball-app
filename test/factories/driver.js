@@ -222,23 +222,73 @@ export function runMonsterNight(app, d, { players = 8, rounds = 3, tables = 2, s
 }
 
 /**
- * Fabricated club ranking points for 8 players (p_0001 … p_0008). Offsets from 1800
- * are 5 × (2^k − 1), so every pair of players has a DIFFERENT sum: whatever teams are
- * formed or drawn, "team strength" (sum of partner points) is never tied.
- * Total 15,635 → bonus pool 1% = 156.
+ * Recorded club history for the 8 players (p_0001 … p_0008) of a bracket-only team event.
+ *
+ * Owner-confirmed ranking model (2026-11-11): every player starts at 2,000 club points and
+ * points are derived ONLY from recorded tournament results (manual "Recalculate" resets
+ * everyone to 2,000 and replays events chronologically). A starting state with hand-set
+ * balances is therefore not a state the club can be in; the team-seed checks instead give
+ * the field distinct points by PLAYING earlier events through the production code.
+ *
+ * Four fabricated earlier Singles brackets (single elimination). Each entry lists player
+ * numbers in "strength order": in every match the player listed earlier wins.
  */
-export const TEAM_EVENT_POINTS = [1800, 1805, 1955, 2115, 2435, 1875, 1815, 1835];
+export const TEAM_EVENT_HISTORY = [
+  [2, 7, 4, 8, 6],
+  [3, 8, 1, 2, 6],
+  [3, 6, 7, 2],
+  [5, 7, 4, 8, 2, 1],
+];
+/** Recorded (fabricated) dates of the history events, so chronological replay order is explicit. */
+export const TEAM_EVENT_HISTORY_DATES = [Date.UTC(2026, 0, 6, 23), Date.UTC(2026, 0, 13, 23), Date.UTC(2026, 0, 20, 23), Date.UTC(2026, 0, 27, 23)];
+
+/**
+ * Club points TEAM_EVENT_HISTORY produces (2,000 + each player's recorded deltas). Pinned so
+ * the team-event expectations can be derived by hand; test/regression/checks.js asserts that
+ * the history really produces them (and that "Recalculate" reproduces them) rather than
+ * assuming it. Every pair of players has a DIFFERENT sum, so whatever teams are formed or
+ * drawn, "team strength" (sum of partner points) is never tied.
+ * Total 16,404 → bonus pool 1% = 164.
+ */
+export const TEAM_EVENT_POINTS = [2020, 2026, 2108, 2038, 2085, 2000, 2077, 2050];
+
+/**
+ * Play TEAM_EVENT_HISTORY for `ids` (one finished, ranked Singles bracket per entry).
+ * Returns the history events, oldest first.
+ */
+export function playRankingHistory(app, d, ids, history = TEAM_EVENT_HISTORY) {
+  return history.map((order, k) => {
+    const field = order.map((n) => ids[n - 1]);
+    const t = d.createTournament({ type: 'singles', format: 'single-elim', name: `Synthetic Singles ${k + 1}` });
+    t.createdAt = TEAM_EVENT_HISTORY_DATES[k];
+    d.addToEvent(t, field);
+    d.startBracket(t);
+    const strength = (e) => field.indexOf((e?.playerIds && e.playerIds[0]) || e?.id);
+    d.playBracketToCompletion(t, { pickWinner: (m) => strength(m.a.entity) < strength(m.b.entity) });
+    return t;
+  });
+}
 
 /**
  * Convenience: a bracket-only TEAM event (no ranking rounds) of 4 teams with a scripted
- * result. Doubles uses fixed teams (p1+p2, p3+p4, p5+p6, p7+p8); DYP / Monster draw their
- * teams inside startBracketTournament(). `upset: true` → the team with the HIGHER seed
- * number wins every match; `false` → the lower seed number wins every match ("chalk").
- * Returns the event plus each team's bracket seed as stored on the bracket sides.
+ * result, played after the recorded TEAM_EVENT_HISTORY. Doubles uses fixed teams (p1+p2,
+ * p3+p4, p5+p6, p7+p8); DYP / Monster draw their teams inside startBracketTournament().
+ * `upset: true` → the team with the HIGHER seed number wins every match; `false` → the lower
+ * seed number wins every match ("chalk").
+ * Returns the event, each team's bracket seed as stored on the bracket sides, the history
+ * events and every player's club points right before the event.
+ *
+ * `legacyStartPoints` exists ONLY so scripts/generate-fixtures.mjs can regenerate the
+ * committed v7.28 fixture exactly as it was made (hand-set balances instead of a history).
+ * Hand-set balances are not a valid state under the owner-confirmed ranking model and are
+ * erased by v7.34's automatic ranking rebuild (DISC-17); do not use them in tests.
  */
-export function runBracketOnlyTeamEvent(app, d, { type = 'doubles', format = 'double-elim', upset = true, name } = {}) {
-  const ids = d.addPlayers(TEAM_EVENT_POINTS.length);
-  ids.forEach((id, i) => { d.player(id).rankingPoints = TEAM_EVENT_POINTS[i]; });
+export function runBracketOnlyTeamEvent(app, d, { type = 'doubles', format = 'double-elim', upset = true, name, legacyStartPoints } = {}) {
+  const ids = d.addPlayers(8);
+  let history = [];
+  if (legacyStartPoints) ids.forEach((id, i) => { d.player(id).rankingPoints = legacyStartPoints[i]; });
+  else history = playRankingHistory(app, d, ids);
+  const pointsBefore = Object.fromEntries(ids.map((id) => [id, d.player(id).rankingPoints]));
   app.call('saveState');
   const t = d.createTournament({ type, format, name });
   d.addToEvent(t, ids);
@@ -259,5 +309,5 @@ export function runBracketOnlyTeamEvent(app, d, { type = 'doubles', format = 'do
       return upset ? a > b : a < b;
     },
   });
-  return { t, ids, seedOf, teamKey };
+  return { t, ids, seedOf, teamKey, history, pointsBefore };
 }

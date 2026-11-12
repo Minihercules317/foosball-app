@@ -51,12 +51,15 @@ test/
     synthetic-club.json        fabricated 3-night club backup (npm run fixtures regenerates)
     historical/*.json          fabricated event really played by an OLDER app version (stored old
                                ranking deltas); `npm run fixtures -- --historical <v7.28 index.html>`
-    scenarios/*.json           saved, replayable scenarios (DISC-01, DISC-15 counterexamples)
+    scenarios/*.json           saved, replayable scenarios (DISC-01 v7.34 counterexample, DISC-15 seeds;
+                               DISC-01-resolved-v734.json = the v7.28 counterexample, now a regression test)
   unit/ properties/ integration/ regression/ discrepancies/   (as labelled below)
   properties/defs/    property definitions (non-test modules, so replay can import them)
   regression/checks.js  regression check bodies, shared with the mutation probes
+  regression/resolved-discrepancies.test.js  former discrepancy checks resolved in v7.34
   selftest/           tests OF THE TEST INFRASTRUCTURE (classifier, replay, isolation, mutations, stress)
   selftest/probes/    deliberately failing probes, run only in a child process by selftest/
+  selftest/fixtures/  synthetic replay fixture (deliberately wrong claim) used by selftest/replay.test.js
   replay/             replay entry point (runs only with SCENARIO_FILE; used by npm run replay)
   e2e/                Playwright: UI flow, member snapshot, TV board cross-tab
 ```
@@ -69,7 +72,8 @@ test/
 | `[char]` | Characterization: pins current behavior (even if questionable) so refactors can't change it silently |
 | `[regression]` / `regression/` | Protects a previously fixed bug; each is mutation-probed (below) |
 | property tests | Invariants checked over generated scenarios |
-| `[DISC-xx]` | Discrepancy: asserts a *proposed* invariant that v7.28 violates (see [AUDIT.md](AUDIT.md)) |
+| `[DISC-xx]` | Discrepancy: asserts a *proposed* invariant that the current app (v7.34) violates (see [AUDIT.md](AUDIT.md)) |
+| `[regression] [DISC-xx]` | A discrepancy resolved by an app release, kept as an ordinary test (`regression/resolved-discrepancies.test.js`) |
 | `selftest/` | Proves the harness itself: classifier, replay, isolation, mutation sensitivity, stress plumbing |
 
 ## Isolation guarantees
@@ -127,8 +131,22 @@ must list exact patterns (DISC-08 allows only the specific boot crash it documen
 Proven by `test/selftest/classifier.test.js`: 22 probes run as real registered tests in a child
 Vitest process (including the review's reproduction — `submitScore` replaced by a no-op before
 DISC-03's prerequisite match — and a real timeout); exactly the 4 "EXPECTED" probes pass. The
-same file runs the **real** DISC-03 tests with `LCFC_FAULT=noop-submitScore` (all must fail as
-UNEXPECTED) and without it (all must pass).
+same file runs the DISC-03 scenarios (`selftest/probes/fault-injection.probe.js`) with
+`LCFC_FAULT=noop-submitScore` (all must fail as UNEXPECTED), without it (all must pass) and with
+no fault at all (all must report NO LONGER REPRODUCES), and runs the **real** discrepancy suite
+with `noop-submitScore` (only the five that never score a match may still reproduce).
+
+The self-tests do **not** depend on a live application bug. v7.34 fixed DISC-03, so its v7.28
+defect ("opening Edit score wipes a finished series") is re-injected by the test-only fault
+`reintroduce-disc03-open-wipe` (`test/harness/faults.js`, copied from the v7.28 code); the replay
+self-test uses a synthetic fixture with a deliberately wrong claim instead of the DISC-01 fixture.
+When a self-test needs a known discrepancy, inject one — never point it at an open app defect.
+
+**When a discrepancy stops reproducing** (`DISCREPANCY NO LONGER REPRODUCES`): check the app state
+the scenario leaves (not just the pass), record the fix in AUDIT.md (section A2), and move the
+check unchanged to `test/regression/resolved-discrepancies.test.js` (setup assertions →
+`precondition:`, checkpoint → ordinary assertion). If only some of its checks stopped
+reproducing, keep the finding open with a fresh counterexample (DISC-01).
 
 `npm run test:discrepancies` (`STRICT=1`) runs them as ordinary tests so every failure and its
 reproduction is printed; CI runs this as the informational, non-blocking "Known discrepancies" job.
@@ -236,6 +254,20 @@ Monster with shuffled seeds, and a recalculation of a fabricated Doubles event t
 scored (`test/fixtures/historical/`), which must come out with the corrected numbers. All five
 fail against v7.28 and against the mutation probe, on the ranking assertion.
 
+**Starting points follow the owner-confirmed ranking model** (everyone starts at 2,000; points
+come only from recorded results; Recalculate resets to 2,000 and replays events by date — see
+AUDIT.md). The four live cases first play a recorded history of four fabricated Singles brackets
+(`TEAM_EVENT_HISTORY` in `test/factories/driver.js`), which gives the 8 players distinct points
+with every pair sum distinct. Each case asserts as preconditions that the history produced the
+pinned `TEAM_EVENT_POINTS` (from which the table is derived) and that they equal 2,000 + each
+player's recorded deltas. After checking Δ, expected finish, podium, the locked bonus pool and
+final club points, it runs **Recalculate** and requires the same Δ, history deltas and totals.
+Until 2026-11-11 these cases hand-set the starting balances instead; v7.34's automatic ranking
+rebuild (DISC-17) erases such balances, which is why the four tests failed on v7.34 (Δ, seeds,
+podium and pool still matched). The committed v7.28 fixture keeps its original hand-set balances
+(only its stored deltas and Recalculate are used); `scripts/generate-fixtures.mjs --historical`
+still regenerates it exactly.
+
 ## Writing a new test
 ```js
 import { it, expect } from 'vitest';
@@ -276,7 +308,7 @@ Tips:
 - **Multi-event** table sharing / conflict lock / cross-event player contention / `fairPromoteAcrossEvents`
   (round properties check one round of one event at a time). Highest-priority gap.
 - Score corrections across Bo1/3/5, undo/clear, descendants and grand-final reset, with reload and
-  ranking-history checks (beyond DISC-01…05).
+  ranking-history checks (beyond DISC-01 and the resolved DISC-02…05 checks).
 - Independent ranking examples beyond the 4-team bracket-only cases above (both bonus splits, ties, zero floor,
   event-date edits). Recalculation agreeing with the incremental path is consistency evidence,
   not an independent oracle.

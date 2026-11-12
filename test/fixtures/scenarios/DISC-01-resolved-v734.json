@@ -1,0 +1,7 @@
+{
+  "property": "DISC-01-correction",
+  "scenario": { "seed": 8, "n": 9, "format": "double-elim", "playFirst": 7 },
+  "foundBy": { "fcSeed": 20261108, "fcPath": "0", "note": "first generated case of the pinned DISC-01 property after per-case isolation (2026-11-08)" },
+  "observation": "up to v7.32: after flipping the earliest result, player p_0002 is in two ready matches",
+  "resolved": "v7.34 (upstream 4b9127e): the invariant holds for this scenario; replayed as a regression test in test/regression/resolved-discrepancies.test.js. DISC-01 itself stays OPEN — see DISC-01-correction.json."
+}

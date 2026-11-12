@@ -114,29 +114,46 @@ export function checkLateJoinersDoNotSit(app, d) {
  * averaged the two partners' INDIVIDUAL club-rank positions (1…8 for 8 players) and
  * compared that with a TEAM place (1…4) — which inflated every seed adjustment.
  *
+ * Owner-confirmed ranking model (2026-11-11): everyone starts at 2,000 and club points are
+ * derived from recorded tournament results only. So the field gets its distinct points from
+ * a recorded HISTORY of four Singles brackets played through the app (TEAM_EVENT_HISTORY in
+ * test/factories/driver.js), never from hand-set balances. The history is input, not the
+ * subject: the check asserts (as preconditions) that it produced the pinned TEAM_EVENT_POINTS,
+ * that those equal 2,000 + each player's recorded deltas, and that "Recalculate" reproduces
+ * them. (Until 2026-11-11 the fixture hand-set the balances; v7.34's automatic ranking
+ * rebuild erases such balances — DISC-17 — which is why those four tests went red.)
+ *
  * The expected numbers below are derived by hand from the README, not from the app:
  *   Δ = (tier(expected) − tier(actual)) × 8 + podium bonus     tiers: 1 · 2 · 3–4 · 5–8
  *   bonus pool = 1% of the field's combined points, locked at bracket creation,
  *   split 50/30/20, each partner on a podium step receives that step's share.
- * Field (TEAM_EVENT_POINTS) totals 15,635 → pool 156 → shares 78 / 47 / 31.
+ * Field (TEAM_EVENT_POINTS) totals 16,404 → pool round(164.04) = 164
+ *   → shares round(82) = 82 / round(49.2) = 49 / remainder 164 − 82 − 49 = 33.
  *
  * With 4 teams and the higher seed number winning every match ("upset"), in single AND
  * double elimination: seed 4 → 1st, seed 3 → 2nd, seed 2 → 3rd, seed 1 → 4th.
  *   seed 1: (tier 1st=0 − tier 4th=2) × 8 = −16            → −16
- *   seed 2: (tier 2nd=1 − tier 3rd=2) × 8 =  −8, + 31      → +23
- *   seed 3: (tier 3rd=2 − tier 2nd=1) × 8 =  +8, + 47      → +55
- *   seed 4: (tier 4th=2 − tier 1st=0) × 8 = +16, + 78      → +94
+ *   seed 2: (tier 2nd=1 − tier 3rd=2) × 8 =  −8, + 33      → +25
+ *   seed 3: (tier 3rd=2 − tier 2nd=1) × 8 =  +8, + 49      → +57
+ *   seed 4: (tier 4th=2 − tier 1st=0) × 8 = +16, + 82      → +98
  * With the lower seed number winning every match ("chalk") every team finishes exactly
  * where it was seeded, so the seed adjustment is 0 and Δ is the bonus alone.
  * ---------------------------------------------------------------------------------- */
-const TEAM_EVENT_POOL = 156;
+const TEAM_EVENT_POOL = 164;
 const DELTA_BY_SEED = {
-  upset: { 1: -16, 2: 23, 3: 55, 4: 94 },
-  chalk: { 1: 78, 2: 47, 3: 31, 4: 0 },
+  upset: { 1: -16, 2: 25, 3: 57, 4: 98 },
+  chalk: { 1: 82, 2: 49, 3: 33, 4: 0 },
 };
 const PODIUM_SEEDS = { upset: [4, 3, 2], chalk: [1, 2, 3] };
 const plain = (v) => JSON.parse(JSON.stringify(v));
 export const HISTORICAL_DOUBLES_FIXTURE = new URL('../fixtures/historical/doubles-bracket-only-v7.28.json', import.meta.url);
+
+/** 2,000 + the sum of each player's stored deltas over `events` (README / owner model). */
+function pointsFromRecordedDeltas(ids, events) {
+  const pts = Object.fromEntries(ids.map((id) => [id, 2000]));
+  for (const ev of events) for (const [id, v] of Object.entries(ev.rankingDeltas || {})) if (id in pts) pts[id] += Number(v);
+  return pts;
+}
 
 /** Each case adds something the others do not; all use 8 players / 4 teams. */
 export const TEAM_SEED_CASES = [
@@ -158,9 +175,17 @@ export const TEAM_SEED_CASES = [
  */
 export function checkBracketOnlyTeamRanking(app, d, { type, format, upset }) {
   const script = upset ? 'upset' : 'chalk';
-  const { t, ids, seedOf, teamKey } = runBracketOnlyTeamEvent(app, d, { type, format, upset });
+  const { t, ids, seedOf, teamKey, history, pointsBefore } = runBracketOnlyTeamEvent(app, d, { type, format, upset });
   const startPoints = Object.fromEntries(ids.map((id, i) => [id, TEAM_EVENT_POINTS[i]]));
   const teams = [...seedOf.entries()].map(([key, seed]) => ({ key, seed, ids: key.split('+') }));
+  const pointsNow = () => Object.fromEntries(ids.map((id) => [id, d.player(id).rankingPoints]));
+
+  // The field's starting points come from recorded results (owner model), not hand-set balances.
+  expect(history.map((h) => [h.status, h.rankingApplied]), 'precondition: every history event finished and was ranked')
+    .toEqual(history.map(() => ['finished', true]));
+  expect(pointsBefore, 'precondition: club points before the event = 2,000 + recorded history deltas')
+    .toEqual(pointsFromRecordedDeltas(ids, history));
+  expect(pointsBefore, 'precondition: the history produced the pinned TEAM_EVENT_POINTS the table is derived from').toEqual(startPoints);
 
   expect(teams.map((x) => x.seed).sort(), 'precondition: 4 teams seeded 1…4').toEqual([1, 2, 3, 4]);
   expect(teams.flatMap((x) => x.ids).sort(), 'precondition: every player is on exactly one seeded team').toEqual(ids.slice().sort());
@@ -174,7 +199,7 @@ export function checkBracketOnlyTeamRanking(app, d, { type, format, upset }) {
   const pl = t.placements || t.playoffs.placements;
   expect([pl.first, pl.second, pl.third].map((e) => seedOf.get(teamKey(e))),
     `precondition: the scripted result happened (${script}: podium seeds)`).toEqual(PODIUM_SEEDS[script]);
-  expect((t.bonusPoolLocked || t.playoffs.bonusPoolLocked).bonusPool, 'precondition: locked pool = 1% of 15,635').toBe(TEAM_EVENT_POOL);
+  expect((t.bonusPoolLocked || t.playoffs.bonusPoolLocked).bonusPool, 'precondition: locked pool = 1% of 16,404').toBe(TEAM_EVENT_POOL);
   expect(t.playoffTeams || [], 'precondition: a bracket-only event stores no playoff teams (the case the rule is about)').toHaveLength(0);
 
   const expectedDelta = {}; const expectedSeed = {}; const expectedPoints = {};
@@ -186,16 +211,27 @@ export function checkBracketOnlyTeamRanking(app, d, { type, format, upset }) {
   expect(plain(t.rankingDeltas), `${type} ${script}: ranking Δ follows the team's bracket seed`).toEqual(expectedDelta);
   expect(Object.fromEntries(ids.map((id) => [id, t.rankingDeltaDetail[id].expected])),
     `${type} ${script}: expected finish is the team's bracket seed`).toEqual(expectedSeed);
-  expect(Object.fromEntries(ids.map((id) => [id, d.player(id).rankingPoints])),
-    `${type} ${script}: club points = start + Δ`).toEqual(expectedPoints);
+  expect(pointsNow(), `${type} ${script}: club points = start + Δ`).toEqual(expectedPoints);
+
+  // Historical recalculation (owner rule: reset everyone to 2,000, replay recorded events in
+  // date order) must reproduce exactly the same event Δ and club totals.
+  const historyDeltas = history.map((h) => plain(h.rankingDeltas));
+  expect(app.call('recalculateClubRankingsFromEvents'), `${type} ${script}: recalculation replays the history and the event`).toBe(history.length + 1);
+  expect(plain(t.rankingDeltas), `${type} ${script}: recalculated Δ still follows the team's bracket seed`).toEqual(expectedDelta);
+  expect(history.map((h) => plain(h.rankingDeltas)), `${type} ${script}: recalculation reproduces the history deltas`).toEqual(historyDeltas);
+  expect(pointsNow(), `${type} ${script}: recalculated club points = 2,000 + history + Δ`).toEqual(expectedPoints);
 }
 
 /**
  * Historical recalculation. The fixture is the saved device state of a FABRICATED
  * bracket-only Doubles event that was really played and scored by v7.28 (see its
  * `provenance`; regenerate with scripts/generate-fixtures.mjs --historical). It is the
- * "upset" scenario above with fixed teams p1+p2 (seed 4), p3+p4 (seed 2), p5+p6 (seed 1),
- * p7+p8 (seed 3), so its stored deltas are the OLD ones:
+ * "upset" scenario above, generated before the v7.34 maintenance from HAND-SET starting
+ * balances (V728_FIXTURE_START_POINTS in the generator; not a valid state under the
+ * owner-confirmed 2,000 baseline, which is why only the stored deltas and "Recalculate" are
+ * used here — loading the file rebuilds totals from deltas anyway). Fixed teams p1+p2
+ * (seed 4), p3+p4 (seed 2), p5+p6 (seed 1), p7+p8 (seed 3); stored deltas are the OLD ones,
+ * with expected = average of the partners' club-rank positions under those balances:
  *   p1+p2  expected round((8+7)/2)=8 → 1st: (3−0)×8 + 78 = 102
  *   p7+p8  expected round((6+5)/2)=6 → 2nd: (3−1)×8 + 47 =  63
  *   p3+p4  expected round((3+2)/2)=3 → 3rd: (2−2)×8 + 31 =  31

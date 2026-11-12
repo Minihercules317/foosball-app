@@ -1,4 +1,4 @@
-# Engineering Audit — LCFC Manager v7.28
+# Engineering Audit — LCFC Manager v7.28 (updated for v7.34)
 
 *Audited 2026-11-08 on fork branch `engineering/testing-foundation`. No production code was
 changed. Every item says how it was established:*
@@ -8,8 +8,16 @@ changed. Every item says how it was established:*
 - **Reported** — found by an exploratory script during the audit and checked by reading the
   code, but not yet captured in the suite
 
-Severity is from a weekly club operator's point of view. **Nothing here has been fixed.**
-Each discrepancy needs a decision from the app's owner (see "Owner decision" lines).
+Severity is from a weekly club operator's point of view. Each open discrepancy needs a decision
+from the app's owner (see "Owner decisions needed").
+
+> **v7.34 update (2026-11-11, branch `engineering/v734-test-maintenance`).** Upstream v7.34
+> (`4b9127e`) resolved DISC-02 … DISC-06 and part of DISC-01: ten former discrepancy checks now
+> hold and are ordinary regression tests (section **A2**, which also says which checks share one
+> fix — ten checks, five fixes). **DISC-01 stays open** (the random property still finds
+> double-booking). v7.34 also introduced an automatic ranking rebuild on bracket completion,
+> recorded as **DISC-17** (owner-accepted for now). Line numbers in rows that were not re-checked
+> still refer to v7.28.
 
 ## Summary
 
@@ -34,16 +42,11 @@ Most real risk sits in four areas:
 4. **Operational workflows** that silently replace or overwrite data: operator mode off,
    two tabs open at once, deleting a ranked event.
 
-## A. Discrepancies (each has a failing reproduction in `test/discrepancies/`)
+## A. Open discrepancies (each has a failing reproduction in `test/discrepancies/`)
 
 | ID | Sev | Area | Finding | How established |
 |---|---|---|---|---|
-| DISC-01 | **High** | Brackets | Correcting a bracket result clears only the next match downstream. Later rounds keep stale entrants, so a player can be in two ready matches at once, or an eliminated player stays scheduled. Lines: `submitBracketScore` l.9370–9388, `clearBracketMatch` l.8608–8626. A related path: cleared matches keep `_byePropagated`, so a losers-bracket bye doesn't re-advance. | Test: `bracket-corrections.test.js` (random property + single-elim-8 repro) |
-| DISC-02 | **High** | Brackets | Bronze and grand-final results survive a change to their feeder, because only the side's entity is cleared, not `winner`. Example: re-scoring a semi-final in a 4-player bracket gives 1st=E4, 2nd=E1, 3rd=E4 while the event stays "finished". | Test |
-| DISC-03 | **High** (Monster) | Scoring | **Opening** "Edit score" on a finished best-of-3/5 match wipes its result in memory at once (`openPlayoffScore` l.10400, `openScoreModal` l.9055). Closing the dialog doesn't restore it. (The persisted copy initially still holds the old result; cancelling alone was not shown to delete it from disk. Whether a later save persists the cleared result was not tested.) In a bracket, the downstream invalidation is also skipped (winner is already null at submit), so the re-entered semi-final winner becomes champion of a final they never played. Monster playoffs are always Bo3, so this sits in the weekly workflow. | Test (3 cases) |
-| DISC-04 | Med | Brackets | Fixing a typo without changing the winner (5–1 → 5–2) still clears the next match's result, while placements still show the old champion. | Test |
-| DISC-05 | Med | Ranking | Club ranking is applied once (`rankingApplied`) and never re-applied after a correction or "Replace bracket". Stored deltas then credit the old podium until someone manually runs "Recalculate". | Test |
-| DISC-06 | **High** | Import | No import path calls `saveState()` (l.10580–10661). The toast says "Data replaced" or "Imported event", but a reload, another tab's save, or the 5-second refresh tick restores the old data. The import only sticks if some later action happens to save. | Test (full replace + single event) |
+| DISC-01 | **High** | Brackets | Correcting a bracket result clears only the next match downstream. Later rounds keep stale entrants, so a player can be in two ready matches at once, or an eliminated player stays scheduled. Lines: `submitBracketScore` l.9370–9388, `clearBracketMatch` l.8608–8626. A related path: cleared matches keep `_byePropagated`, so a losers-bracket bye doesn't re-advance. | Test: `bracket-corrections.test.js` (random property + saved v7.34 counterexample `DISC-01-correction.json`: seed 15, 6 players, double elim, p_0005 in two ready matches). **Partially resolved in v7.34:** the single-elim-8 repro and the v7.28 saved scenario (seed 8) now hold and are regression tests (A2); the randomized double-booking still reproduces, so the finding stays open. |
 | DISC-07 | Med | Import / ranking | Importing an event that already exists and choosing Cancel ("keep both") creates a copy with identical `rankingDeltas`. Those points are counted twice. | Test |
 | DISC-08 | Med (High if it occurs) | Robustness | A single malformed record (a `null` tournament, a missing `playerIds`, a non-string name) throws during the first render (`renderHome` l.5430 / `escapeHtml` l.12715) before auto-refresh and the snapshot fetch start. A member device that loaded a bad `latest.json` saves it locally and can't recover, even after the file is fixed, until site data is cleared. | Test (3 cases) |
 | DISC-09 | Med | Ranking | Deleting a finished official event (`confirmDeleteTournament`, not operator-gated) leaves its deltas in the operator's player totals. Members rebuild totals from the remaining events' deltas, so the operator's leaderboard and the published one disagree. Manually edited `rankingPoints` are lost the same way on any import. | Test |
@@ -54,16 +57,67 @@ Most real risk sits in four areas:
 | DISC-14 | Low | Merge | After merging players, `sitOutQueue` and `bonusPoolLocked.fieldIds` still reference the removed id. Neither affects scoring of finished events; the scoring-relevant references are covered by a passing contract test. | Test |
 | DISC-15 | Low (rules question) | Partners | In rare late rounds of small fields, the draw has more repeat partnerships than the minimum possible. Example: 7 players, round 10, 4 playing: the app picks two second-time pairs (2 repeats), although a third-time pair plus a brand-new pair (1 repeat) was available. The alternative is better even by the app's own comparison (`fairPairPlayers` l.6944 ranks by forbidden repeats, then rematches), but the greedy builder (l.6899) always takes the lowest-count partner first, so it never generates that pairing. Seen in 2 of 1,925 random 2–10-round nights (about 0.1%), both with 7 players in round 10 (audit estimate; not independently replicated). **Whether the app's choice is worse for players is a club-rules judgement.** | Test: `partners.test.js`, 2 pinned scenario fixtures (found by a time-bounded random search) |
 | DISC-16 | Low–Med (rules question) | Ranking | Non-podium places sort by "fewer bracket losses first" (`getEventFinishPlaces` sort at l.4309; comment at l.4238 "fewer bracket losses = deeper run"). In double elimination every non-podium entry has 2 losses, so this never matters there. In **single elimination with a bronze match**, the bronze-match loser — a semi-finalist, 2 losses — is placed **last** (8th of 8), behind all quarter-final losers (1 loss each). Places feed seed points (tier 3–4 vs 5–8). Found while repairing the non-podium regression guard (review F7); a mutation probe confirms that reversing the loss key moves the bronze loser to 4th. | Test: `ranking-places.test.js` |
+| DISC-17 | Med (owner-accepted for now) | Ranking | **v7.34 automatic ranking rebuild on ordinary bracket completion.** The submission that finishes a bracket runs `updatePlacementsFromBracket` (l.10572) → `tryApplyRankingOnFinish`, which sets `rankingApplied`; `submitBracketScore` (l.9687) then sees `prevWinner \|\| t.rankingApplied` and handles the ordinary finish like a correction: `reapplyRankingAfterBracketCorrection` (l.9571) drops this event's deltas and calls `rebuildPlayerRankingPointsFromEventDeltas` (l.3867), which resets **every** player to 2,000 and replays the **stored** `rankingDeltas` of the remaining events in `createdAt` order (it does not recompute them from results), then applies this event again. Any points not represented by a retained event delta are lost — for every player, not just this event's. Affected data states: (a) the contribution of a **deleted** ranked event, which the owner confirmed may stay in the totals until a recalculation (rule 6) — an unrelated bracket finish now acts as an unrequested partial recalculation; (b) any `rankingPoints` value not backed by stored deltas — e.g. balances set outside the event-delta mechanism, as the team-seed test fixture did until 2026-11-11 (its four tests went red on v7.34 for exactly this reason). Not affected: merges (they already run a full recalculation). Corrections take the same path by design (DISC-05 fix); imports in v7.34 also rebuild. **This is separate from the confirmed rule that every player starts at 2,000.** | Test: `ranking-rebuild.test.js` — delete a ranked Monster night, finish an unrelated 4-player Singles bracket (one submission per match); checkpoint `points-change-only-by-event-delta` fails because the night's players drop back to 2,000. |
 
 **Owner decisions needed:**
-- DISC-01–05: what a correction should do once later matches have been played: cascade and
-  invalidate, block, or ask the operator?
+- DISC-01: v7.34 cascades and invalidates downstream matches; the random property still finds
+  double-booking after a correction (see the saved counterexample).
 - DISC-11: what "OT" means.
 - DISC-12: should DYP ranking-round standings be per player, like Monster?
 - DISC-13: is generating a round, or starting playoffs, while matches are live allowed?
 - DISC-08: how bad records should be handled.
 - DISC-15: is "fewest repeat pairs" the right goal, or is "no pair three times" preferred?
 - DISC-16: where should a single-elimination bronze-match loser finish — 4th, or after the quarter-final losers?
+- DISC-17: **accepted for now (owner, 2026-11-11)** — tracked, not to be fixed in this cycle. How
+  to evaluate a future change: if the rebuild is removed or made incremental, the test reports
+  `DISCREPANCY NO LONGER REPRODUCES` → confirm with the owner that finishing an event changes
+  points only by its own Δ, then convert the test to a regression test. If deleting an event
+  starts removing its contribution immediately, the test's setup assertion fails as
+  `UNEXPECTED FAILURE` → that is a change to owner rule 6, review it with the owner (and DISC-09)
+  before rewriting the scenario. Never loosen the checkpoint to absorb either change.
+- DISC-09: owner rule 6 (below) says a deleted event's contribution may stay in the totals until
+  a recalculation. Whether DISC-09's proposed invariant (operator totals = published totals right
+  after a deletion) is still wanted is an owner question; the test is unchanged.
+
+**Owner-confirmed ranking rules (2026-11-11).** (1) Every player starts at 2,000 club points;
+(2) this equal baseline is intentional; (3) points are derived from tournament results, not from
+manually set balances; (4) manual Recalculate resets everyone to 2,000 and replays recorded
+tournaments chronologically; (5) Recalculate has been used to correct records after merging
+duplicate player identities; (6) deleted tournaments can leave their ranking contributions in
+the current totals until a recalculation. Test fixtures follow these rules: starting points come
+from recorded (fabricated) events, never from hand-set balances (TESTING.md).
+
+## A2. Resolved in v7.34 (now regression tests)
+
+Each check below reported `DISCREPANCY NO LONGER REPRODUCES` against v7.34 (`4b9127e`) after
+failing at its checkpoint against v7.28 and v7.32. Each was confirmed against the resulting app
+state, not only the pass: the corrected match's downstream slots are cleared and re-playable, the
+podium is cleared or rebuilt (never duplicated), cancelled edits leave results intact, the new
+champion is ranked 1st, and imported data survives a reload. The checks moved unchanged (same
+scenario; setup assertions → preconditions; checkpoint → ordinary assertion) to
+`test/regression/resolved-discrepancies.test.js`. They are not separately mutation-probed; their
+discriminating power is the recorded failure on v7.28/v7.32.
+
+**Ten checks, five fixes** (v7.34 code comments name the DISC ids):
+
+| Fix in v7.34 | Checks resolved | Where (v7.34) |
+|---|---|---|
+| F1. A correction that changes the winner clears every downstream slot fed by the match and voids its results; single-elim placements are recomputed from current winners | DISC-01 single-elim-8 and the v7.28 saved scenario (seed 8); DISC-02; DISC-03 Bo3 semi-final re-entry (with F2) | `clearDownstreamBracketFrom` l.9535, `submitBracketScore` l.9676, `updatePlacementsFromBracket` l.10578/10616 |
+| F2. Opening/cancelling "Edit score" never mutates the match; a best-of series re-edit commits only on save (and remembers the previous winner) | DISC-03 Monster playoff Bo3; DISC-03 Bo3 ranking round | `openScoreModal` l.9157, `openPlayoffScore` l.10658, submit paths l.9443/9598 |
+| F3. A same-winner score fix no longer cascades | DISC-04 | `submitBracketScore` l.9676 |
+| F4. Ranking is re-applied after a correction | DISC-05 | `reapplyRankingAfterBracketCorrection` l.9571 (the same call also runs on ordinary completion — DISC-17) |
+| F5. Every import path saves | DISC-06 full replace-import; DISC-06 single-event import | l.10871/10883/10899/10913 |
+
+Former rows (v7.28 descriptions and line numbers), kept for history:
+
+| ID | Sev | Area | Finding (v7.28) | Status |
+|---|---|---|---|---|
+| DISC-01 | **High** | Brackets | Correcting a bracket result clears only the next match downstream. Later rounds keep stale entrants, so a player can be in two ready matches at once, or an eliminated player stays scheduled. Lines: `submitBracketScore` l.9370–9388, `clearBracketMatch` l.8608–8626. A related path: cleared matches keep `_byePropagated`, so a losers-bracket bye doesn't re-advance. | **Partially resolved** — still open in A (random property) |
+| DISC-02 | **High** | Brackets | Bronze and grand-final results survive a change to their feeder, because only the side's entity is cleared, not `winner`. Example: re-scoring a semi-final in a 4-player bracket gives 1st=E4, 2nd=E1, 3rd=E4 while the event stays "finished". | Resolved in v7.34 (F1) for the tested single-elim semi-final correction. Not separately tested: the grand-final path of the original description |
+| DISC-03 | **High** (Monster) | Scoring | **Opening** "Edit score" on a finished best-of-3/5 match wipes its result in memory at once (`openPlayoffScore` l.10400, `openScoreModal` l.9055). Closing the dialog doesn't restore it. (The persisted copy initially still holds the old result; cancelling alone was not shown to delete it from disk. Whether a later save persists the cleared result was not tested.) In a bracket, the downstream invalidation is also skipped (winner is already null at submit), so the re-entered semi-final winner becomes champion of a final they never played. Monster playoffs are always Bo3, so this sits in the weekly workflow. | Resolved in v7.34 (F2; the bracket case with F1) — all 3 cases |
+| DISC-04 | Med | Brackets | Fixing a typo without changing the winner (5–1 → 5–2) still clears the next match's result, while placements still show the old champion. | Resolved in v7.34 (F3) |
+| DISC-05 | Med | Ranking | Club ranking is applied once (`rankingApplied`) and never re-applied after a correction or "Replace bracket". Stored deltas then credit the old podium until someone manually runs "Recalculate". | Resolved in v7.34 (F4) for a correction. Not separately tested: "Replace bracket". Side effect: DISC-17 |
+| DISC-06 | **High** | Import | No import path calls `saveState()` (l.10580–10661). The toast says "Data replaced" or "Imported event", but a reload, another tab's save, or the 5-second refresh tick restores the old data. The import only sticks if some later action happens to save. | Resolved in v7.34 (F5) — both cases |
 
 ## B. Risks in intended workflows (characterized, not failing)
 

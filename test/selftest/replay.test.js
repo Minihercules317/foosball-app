@@ -10,7 +10,7 @@
  */
 import { describe, it, expect, afterEach } from 'vitest';
 import fc from 'fast-check';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { checkProperty, runScenario, defineProperty } from '../harness/scenario.js';
@@ -128,9 +128,26 @@ describe('independent replay of randomized scenarios', () => {
     expect(child.code).toBe(0);
   }, 180_000);
 
-  it('the committed DISC-01 fixture reproduces its discrepancy alone in a new process', async () => {
-    const child = await runNode(['scripts/replay.mjs', 'test/fixtures/scenarios/DISC-01-correction.json'], {});
-    expect(child.code).not.toBe(0);
-    expect(child.out).toContain('[DISC-01 @ no-double-booking-after-correction] player p_0002 in two ready matches');
+  it('a committed discrepancy fixture reproduces its tagged observation alone in a new process (and only because of its claim)', async () => {
+    // Synthetic fixture (test/selftest/fixtures/replay-discrepancy.json): a real Monster night
+    // plus a deliberately wrong claim, so this does not depend on a live application bug
+    // (until v7.34 it replayed the DISC-01 fixture, which v7.34 resolved).
+    const FIXTURE = 'test/selftest/fixtures/replay-discrepancy.json';
+    const child = await runNode(['scripts/replay.mjs', FIXTURE], {});
+    expect(child.code, child.out.slice(-2000)).not.toBe(0);
+    expect(child.out).toContain('[SELFTEST-REPLAY @ round1-sit-outs-match-claim] round 1 sit-outs (claimed 2): expected 3 to be 2');
+
+    // Control: the same scenario with the correct claim replays cleanly in a new process, so the
+    // failure above comes from the tagged observation, not from replay plumbing or the app.
+    const fx = JSON.parse(readFileSync(path.join(ROOT, FIXTURE), 'utf8'));
+    const dir = path.join(ROOT, 'test-results', 'selftest');
+    mkdirSync(dir, { recursive: true });
+    const control = path.join(dir, `replay-discrepancy-control-${process.pid}.json`);
+    writeFileSync(control, JSON.stringify({ ...fx, scenario: { ...fx.scenario, claimedSitOuts: 3 } }));
+    try {
+      const ok = await runNode(['scripts/replay.mjs', path.relative(ROOT, control)], {});
+      expect(ok.code, ok.out.slice(-2000)).toBe(0);
+      expect(ok.out).toContain('[replay] selftest-replay-discrepancy');
+    } finally { rmSync(control, { force: true }); }
   }, 120_000);
 });

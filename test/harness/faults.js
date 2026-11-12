@@ -21,6 +21,38 @@ export const FAULTS = {
   },
   /** The player list renders nothing (a silently broken view). */
   'blank-renderPlayers': (app) => { app.eval('renderPlayers = function () {}'); },
+  /**
+   * Re-injects the v7.28 DISC-03 defect (resolved in v7.34): OPENING "Edit score" on a
+   * finished best-of-3/5 match wipes its result in memory at once. The cleared fields are
+   * copied from v7.28 openPlayoffScore / openScoreModal. Lets the classifier self-tests
+   * use a known, deterministic discrepancy without depending on a live application bug.
+   */
+  'reintroduce-disc03-open-wipe': (app) => {
+    app.eval(`(function () {
+      const origPlayoff = openPlayoffScore;
+      openPlayoffScore = function (matchId) {
+        const t = getCurrentTournament();
+        const match = t && findBracketMatch(t, matchId)?.match;
+        const bestOf = t ? getTournamentBestOf(t, 'playoff') : 1;
+        if (match && bestOf > 1 && match.winner && isSeriesComplete(match.seriesA || 0, match.seriesB || 0, bestOf)) {
+          match.games = []; match.seriesA = 0; match.seriesB = 0;
+          match.scoreA = null; match.scoreB = null; match.winner = null; match.loser = null;
+        }
+        return origPlayoff.apply(this, arguments);
+      };
+      const origRound = openScoreModal;
+      openScoreModal = function (roundNum, matchId) {
+        const t = getCurrentTournament();
+        const round = t && t.rounds.find(r => r.number === parseInt(roundNum, 10));
+        const match = round && round.matches.find(m => m.id === matchId);
+        if (match && getTournamentBestOf(t, 'ranking') > 1 && match.status === 'done') {
+          match.games = []; match.seriesA = 0; match.seriesB = 0;
+          match.scoreA = null; match.scoreB = null; match.status = 'pending';
+        }
+        return origRound.apply(this, arguments);
+      };
+    })()`);
+  },
 };
 
 export function activeFaults() {

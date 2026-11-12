@@ -2,7 +2,7 @@
   "property": "DISC-01-correction",
   "discrepancy": "DISC-01",
   "checkpoint": "no-double-booking-after-correction",
-  "scenario": { "seed": 8, "n": 9, "format": "double-elim", "playFirst": 7 },
-  "foundBy": { "fcSeed": 20261108, "fcPath": "0", "note": "first generated case of the pinned DISC-01 property after per-case isolation (2026-11-08)" },
-  "observation": "after flipping the earliest result, player p_0002 is in two ready matches"
+  "scenario": { "seed": 15, "n": 6, "format": "double-elim", "playFirst": 10 },
+  "foundBy": { "fcSeed": 20261108, "fcPath": "19", "note": "first failing case of the pinned DISC-01 property against v7.34 (upstream 4b9127e), 2026-11-11; the previous fixture (seed 8) no longer reproduces and is kept as DISC-01-resolved-v734.json" },
+  "observation": "after flipping the earliest result, player p_0005 is in two ready matches"
 }

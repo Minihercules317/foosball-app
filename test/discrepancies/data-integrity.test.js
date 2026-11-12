@@ -1,5 +1,6 @@
 /**
  * DISCREPANCIES — persistence, import, data integrity, security.
+ * (DISC-06 was resolved in v7.34; its checks moved to test/regression/resolved-discrepancies.test.js.)
  * Requires domain-owner review; see docs/AUDIT.md. Expected to fail against the
  * current index.html AT THEIR DECLARED CHECKPOINT (run `npm run test:discrepancies`
  * to see the failures). Windows are booted per test and closed in afterEach.
@@ -21,34 +22,6 @@ async function clubWithNight(seed = 5) {
   const { t, ids } = runMonsterNight(app, d, { players: 10 });
   return { app, d, t, ids };
 }
-
-describe('DISC-06 import persistence', () => {
-  discrepancy('DISC-06', 'after a successful full replace-import, a reload shows the imported data', { checkpoint: 'events-after-reload' }, async (disc) => {
-    const { d: srcD } = await clubWithNight(5);
-    const backup = srcD.exportAll().data;
-    const app = await boot({ seed: 9 });
-    const d = createDriver(app);
-    d.addPlayers(3); // pre-existing local data
-    const toasts = await d.importJson(backup, [false, true]); // Cancel = replace, OK = confirm
-    expect(toasts.join(' '), 'setup: import reported success').toMatch(/Data replaced/);
-    expect(app.state.tournaments.length, 'setup: imported event in memory').toBe(1);
-    const reloaded = await boot({ data: app.stored() });
-    disc.observe('events-after-reload', () => expect(reloaded.state.tournaments.length, 'imported events lost on reload').toBe(1));
-  });
-
-  discrepancy('DISC-06', 'after a single-event import, a reload still shows the event', { checkpoint: 'event-after-reload' }, async (disc) => {
-    const { d: srcD, t } = await clubWithNight(6);
-    const payload = srcD.exportTournament(t).data;
-    const app = await boot({ seed: 10 });
-    const d = createDriver(app);
-    d.addPlayers(2); // something already saved locally
-    const toasts = await d.importJson(payload);
-    expect(toasts.join(' '), 'setup: import reported success').toMatch(/Imported event/);
-    expect(app.state.tournaments.length, 'setup: imported event in memory').toBe(1);
-    const reloaded = await boot({ data: app.stored() });
-    disc.observe('event-after-reload', () => expect(reloaded.state.tournaments.length, 'imported event lost on reload').toBe(1));
-  });
-});
 
 describe('DISC-07 importing an event that already exists', () => {
   discrepancy('DISC-07', 're-importing the same event (keep both) never changes anyone\'s ranking points', { checkpoint: 'points-unchanged' }, async (disc) => {

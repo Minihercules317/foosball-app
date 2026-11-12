@@ -7,10 +7,14 @@
  *     pass; unrelated assertions, exceptions (also with assertion causes),
  *     unexpected passes, unreached/wrong checkpoints, page errors and timeouts
  *     all fail with an actionable message.
- *  2. Fault injection into the REAL discrepancy suite (LCFC_FAULT, test/harness/faults.js)
- *     with submitScore broken: the real DISC-03 tests turn red as UNEXPECTED (and
- *     pass without the fault), and only the five discrepancies that never score a
- *     match may still count as reproduced — every other one fails with a label.
+ *  2. Fault injection (LCFC_FAULT, test/harness/faults.js) with submitScore broken:
+ *     - the DISC-03 scenarios (probes/fault-injection.probe.js), made a known discrepancy
+ *       by re-injecting the v7.28 defect (v7.34 fixed the real one), turn red as UNEXPECTED;
+ *       they pass with only the defect injected (positive control) and report NO LONGER
+ *       REPRODUCES with no fault at all (sensitivity control). None of this depends on a
+ *       live application bug.
+ *     - in the REAL discrepancy suite only the five discrepancies that never score a
+ *       match may still count as reproduced — every other one fails with a label.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { runVitest } from './nested.js';
@@ -32,10 +36,10 @@ describe('classifier probes (child process)', () => {
   it('only the EXPECTED probes pass', () => {
     const passed = [...run.tests].filter(([, t]) => t.status === 'passed').map(([k]) => k).sort();
     expect(passed).toEqual([
+      '[PROBE] EXPECTED: DISC-03 scenario with the v7.28 defect re-injected reproduces at its checkpoint',
       '[PROBE] EXPECTED: allowed page error',
       '[PROBE] EXPECTED: async observation',
       '[PROBE] EXPECTED: observation inside a property case (fast-check wrapped)',
-      '[PROBE] EXPECTED: real DISC-03 reproduces at its checkpoint',
     ]);
     expect(run.tests.size).toBe(22);
     expect(run.code).not.toBe(0);
@@ -77,29 +81,41 @@ describe('classifier probes (child process)', () => {
 });
 
 describe('fault injection into the real discrepancy suite (child process)', () => {
+  const FI_PROBES = 'test/selftest/probes/fault-injection.probe.js';
+  const DEFECT = 'reintroduce-disc03-open-wipe';
   const runs = {};
   beforeAll(async () => {
-    [runs.fault, runs.disc03Clean] = await Promise.all([
-      runVitest({ files: ['test/discrepancies'], env: { LCFC_FAULT: 'noop-submitScore' } }),
-      runVitest({ files: ['test/discrepancies/bracket-corrections.test.js'], filter: 'DISC-03' }),
-    ]);
+    // Sequential: each child boots many jsdom windows; running them together was what
+    // caused memory pressure locally. The real-suite fault run is the heaviest.
+    runs.fault = await runVitest({ files: ['test/discrepancies'], env: { LCFC_FAULT: 'noop-submitScore' } });
+    runs.probeFault = await runVitest({ config: PROBES, files: [FI_PROBES], env: { LCFC_FAULT: `${DEFECT},noop-submitScore` } });
+    runs.probeDefect = await runVitest({ config: PROBES, files: [FI_PROBES], env: { LCFC_FAULT: DEFECT } });
+    runs.probeClean = await runVitest({ config: PROBES, files: [FI_PROBES] });
   }, 300_000);
 
   const ran = (r) => [...r.tests.values()].filter((t) => t.status !== 'skipped');
-  const isDisc03 = (t) => t.fullName.includes('[DISC-03]');
 
-  it('DISC-03 with submitScore broken: every DISC-03 test fails as UNEXPECTED (none counts as the known finding)', () => {
-    const tests = ran(runs.fault).filter(isDisc03);
-    expect(tests).toHaveLength(3);
+  it('DISC-03 scenarios (v7.28 defect re-injected) with submitScore broken: every one fails as UNEXPECTED (none counts as the known finding)', () => {
+    const tests = ran(runs.probeFault);
+    expect(tests).toHaveLength(2);
     for (const t of tests) {
       expect(t.status, t.fullName).toBe('failed');
       expect(t.message).toContain('UNEXPECTED FAILURE');
+      expect(t.message).not.toContain('DiscrepancyObserved');
     }
   });
-  it('positive control: the same DISC-03 tests pass without the fault', () => {
-    const tests = ran(runs.disc03Clean);
-    expect(tests).toHaveLength(3);
+  it('positive control: the same DISC-03 scenarios pass (reproduce at their checkpoint) with only the defect injected', () => {
+    const tests = ran(runs.probeDefect);
+    expect(tests).toHaveLength(2);
     for (const t of tests) expect(t.status, t.message).toBe('passed');
+  });
+  it('sensitivity control: without the injected defect they report NO LONGER REPRODUCES (the defect is what they detect)', () => {
+    const tests = ran(runs.probeClean);
+    expect(tests).toHaveLength(2);
+    for (const t of tests) {
+      expect(t.status, t.fullName).toBe('failed');
+      expect(t.message).toContain('DISCREPANCY NO LONGER REPRODUCES');
+    }
   });
   it('with scoring broken, ONLY the discrepancies that never score a match still count as reproduced', () => {
     const stillReproduce = ran(runs.fault).filter((t) => t.status === 'passed').map((t) => t.fullName.replace(/^.*?(\[DISC-\d+\])/, '$1').slice(0, 60)).sort();
@@ -115,7 +131,9 @@ describe('fault injection into the real discrepancy suite (child process)', () =
     const all = ran(runs.fault);
     const failed = all.filter((t) => t.status === 'failed');
     expect(failed.length + 5, 'each test either still reproduces (the 5 above) or failed').toBe(all.length);
-    expect(failed.length).toBeGreaterThan(15);
+    // 13 at v7.34 (open discrepancies that score a match); the floor only guards against an
+    // empty or truncated run — the exact partition is asserted by the line above.
+    expect(failed.length).toBeGreaterThanOrEqual(10);
     for (const t of failed) expect(t.message, t.fullName).toMatch(/UNEXPECTED FAILURE|NO LONGER REPRODUCES|CHECKPOINT NEVER REACHED/);
   });
 });

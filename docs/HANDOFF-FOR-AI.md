@@ -110,7 +110,37 @@ See [AUDIT.md](AUDIT.md), section A. The most important ones for club nights:
 Until the owner decides, a safe operating tip for club nights: **export a backup before
 correcting playoff scores.**
 
-## 7. Map of the repo
+## 7. Evaluating a new upstream release (rolling branch)
+
+Rolling branch: **`engineering/upstream-current`** on the fork (`origin`). One normal commit per
+evaluated upstream release; never force-push, rebase, or merge it into `main`. Older
+`engineering/upstream-v7xx-evaluation` / `v7xx-*maintenance` branches are history: keep them.
+`upstream` has push disabled; push only to `origin`.
+
+```bash
+git switch engineering/upstream-current && git pull --ff-only origin engineering/upstream-current
+git fetch upstream
+PIN=$(git rev-parse upstream/main)            # pin once; ignore later upstream pushes
+git show "$PIN:index.html" | grep -m1 LCFC_MANAGER_BUILD   # version
+git show "$PIN:index.html" > index.html        # import the app file only (keep data/, tests)
+[ "$(git show "$PIN:index.html" | sha256sum)" = "$(sha256sum < index.html)" ] && echo BYTE-IDENTICAL
+git diff --quiet -- index.html && echo "unchanged since last evaluation: stop, no commit"
+git commit -m "Evaluate upstream vX.YY: import index.html from $PIN" -- index.html
+npm run check
+npm test -- --no-file-parallelism              # unrestricted parallelism has hit Node OOM
+npx playwright test --workers=1
+node scripts/stress.mjs --runs 3 --seed 20261108   # same bounded run as CI
+npm run test:discrepancies -- --no-file-parallelism  # red = still-open findings (expected)
+git push origin engineering/upstream-current   # ordinary push, even if tests failed
+gh run list --branch engineering/upstream-current --limit 1   # then: gh run watch <id>
+```
+
+A failed evaluation is a valid result: push it and report it. To investigate, branch off the
+evaluation commit (`git switch -c engineering/investigate-vX.YY <sha>`) or check it out
+detached; fix tests or report app bugs there, never by amending the evaluation commit. If the
+next release fixes things, it simply lands as the next commit on the rolling branch.
+
+## 8. Map of the repo
 
 ```
 index.html                 the app (unchanged by the test work)

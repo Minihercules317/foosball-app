@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<!-- LCFC_MANAGER_BUILD v7.37 | 2026-11-11 | if you see an older version, check the deployed file/cache -->
+<!-- LCFC_MANAGER_BUILD v7.42 | 2026-11-12 | if you see an older version, check the deployed file/cache -->
 <html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#f4f7f5" />
   <meta name="application-name" content="LCFC Manager" />
-  <meta name="lcfc-build" content="7.37" />
+  <meta name="lcfc-build" content="7.42" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>LCFC Manager v7.37 – Lake Champlain Foosball Club</title>
+  <title>LCFC Manager v7.42 – Lake Champlain Foosball Club</title>
   <script>
     /* ===== LCFC color themes — applied before first paint so there is no flash ===== */
     (function () {
@@ -3151,8 +3151,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Format</label>
             <select id="t-format" class="input-field w-full rounded-xl px-4 py-3 text-slate-800">
-              <option value="swiss">Swiss / Ranking Rounds</option>
-              <option value="roundrobin">Round Robin</option>
+              <option value="swiss">Ranking Rounds</option>
               <option value="single-elim">Single Elimination</option>
               <option value="double-elim">Double Elimination</option>
             </select>
@@ -3582,10 +3581,10 @@
   <script>
     // ==================== DATA LAYER ====================
     const STORAGE_KEY = 'foosmanager_v1';
-    const APP_VERSION = '7.37';
+    const APP_VERSION = '7.42';
     const APP_UPDATED = 'Nov 11, 2026';
     /* Lines of code in this file. Updated each release by: ./update_loc.sh index.html (edits in place, never changes line count). */
-    const APP_LINES = 15799;
+    const APP_LINES = 16213;
 
     let state = {
       players: [],
@@ -3603,15 +3602,34 @@
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
-          const data = JSON.parse(raw);
-          state.players = data.players || [];
-          state.tournaments = data.tournaments || [];
-          migratePlayerHomeState();
-          migratePlayerRankings();
-          backfillRankingFromTournaments();
+          const data = JSON.parse(raw) || {};
+          const players = Array.isArray(data.players) ? data.players : [];
+          const tournaments = Array.isArray(data.tournaments) ? data.tournaments : [];
+          state.players = players.filter(p => p && typeof p === 'object').map(p => {
+            if (p.name == null) p.name = String(p.id || 'Player');
+            else p.name = String(p.name);
+            if (p.id == null || p.id === '') p.id = uid();
+            else p.id = String(p.id);
+            return p;
+          });
+          state.tournaments = tournaments.filter(t => t && typeof t === 'object').map(t => {
+            if (t.name == null || t.name === '') t.name = 'Tournament';
+            else t.name = String(t.name);
+            if (!Array.isArray(t.playerIds)) t.playerIds = [];
+            if (!Array.isArray(t.absentIds)) t.absentIds = [];
+            if (!Array.isArray(t.rounds)) t.rounds = [];
+            if (t.id == null || t.id === '') t.id = uid();
+            else t.id = String(t.id);
+            return t;
+          });
+          try { migratePlayerHomeState(); } catch (e) { console.warn('migratePlayerHomeState', e); }
+          try { migratePlayerRankings(); } catch (e) { console.warn('migratePlayerRankings', e); }
+          try { backfillRankingFromTournaments(); } catch (e) { console.warn('backfillRankingFromTournaments', e); }
         }
       } catch (e) {
         console.error('Failed to load state', e);
+        if (!Array.isArray(state.players)) state.players = [];
+        if (!Array.isArray(state.tournaments)) state.tournaments = [];
       }
     }
 
@@ -3857,7 +3875,8 @@
       let n = 0;
       sorted.forEach(t => {
         if (!t) return;
-        if (t.rankingApplied && t.rankingDeltas && typeof t.rankingDeltas === 'object') return;
+        // rankingApplied alone is enough (empty deltas still mean "do not apply")
+        if (t.rankingApplied || t.importedCopy) return;
         if (applyRankingPointsForTournament(t)) n++;
       });
       return n;
@@ -4337,6 +4356,8 @@
 
     function applyRankingPointsForTournament(t) {
       if (!t || t.rankingApplied) return false;
+      // Duplicate imports kept for history must never receive ranking again
+      if (t.importedCopy) return false;
       if (isSandboxTournament(t)) return false;
       if (!t.playoffs) return false;
       const placements = t.placements || t.playoffs.placements || {};
@@ -4344,6 +4365,9 @@
 
       const { ids: fieldIds, placeOf } = getEventFinishPlaces(t);
       if (fieldIds.length < 2) return false;
+
+      // Prefer places frozen at playoff create (stable across rebuilds)
+      const lockedExpected = t.expectedPlaceLocked || t.playoffs?.expectedPlaceLocked || null;
 
       // Individual ranking order (for singles / fallback)
       const seeded = fieldIds.slice().sort((a, b) => {
@@ -4358,9 +4382,17 @@
 
       // Playoff team seed → same expected place for both partners
       const teamExpected = {};
+      if (lockedExpected && typeof lockedExpected === 'object') {
+        Object.keys(lockedExpected).forEach(id => {
+          const n = Number(lockedExpected[id]);
+          if (n > 0) teamExpected[id] = n;
+        });
+      }
       (t.playoffTeams || []).forEach(team => {
         if (team.seed == null) return;
-        (team.playerIds || []).forEach(id => { teamExpected[id] = Number(team.seed); });
+        (team.playerIds || []).forEach(id => {
+          if (teamExpected[id] == null) teamExpected[id] = Number(team.seed);
+        });
       });
       // Backfill seeds from bracket sides when playoffTeams missing/incomplete (old imports)
       try {
@@ -4504,6 +4536,16 @@
       t.rankingDeltaDetail = deltaDetail;
       t.rankingBonusShare = bonusShare.slice();
       t.rankingBonusPool = bonusPool;
+      // Persist pool snapshot when missing so future rebuilds don't drift
+      if (!t.bonusPoolLocked && bonusPool != null) {
+        t.bonusPoolLocked = {
+          bonusPool: bonusPool,
+          fieldPoints: fieldPoints,
+          shares: bonusShare.slice(),
+          fieldSize: (fieldIds && fieldIds.length) || 0,
+          lockedAt: Date.now()
+        };
+      }
       return true;
     }
 
@@ -4558,6 +4600,14 @@
         p.rankingDelta = 0;
       });
       (state.tournaments || []).forEach(t => {
+        if (!t) return;
+        if (t.importedCopy) {
+          // Keep neutral: never re-rank duplicate imports
+          t.rankingApplied = true;
+          t.rankingDeltas = {};
+          delete t.rankingDeltaDetail;
+          return;
+        }
         delete t.rankingApplied;
         delete t.rankingAppliedAt;
         delete t.rankingDeltas;
@@ -4695,7 +4745,9 @@
           savedId = p.id;
         }
       } else {
-        const player = { id: uid(), name, skill, rankingPoints, rankingDelta: 0, region: geo || '', homeState: geo || '' };
+        let newId = uid();
+        if (typeof isSafeEntityId === 'function' && !isSafeEntityId(newId)) newId = uid();
+        const player = { id: newId, name, skill, rankingPoints, rankingDelta: 0, region: geo || '', homeState: geo || '' };
         state.players.push(player);
         savedId = player.id;
         if (state.quickAddMode && state.currentTournamentId) {
@@ -4790,7 +4842,7 @@
       }
       const sorted = state.players.slice().sort((a, b) => a.name.localeCompare(b.name));
       const opts = sorted.map(p =>
-        `<option value="${p.id}">${escapeHtml(p.name)}</option>`
+        `<option value="${escapeAttr(p.id)}">${escapeHtml(p.name)}</option>`
       ).join('');
       const keepSel = document.getElementById('merge-keep-id');
       const remSel = document.getElementById('merge-remove-id');
@@ -4894,11 +4946,14 @@
       const keepName = keep.name;
 
       (state.tournaments || []).forEach(t => {
+        if (!t) return;
         if (Array.isArray(t.playerIds)) t.playerIds = rewriteIdList(t.playerIds, removeId, keepId);
         if (Array.isArray(t.absentIds)) t.absentIds = rewriteIdList(t.absentIds, removeId, keepId);
         if (Array.isArray(t.currentSitOutIds)) t.currentSitOutIds = rewriteIdList(t.currentSitOutIds, removeId, keepId);
+        if (Array.isArray(t.sitOutQueue)) t.sitOutQueue = rewriteIdList(t.sitOutQueue, removeId, keepId);
 
         (t.rounds || []).forEach(r => {
+          if (!r) return;
           if (Array.isArray(r.sitOutIds)) r.sitOutIds = rewriteIdList(r.sitOutIds, removeId, keepId);
           (r.teams || []).forEach(team => {
             if (Array.isArray(team.playerIds)) {
@@ -4935,6 +4990,26 @@
             delete t.rankingDeltas[removeId];
           }
         }
+        if (t.rankingDeltaDetail && typeof t.rankingDeltaDetail === 'object') {
+          if (removeId in t.rankingDeltaDetail) {
+            if (!t.rankingDeltaDetail[keepId]) t.rankingDeltaDetail[keepId] = t.rankingDeltaDetail[removeId];
+            delete t.rankingDeltaDetail[removeId];
+          }
+        }
+        if (t.expectedPlaceLocked && typeof t.expectedPlaceLocked === 'object') {
+          if (removeId in t.expectedPlaceLocked) {
+            if (t.expectedPlaceLocked[keepId] == null) t.expectedPlaceLocked[keepId] = t.expectedPlaceLocked[removeId];
+            delete t.expectedPlaceLocked[removeId];
+          }
+        }
+        if (t.playoffs && t.playoffs.expectedPlaceLocked && typeof t.playoffs.expectedPlaceLocked === 'object') {
+          if (removeId in t.playoffs.expectedPlaceLocked) {
+            if (t.playoffs.expectedPlaceLocked[keepId] == null) {
+              t.playoffs.expectedPlaceLocked[keepId] = t.playoffs.expectedPlaceLocked[removeId];
+            }
+            delete t.playoffs.expectedPlaceLocked[removeId];
+          }
+        }
 
         // Placements
         const pl = t.placements || t.playoffs?.placements;
@@ -4961,6 +5036,28 @@
 
       if (state.profilePlayerId === removeId) state.profilePlayerId = keepId;
       if (state.editingPlayerId === removeId) state.editingPlayerId = null;
+
+      // DISC-14: structural pass only (===), never substring match on ids
+      try {
+        const scrub = (obj) => {
+          if (!obj || typeof obj !== 'object') return;
+          if (Array.isArray(obj)) {
+            for (let i = 0; i < obj.length; i++) {
+              if (obj[i] === removeId) obj[i] = keepId;
+              else if (obj[i] && typeof obj[i] === 'object') scrub(obj[i]);
+            }
+          } else {
+            Object.keys(obj).forEach(k => {
+              if (obj[k] === removeId) obj[k] = keepId;
+              else if (k === removeId && keepId !== removeId) {
+                if (obj[keepId] == null) obj[keepId] = obj[k];
+                delete obj[k];
+              } else if (obj[k] && typeof obj[k] === 'object') scrub(obj[k]);
+            });
+          }
+        };
+        scrub(state);
+      } catch (e) { console.warn('merge scrub', e); }
 
       // Rebuild club ranking from bracket results so points are not double-counted
       let ranked = 0;
@@ -5043,14 +5140,14 @@
         <tr class="border-t border-slate-200 table-row">
           <td class="px-3 py-3.5 tabular-nums ${rankCls} text-sm">#${rank}</td>
           <td class="px-4 py-3.5">
-            <button type="button" onclick="openPlayerProfile('${p.id}')" class="font-medium text-slate-900 hover:text-emerald-700 text-left">${escapeHtml(p.name)}</button>
+            <button type="button" onclick="openPlayerProfile('${escapeAttr(p.id)}')" class="font-medium text-slate-900 hover:text-emerald-700 text-left">${escapeHtml(p.name)}</button>
           </td>
           <td class="px-4 py-3.5 text-slate-500 hidden sm:table-cell"><span class="badge px-2 py-0.5 rounded-md bg-slate-50 text-slate-500">${escapeHtml(band.label)}</span> <span class="text-xs text-slate-400 ml-1">${p.rankingPoints}</span></td>
           <td class="px-4 py-3.5 hidden md:table-cell">${form}</td>
           <td class="px-4 py-3.5 text-right space-x-2 sm:space-x-3">
-            <button onclick="openPlayerProfile('${p.id}')" class="text-slate-500 hover:text-emerald-600 text-sm font-medium">Profile</button>
-            ${opMode ? `<button onclick="editPlayer('${p.id}')" class="text-emerald-600/90 hover:text-emerald-700 text-sm font-medium">Edit</button>
-            <button onclick="deletePlayer('${p.id}')" class="text-red-500/80 hover:text-red-600 text-sm font-medium">Delete</button>` : ''}
+            <button onclick="openPlayerProfile('${escapeAttr(p.id)}')" class="text-slate-500 hover:text-emerald-600 text-sm font-medium">Profile</button>
+            ${opMode ? `<button onclick="editPlayer('${escapeAttr(p.id)}')" class="text-emerald-600/90 hover:text-emerald-700 text-sm font-medium">Edit</button>
+            <button onclick="deletePlayer('${escapeAttr(p.id)}')" class="text-red-500/80 hover:text-red-600 text-sm font-medium">Delete</button>` : ''}
           </td>
         </tr>`;
       }).join('');
@@ -5253,8 +5350,16 @@
 
     function confirmDeleteTournament() {
       if (!confirm('Delete this tournament permanently?')) return;
-      state.tournaments = state.tournaments.filter(t => t.id !== state.currentTournamentId);
+      state.tournaments = state.tournaments.filter(t => t && t.id !== state.currentTournamentId);
       state.currentTournamentId = null;
+      // Rebuild club ranking so deleted event deltas are not left on players (DISC-09)
+      try {
+        if (typeof rebuildPlayerRankingPointsFromEventDeltas === 'function') {
+          rebuildPlayerRankingPointsFromEventDeltas();
+        } else if (typeof recalculateClubRankingsFromEvents === 'function') {
+          recalculateClubRankingsFromEvents();
+        }
+      } catch (e) { console.warn('ranking rebuild after delete', e); }
       saveState();
       showView('home');
       toast('Tournament deleted');
@@ -5436,7 +5541,7 @@
       if (typeof maybeNudgeConflictLock === 'function') maybeNudgeConflictLock();
       const list = document.getElementById('tournament-list');
       const empty = document.getElementById('empty-tournaments');
-      if (state.tournaments.length === 0) {
+      if (!(state.tournaments || []).filter(t => t && t.id).length) {
         list.innerHTML = '';
         empty.classList.remove('hidden');
         return;
@@ -5467,7 +5572,7 @@
       }
       const typeLabel = {singles:'Singles', doubles:'Doubles', dyp:'DYP', monster:'Monster DYP'};
       const typeIcon = {singles:'👤', doubles:'👥', dyp:'🎲', monster:'👹'};
-      const sorted = state.tournaments.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      const sorted = (state.tournaments || []).filter(t => t && t.id).slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
       const expandedIds = getHomeExpandedEventIds();
       list.innerHTML = sorted.map(t => {
         const pod = getTournamentPodiumLabels(t);
@@ -5494,17 +5599,17 @@
         const finished = t.status === 'finished';
         const expanded = !finished || expandedIds.has(t.id);
         const chevron = finished
-          ? `<button type="button" onclick="event.stopPropagation(); toggleHomeEventExpanded('${t.id}')" class="ml-0.5 p-1 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600" aria-label="${expanded ? 'Collapse' : 'Expand'} event card" aria-expanded="${expanded}">
+          ? `<button type="button" onclick="event.stopPropagation(); toggleHomeEventExpanded('${escapeAttr(t.id)}')" class="ml-0.5 p-1 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600" aria-label="${expanded ? 'Collapse' : 'Expand'} event card" aria-expanded="${expanded}">
               <svg class="w-4 h-4 transition-transform ${expanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>`
           : '';
         const headerClick = finished
-          ? `onclick="event.stopPropagation(); toggleHomeEventExpanded('${t.id}')"`
-          : `onclick="openTournament('${t.id}')"`;
-        const cardClick = finished ? '' : `onclick="openTournament('${t.id}')"`;
+          ? `onclick="event.stopPropagation(); toggleHomeEventExpanded('${escapeAttr(t.id)}')"`
+          : `onclick="openTournament('${escapeAttr(t.id)}')"`;
+        const cardClick = finished ? '' : `onclick="openTournament('${escapeAttr(t.id)}')"`;
         const compactPad = finished && !expanded ? 'p-3.5' : 'p-5';
         return `
-        <div ${cardClick} class="${finished ? '' : 'card-interactive cursor-pointer '}surface-card rounded-2xl ${compactPad} ${band}${t.sandbox ? ' ring-1 ring-amber-300/80' : ''}" data-home-event="${t.id}" data-expanded="${expanded}">
+        <div ${cardClick} class="${finished ? '' : 'card-interactive cursor-pointer '}surface-card rounded-2xl ${compactPad} ${band}${t.sandbox ? ' ring-1 ring-amber-300/80' : ''}" data-home-event="${escapeAttr(t.id)}" data-expanded="${expanded}">
           <div ${headerClick} class="flex items-start justify-between gap-3 ${finished ? 'cursor-pointer' : ''}">
             <div class="flex items-start gap-3 min-w-0">
               <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${iconBg}">${typeIcon[t.type] || '⚽'}</div>
@@ -5533,7 +5638,7 @@
             <span>${new Date(t.createdAt).toLocaleDateString()}</span>
           </div>
           ${podiumBlock}
-          ${finished ? `<div class="mt-3"><button type="button" onclick="event.stopPropagation(); openTournament('${t.id}')" class="btn-secondary text-xs px-3 py-1.5 rounded-lg">Open event</button></div>` : ''}
+          ${finished ? `<div class="mt-3"><button type="button" onclick="event.stopPropagation(); openTournament('${escapeAttr(t.id)}')" class="btn-secondary text-xs px-3 py-1.5 rounded-lg">Open event</button></div>` : ''}
           ` : ''}
         </div>`;
       }).join('');
@@ -5628,6 +5733,7 @@
       if (!t || !t.playoffs) return null;
       if (typeof isSandboxTournament === 'function' && isSandboxTournament(t)) {
         delete t.bonusPoolLocked;
+        delete t.expectedPlaceLocked;
         return null;
       }
       const snap = computeBonusPoolSnapshot(t);
@@ -5643,6 +5749,36 @@
           lockedAt: snap.lockedAt
         };
       } catch (e) {}
+      // Freeze expected places at playoff create (seeds + club RP order) so rebuilds don't drift
+      try {
+        const fieldIds = snap.fieldIds || [...(typeof collectPlayoffFieldIds === 'function' ? collectPlayoffFieldIds(t) : [])];
+        const expectedPlaceLocked = {};
+        (t.playoffTeams || []).forEach(team => {
+          if (team && team.seed != null) {
+            (team.playerIds || []).forEach(id => {
+              if (id) expectedPlaceLocked[id] = Number(team.seed);
+            });
+          }
+        });
+        const missing = fieldIds.filter(id => expectedPlaceLocked[id] == null);
+        if (missing.length) {
+          const seededVals = Object.values(expectedPlaceLocked).map(Number).filter(n => n > 0);
+          // Continue after highest existing seed so backfill does not collide with team seeds
+          let nextPlace = seededVals.length ? (Math.max.apply(null, seededVals) + 1) : 1;
+          missing.slice().sort((a, b) => {
+            const pa = typeof getPlayerRankingPoints === 'function' ? getPlayerRankingPoints(a) : 2000;
+            const pb = typeof getPlayerRankingPoints === 'function' ? getPlayerRankingPoints(b) : 2000;
+            if (pb !== pa) return pb - pa;
+            const na = (state.players.find(p => p.id === a) || {}).name || '';
+            const nb = (state.players.find(p => p.id === b) || {}).name || '';
+            return String(na).localeCompare(String(nb));
+          }).forEach((id) => {
+            expectedPlaceLocked[id] = nextPlace++;
+          });
+        }
+        t.expectedPlaceLocked = expectedPlaceLocked;
+        if (t.playoffs) t.playoffs.expectedPlaceLocked = Object.assign({}, expectedPlaceLocked);
+      } catch (e) { console.warn('expectedPlaceLocked', e); }
       return snap;
     }
 
@@ -5891,7 +6027,7 @@
           box.innerHTML = available.map(p => {
             const checked = prevChecked.has(p.id) ? 'checked' : '';
             return `<label class="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-slate-50 transition select-none">
-              <input type="checkbox" class="add-player-cb accent-emerald-600 w-4 h-4 shrink-0" value="${p.id}" ${checked} onchange="updateAddPlayerSelectedCount()" />
+              <input type="checkbox" class="add-player-cb accent-emerald-600 w-4 h-4 shrink-0" value="${escapeAttr(p.id)}" ${checked} onchange="updateAddPlayerSelectedCount()" />
               <span class="text-sm font-medium text-slate-800 min-w-0 truncate">${escapeHtml(p.name)}</span>
             </label>`;
           }).join('');
@@ -5899,7 +6035,7 @@
       }
       if (select) {
         select.innerHTML = available.length
-          ? available.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')
+          ? available.map(p => `<option value="${escapeAttr(p.id)}">${escapeHtml(p.name)}</option>`).join('')
           : '<option value="">No more players</option>';
       }
       updateAddPlayerSelectedCount();
@@ -6634,8 +6770,8 @@ function flipRankingMatchCoin(roundNum, matchId) {
               ${busy ? `<span class="ml-2 text-[11px] font-semibold text-violet-700 bg-violet-50 border border-violet-200 px-1.5 py-0.5 rounded" title="${escapeHtml(busyTitle)}">Busy elsewhere</span>` : ''}
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button onclick="togglePlayerAbsent('${pid}')" class="text-xs font-semibold px-2 py-1 rounded-lg border transition ${absent ? 'text-emerald-700 border-emerald-200 bg-emerald-50 hover:bg-emerald-100' : 'text-amber-700 border-amber-200 bg-amber-50 hover:bg-amber-100'}">${absent ? 'Present' : 'Absent'}</button>
-              <button onclick="removePlayerFromTournament('${pid}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Remove</button>
+              <button onclick="togglePlayerAbsent('${escapeAttr(pid)}')" class="text-xs font-semibold px-2 py-1 rounded-lg border transition ${absent ? 'text-emerald-700 border-emerald-200 bg-emerald-50 hover:bg-emerald-100' : 'text-amber-700 border-amber-200 bg-amber-50 hover:bg-amber-100'}">${absent ? 'Present' : 'Absent'}</button>
+              <button onclick="removePlayerFromTournament('${escapeAttr(pid)}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Remove</button>
             </div>
           </div>
         `;
@@ -6654,7 +6790,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
         .filter(Boolean);
       const ids = new Set(unpaired.map(p => p.id));
       const opts = unpaired.length
-        ? unpaired.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')
+        ? unpaired.map(p => `<option value="${escapeAttr(p.id)}">${escapeHtml(p.name)}</option>`).join('')
         : '<option value="">No unpaired players</option>';
       const a = document.getElementById('team-player-a');
       const b = document.getElementById('team-player-b');
@@ -6895,14 +7031,39 @@ function flipRankingMatchCoin(roundNum, matchId) {
       const counts = getSitOutCounts(t);
       const played = getRankingPlayedCounts(t);
       const lastSit = new Set();
-      const lastRound = (t.rounds || [])[(t.rounds || []).length - 1];
+      const prevSit = new Set();
+      const roundsArr = t.rounds || [];
+      const lastRound = roundsArr[roundsArr.length - 1];
+      const prevRound = roundsArr[roundsArr.length - 2];
       if (lastRound && lastRound.sitOutIds && lastRound.sitOutIds.length) {
         lastRound.sitOutIds.forEach(id => lastSit.add(id));
       }
-      // Only active players stay in the rotation ring (absent / removed drop out)
+      if (prevRound && prevRound.sitOutIds && prevRound.sitOutIds.length) {
+        prevRound.sitOutIds.forEach(id => prevSit.add(id));
+      }
+      // Sit ring: stable while active set unchanged; rebuild when join/leave
       const activeIds = new Set(players.map(p => p.id));
+      const ringKey = players.map(p => p.id).slice().sort().join('|');
       if (!Array.isArray(t.sitOutQueue)) t.sitOutQueue = [];
-      t.sitOutQueue = t.sitOutQueue.filter(id => activeIds.has(id));
+      if (t._sitRingKey !== ringKey) {
+        t._sitRingKey = ringKey;
+        // Rebuild ring: fewest sits first, then prior queue order, then name
+        const prevQ = t.sitOutQueue.filter(id => activeIds.has(id));
+        const ordered = players.slice().sort((a, b) => {
+          const ca = counts[a.id] || 0, cb = counts[b.id] || 0;
+          if (ca !== cb) return ca - cb;
+          const ia = prevQ.indexOf(a.id), ib = prevQ.indexOf(b.id);
+          const ra = ia < 0 ? 9999 : ia, rb = ib < 0 ? 9999 : ib;
+          if (ra !== rb) return ra - rb;
+          return String(a.name || '').localeCompare(String(b.name || ''));
+        });
+        t.sitOutQueue = ordered.map(p => p.id);
+      } else {
+        t.sitOutQueue = t.sitOutQueue.filter(id => activeIds.has(id));
+        players.forEach(p => {
+          if (!t.sitOutQueue.includes(p.id)) t.sitOutQueue.push(p.id);
+        });
+      }
       const queueIds = t.sitOutQueue.slice();
 
       const remaining = players.slice();
@@ -6913,13 +7074,15 @@ function flipRankingMatchCoin(roundNum, matchId) {
         const minC = Math.min.apply(null, pool.map(p => counts[p.id] || 0));
         let tier = pool.filter(p => (counts[p.id] || 0) === minC);
         // Among equal sits: prefer players who have played more ranking matches
-        // (late joiners with 0 sits and 1 game played sit after long-time 0-sit players)
         const maxPlayed = Math.max.apply(null, tier.map(p => played[p.id] || 0));
         const highPlayed = tier.filter(p => (played[p.id] || 0) === maxPlayed);
         if (highPlayed.length) tier = highPlayed;
-        // Avoid back-to-back sits when possible
+        // HARD: no back-to-back sit if any min-tier player did not sit last round
         const notLast = tier.filter(p => !lastSit.has(p.id));
         if (notLast.length) tier = notLast;
+        // Soft: avoid sitting in 2 of last 3 rounds
+        const notRecent = tier.filter(p => !prevSit.has(p.id));
+        if (notRecent.length) tier = notRecent;
         // Ring order: earlier in queue sits first
         tier.sort((a, b) => {
           const ia = queueIds.indexOf(a.id);
@@ -6948,7 +7111,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
       const chosenIds = chosen.map(p => p.id);
       const restQ = queueIds.filter(id => !chosenIds.includes(id) && activeIds.has(id));
       const notInQueue = players.map(p => p.id).filter(id => !restQ.includes(id) && !chosenIds.includes(id));
-      // Rotate: unchosen keep order, new active players, then those who just sat
+      // Rotate: unchosen keep order, new active players, then those who just sat (end of ring)
       t.sitOutQueue = restQ.concat(notInQueue).concat(chosenIds);
       return chosen;
     }
@@ -7039,7 +7202,58 @@ function flipRankingMatchCoin(roundNum, matchId) {
     /**
      * Build one random greedy pairing preferring allowed / new partners.
      */
-    function buildOnePairing(t, active, counts, byPlayer) {
+    
+    /** Last ranking-round partner for each player (most recent round with teams/matches). */
+    function getLastPartnerMap(t) {
+      const map = {};
+      if (!t) return map;
+      const resolve = (ent) => {
+        if (!ent) return [];
+        let ids = (ent.playerIds || []).filter(Boolean);
+        if (ids.length >= 2) return ids.slice(0, 2);
+        if (typeof entityPlayerIds === 'function') {
+          ids = entityPlayerIds(ent) || [];
+          if (ids.length >= 2) return ids.slice(0, 2);
+        }
+        return [];
+      };
+      const rounds = t.rounds || [];
+      for (let i = rounds.length - 1; i >= 0; i--) {
+        const r = rounds[i];
+        let found = false;
+        const rec = (a, b) => {
+          if (!a || !b || a === b) return;
+          map[a] = b;
+          map[b] = a;
+          found = true;
+        };
+        (r.matches || []).forEach(m => {
+          if (!m || m.void) return;
+          const pa = resolve(m.entityA || m.a?.entity);
+          const pb = resolve(m.entityB || m.b?.entity);
+          if (pa.length >= 2) rec(pa[0], pa[1]);
+          if (pb.length >= 2) rec(pb[0], pb[1]);
+        });
+        (r.teams || []).forEach(team => {
+          const ids = resolve(team);
+          if (ids.length >= 2) rec(ids[0], ids[1]);
+        });
+        if (found) break;
+      }
+      return map;
+    }
+
+    function countConsecutivePartnerPairs(pairs, lastPartner) {
+      let n = 0;
+      (pairs || []).forEach(([a, b]) => {
+        if (!a || !b) return;
+        if (lastPartner[a.id] === b.id || lastPartner[b.id] === a.id) n++;
+      });
+      return n;
+    }
+
+    function buildOnePairing(t, active, counts, byPlayer, lastPartner) {
+      lastPartner = lastPartner || {};
       const remaining = [...active];
       const pairs = [];
       const used = new Set();
@@ -7053,13 +7267,26 @@ function flipRankingMatchCoin(roundNum, matchId) {
         return n;
       };
 
+      const isConsecutive = (a, b) => lastPartner[a] === b || lastPartner[b] === a;
+
       // Hardest-to-match first (fewest unused partners), shuffle within ties
       const order = shuffle([...remaining]).sort((a, b) => newPartnerCount(a) - newPartnerCount(b));
 
       for (const p of order) {
         if (used.has(p.id)) continue;
         let candidates = remaining.filter(o => o.id !== p.id && !used.has(o.id));
-        let pool = candidates.filter(o => (counts[pairKey(p.id, o.id)] || 0) === 0);
+        // Hard: prefer non-consecutive partners
+        let pool = candidates.filter(o => !isConsecutive(p.id, o.id) && (counts[pairKey(p.id, o.id)] || 0) === 0);
+        if (!pool.length) {
+          pool = candidates.filter(o => !isConsecutive(p.id, o.id) && isPartnerAllowed(t, counts, byPlayer, p.id, o.id));
+        }
+        if (!pool.length) {
+          pool = candidates.filter(o => !isConsecutive(p.id, o.id));
+        }
+        // Escape only if every remaining candidate is consecutive
+        if (!pool.length) {
+          pool = candidates.filter(o => (counts[pairKey(p.id, o.id)] || 0) === 0);
+        }
         if (!pool.length) {
           pool = candidates.filter(o => isPartnerAllowed(t, counts, byPlayer, p.id, o.id));
         }
@@ -7087,44 +7314,164 @@ function flipRankingMatchCoin(roundNum, matchId) {
     function fairPairPlayers(t, active) {
       if (active.length < 2) return [];
       const { counts, byPlayer } = getPartnershipData(t);
+      const lastPartner = getLastPartnerMap(t);
+      const needPairs = Math.floor(active.length / 2);
+
+      const better = (m, best) => {
+        if (m.consecutive < best.consecutive) return true;
+        if (m.consecutive > best.consecutive) return false;
+        if (m.forbidden < best.forbidden) return true;
+        if (m.forbidden > best.forbidden) return false;
+        if (m.rematches < best.rematches) return true;
+        if (m.rematches > best.rematches) return false;
+        return m.score < best.score;
+      };
+
+      // Exact search for small fields (n <= 10)
+      if (active.length <= 10 && needPairs <= 5) {
+        const exact = exactFairPairing(active, counts, byPlayer, t, lastPartner);
+        if (exact && exact.length >= needPairs) {
+          try { logPairingDebug(t, exact, counts, 'exact', lastPartner); } catch (e) {}
+          return exact;
+        }
+      }
+
       let best = null;
-      let bestMetric = { forbidden: Infinity, rematches: Infinity, score: Infinity };
-      // More trials for denser fields so "no rematch until full cycle" is realistic
-      const trials = Math.min(400, 40 + active.length * 20);
+      let bestMetric = { consecutive: Infinity, forbidden: Infinity, rematches: Infinity, score: Infinity };
+      const trials = Math.min(1200, 100 + active.length * 50);
+      let zeroConsecFound = false;
       let zeroForbiddenFound = false;
+      let zeroRematchFound = false;
 
       for (let i = 0; i < trials; i++) {
-        const pairs = buildOnePairing(t, active, counts, byPlayer);
-        if (pairs.length < Math.floor(active.length / 2)) continue;
+        const pairs = buildOnePairing(t, active, counts, byPlayer, lastPartner);
+        if (pairs.length < needPairs) continue;
         let forbidden = 0;
         pairs.forEach(([a, b]) => {
           if (!isPartnerAllowed(t, counts, byPlayer, a.id, b.id)) forbidden++;
         });
-        if (forbidden === 0) zeroForbiddenFound = true;
-        // Hard rule: once a zero-forbidden pairing exists, never accept rematches
-        if (zeroForbiddenFound && forbidden > 0) continue;
         const metric = scorePairing(pairs, counts);
         metric.forbidden = forbidden;
-        if (
-          forbidden < bestMetric.forbidden ||
-          (forbidden === bestMetric.forbidden && metric.rematches < bestMetric.rematches) ||
-          (forbidden === bestMetric.forbidden && metric.rematches === bestMetric.rematches && metric.score < bestMetric.score)
-        ) {
+        metric.consecutive = countConsecutivePartnerPairs(pairs, lastPartner);
+        if (metric.consecutive === 0) zeroConsecFound = true;
+        if (forbidden === 0) zeroForbiddenFound = true;
+        if (forbidden === 0 && metric.rematches === 0) zeroRematchFound = true;
+        // Hard: once a zero-consecutive solution exists, reject consecutive rematches
+        if (zeroConsecFound && metric.consecutive > 0) continue;
+        if (zeroForbiddenFound && forbidden > 0) continue;
+        if (zeroRematchFound && metric.rematches > 0) continue;
+        if (!best || better(metric, bestMetric)) {
           bestMetric = metric;
           best = pairs;
-          if (forbidden === 0 && metric.rematches === 0) break;
+          if (metric.consecutive === 0 && forbidden === 0 && metric.rematches === 0) break;
         }
       }
 
-      if (best) return best;
+      if (best) {
+        try { logPairingDebug(t, best, counts, 'heuristic', lastPartner); } catch (e) {}
+        return best;
+      }
 
-      // Absolute fallback
       const ordered = shuffle([...active]);
       const pairs = [];
       for (let i = 0; i < ordered.length - 1; i += 2) {
         pairs.push([ordered[i], ordered[i + 1]]);
       }
+      try { logPairingDebug(t, pairs, counts, 'fallback', lastPartner); } catch (e) {}
       return pairs;
+    }
+
+    /**
+     * Exact minimum-rematch perfect matching for small active sets (n <= 10).
+     * Explores all perfect matchings; prefers zero forbidden, then fewest rematches, then lowest score.
+     */
+    function exactFairPairing(active, counts, byPlayer, t, lastPartner) {
+      lastPartner = lastPartner || {};
+      const people = active.slice();
+      const n = people.length;
+      // Perfect matching requires even count (sit-outs should already ensure this)
+      if (n < 2 || (n % 2) !== 0) return null;
+      let best = null;
+      let bestMetric = { consecutive: Infinity, forbidden: Infinity, rematches: Infinity, score: Infinity };
+      const used = new Array(n).fill(false);
+      const cur = [];
+
+      function scorePairs(pairs) {
+        let forbidden = 0, rematches = 0, score = 0;
+        pairs.forEach(([a, b]) => {
+          const c = counts[pairKey(a.id, b.id)] || 0;
+          score += c * 100;
+          if (c > 0) rematches++;
+          if (t && typeof isPartnerAllowed === 'function' && !isPartnerAllowed(t, counts, byPlayer, a.id, b.id)) {
+            forbidden++;
+          }
+        });
+        const consecutive = countConsecutivePartnerPairs(pairs, lastPartner);
+        return { consecutive, forbidden, rematches, score };
+      }
+
+      function dfs(start) {
+        if (bestMetric.consecutive === 0 && bestMetric.forbidden === 0 && bestMetric.rematches === 0) return;
+        // find first free index
+        let i = start;
+        while (i < n && used[i]) i++;
+        if (i >= n) {
+          const metric = scorePairs(cur);
+          if (
+            metric.consecutive < bestMetric.consecutive ||
+            (metric.consecutive === bestMetric.consecutive && metric.forbidden < bestMetric.forbidden) ||
+            (metric.consecutive === bestMetric.consecutive && metric.forbidden === bestMetric.forbidden && metric.rematches < bestMetric.rematches) ||
+            (metric.consecutive === bestMetric.consecutive && metric.forbidden === bestMetric.forbidden && metric.rematches === bestMetric.rematches && metric.score < bestMetric.score)
+          ) {
+            bestMetric = metric;
+            best = cur.map(p => [p[0], p[1]]);
+          }
+          return;
+        }
+        used[i] = true;
+        for (let j = i + 1; j < n; j++) {
+          if (used[j]) continue;
+          used[j] = true;
+          cur.push([people[i], people[j]]);
+          dfs(i + 1);
+          cur.pop();
+          used[j] = false;
+          if (bestMetric.consecutive === 0 && bestMetric.forbidden === 0 && bestMetric.rematches === 0) {
+            used[i] = false;
+            return;
+          }
+        }
+        used[i] = false;
+      }
+      dfs(0);
+      return best;
+    }
+
+    /** Operator debug: rematch count + sit histogram for last ranking draw. */
+    function logPairingDebug(t, pairs, counts, mode, lastPartner) {
+      if (!t) return;
+      let rematches = 0;
+      const pairList = [];
+      lastPartner = lastPartner || {};
+      (pairs || []).forEach(([a, b]) => {
+        const c = counts[pairKey(a.id, b.id)] || 0;
+        if (c > 0) rematches++;
+        pairList.push({ a: a.name || a.id, b: b.name || b.id, prior: c });
+      });
+      const consecutive = countConsecutivePartnerPairs(pairs, lastPartner);
+      const sitCounts = typeof getSitOutCounts === 'function' ? getSitOutCounts(t) : {};
+      const lastSitN = (t.currentSitOutIds || []).length;
+      t._lastPairingDebug = {
+        mode,
+        rematches,
+        consecutive,
+        pairs: pairList,
+        sitCounts: Object.assign({}, sitCounts),
+        at: Date.now()
+      };
+      t._fairnessSummary = 'Partners: ' + rematches + ' repeat' + (rematches === 1 ? '' : 's') +
+        ' · ' + consecutive + ' consecutive' +
+        (lastSitN ? (' · ' + lastSitN + ' sitting') : '');
     }
 
     function formatTeamDisplayName(playerIds, positions) {
@@ -8667,6 +9014,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
               <div>
                 <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Round ${round.number}${isLatest(round.number) ? ' · current' : ''}</h4>
                 ${(round.sitOutIds && round.sitOutIds.length) ? `<p class="text-[11px] text-amber-700 mt-0.5">Sitting out: ${escapeHtml(round.sitOutIds.map(id => state.players.find(p => p.id === id)?.name || '?').join(', '))}</p>` : ''}
+                ${(isLatest(round.number) && t._fairnessSummary) ? `<p class="text-[10px] text-slate-500 mt-0.5">${escapeHtml(t._fairnessSummary)}</p>` : ''}
               </div>
               <button onclick="deleteRound(${round.number})" class="text-[11px] font-semibold text-red-500 hover:text-red-700 hover:bg-red-50 px-2 py-1 rounded-lg transition">Delete round</button>
             </div>
@@ -10856,6 +11204,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
           updated++;
         } else {
           const geo = p.region || p.homeState || '';
+          // Keep original id so tournament playerIds in the same backup stay linked
           state.players.push({
             id: p.id,
             name: p.name || 'Player',
@@ -10869,15 +11218,43 @@ function flipRankingMatchCoin(roundNum, matchId) {
       return { added, updated };
     }
 
+    function stripTournamentRankingFields(t) {
+      if (!t || typeof t !== 'object') return t;
+      delete t.rankingApplied;
+      delete t.rankingAppliedAt;
+      delete t.rankingDeltas;
+      delete t.rankingDeltaDetail;
+      delete t.rankingBonusShare;
+      delete t.rankingBonusPool;
+      // Keep bonusPoolLocked so re-apply uses the night-of pool if operator re-ranks
+      return t;
+    }
+
     function importTournamentObject(t) {
       if (!t || !t.id) return false;
-      const idx = state.tournaments.findIndex(x => x.id === t.id);
+      if (!Array.isArray(t.playerIds)) t.playerIds = [];
+      if (t.name == null) t.name = 'Tournament';
+      // Tournament id only (player ids left intact so roster links stay valid)
+      if (typeof isSafeEntityId === 'function' && !isSafeEntityId(String(t.id))) {
+        const used = new Set((state.tournaments || []).map(x => x && x.id).filter(Boolean));
+        t.id = (typeof ensureSafeEntityId === 'function')
+          ? ensureSafeEntityId(t.id, used).id
+          : uid();
+      }
+      const idx = state.tournaments.findIndex(x => x && x.id === t.id);
       if (idx >= 0) {
         if (!confirm(`Tournament "${t.name || t.id}" already exists. Replace it?`)) {
-          // Import as a copy with new id
+          // Import as a copy with new id — mark ranking neutral so applyMissing
+          // does not re-apply the same podium (DISC-07)
           t = JSON.parse(JSON.stringify(t));
           t.id = uid();
           t.name = (t.name || 'Tournament') + ' (imported)';
+          t.importedCopy = true;
+          t.rankingApplied = true;
+          t.rankingDeltas = {};
+          delete t.rankingDeltaDetail;
+          delete t.rankingBonusShare;
+          // Keep bonusPoolLocked / placements for display; contribute 0 to RP rebuild
           state.tournaments.unshift(t);
           return true;
         }
@@ -11404,7 +11781,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
       if (!sel) return;
       const prev = selectedId || sel.value;
       const list = state.players.slice().sort((a, b) => a.name.localeCompare(b.name));
-      sel.innerHTML = list.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')
+      sel.innerHTML = list.map(p => `<option value="${escapeAttr(p.id)}">${escapeHtml(p.name)}</option>`).join('')
         || '<option value="">No players</option>';
       if (prev && list.some(p => p.id === prev)) sel.value = prev;
       else if (list[0]) sel.value = list[0].id;
@@ -12193,7 +12570,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
       if (select) {
         const prev = select.value;
         select.innerHTML = options.length
-          ? options.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')
+          ? options.map(p => `<option value="${escapeAttr(p.id)}">${escapeHtml(p.name)}</option>`).join('')
           : '<option value="">No data</option>';
         if (prev && options.some(p => p.id === prev)) select.value = prev;
       }
@@ -13029,8 +13406,44 @@ function flipRankingMatchCoin(roundNum, matchId) {
 
     // ==================== UTIL & NAV ====================
     function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      if (str == null || str === '') return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    /** Attribute-safe escape (includes single quotes). Use for any id/name in HTML attributes. */
+    function escapeAttr(str) {
+      if (str == null || str === '') return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /** True when id is safe for HTML attributes / storage keys. */
+    function isSafeEntityId(id) {
+      return typeof id === 'string' && /^[a-zA-Z0-9_-]{1,80}$/.test(id);
+    }
+
+    /** Coerce imported ids to a safe form; returns { id, mapped } */
+    function ensureSafeEntityId(id, used) {
+      used = used || new Set();
+      let s = (id == null ? '' : String(id)).trim();
+      if (isSafeEntityId(s) && !used.has(s)) {
+        used.add(s);
+        return { id: s, mapped: false };
+      }
+      let base = s.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').slice(0, 60);
+      if (!base) base = 'id';
+      let candidate = isSafeEntityId(base) ? base : ('id_' + uid());
+      let n = 0;
+      while (used.has(candidate)) {
+        n += 1;
+        candidate = (base.slice(0, 50) + '_' + n).slice(0, 80);
+      }
+      used.add(candidate);
+      return { id: candidate, mapped: candidate !== s };
     }
 
     // ==================== PLAYER PROFILE & LAST 10 FORM ====================
@@ -14074,7 +14487,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
         opts.push(`<option value="__all__">All active events (${active.length})</option>`);
       }
       active.forEach(t => {
-        opts.push(`<option value="${t.id}">${escapeHtml(t.name || 'Event')}</option>`);
+        opts.push(`<option value="${escapeAttr(t.id)}">${escapeHtml(t.name || 'Event')}</option>`);
       });
       sel.innerHTML = opts.join('') || '<option value="">No active events</option>';
 
@@ -15660,7 +16073,7 @@ function flipRankingMatchCoin(roundNum, matchId) {
       const themes = LCFCTheme.list();
       const opt = (t) => {
         const on = cur.pref === t.id;
-        return `<button type="button" role="radio" aria-checked="${on}" onclick="chooseTheme('${t.id}')" class="theme-opt${on ? ' selected' : ''}">
+        return `<button type="button" role="radio" aria-checked="${on}" onclick="chooseTheme('${escapeAttr(t.id)}')" class="theme-opt${on ? ' selected' : ''}">
           ${themeSwatchHtml(LCFCTheme.preview(t))}
           <span class="theme-opt-name"><span>${t.name}</span>${on ? THEME_CHECK_SVG : ''}</span>
         </button>`;
@@ -15758,8 +16171,10 @@ function flipRankingMatchCoin(roundNum, matchId) {
       window.speakTvMatchLine = speakTvMatchLine;
       window.playTvMatchChime = playTvMatchChime;
     } catch (e) { console.warn('TV announce export', e); }
-    loadState();
-    showView('home');
+    try { loadState(); } catch (e) { console.error('loadState init', e); state.players = state.players || []; state.tournaments = state.tournaments || []; }
+    // Auto-refresh must start even if first paint throws (DISC-08)
+    try { if (typeof ensureAppAutoRefresh === 'function') ensureAppAutoRefresh(); } catch (e) { console.warn('ensureAppAutoRefresh', e); }
+    try { showView('home'); } catch (e) { console.error('showView home', e); }
     // Always stamp watermark from APP_VERSION (HTML fallback can lag)
     (function stampVersionWatermark() {
       const vw = document.getElementById('home-version-watermark');
@@ -15772,15 +16187,14 @@ function flipRankingMatchCoin(roundNum, matchId) {
         if (bm) bm.setAttribute('content', APP_VERSION);
       } catch (e) {}
     })();
-    syncOperatorModeButton();
-    renderClubSnapshotStatus();
+    try { syncOperatorModeButton(); } catch (e) {}
+    try { renderClubSnapshotStatus(); } catch (e) {}
     // Fetch data/latest.json from GitHub Pages (or same host) for members
     if (typeof bootClubSnapshot === 'function') {
       bootClubSnapshot().catch(function () {});
     }
-    if (typeof ensureAppAutoRefresh === 'function') ensureAppAutoRefresh();
-    renderPlayers();
-    renderThemeMenu();
+    try { renderPlayers(); } catch (e) { console.warn('renderPlayers', e); }
+    try { renderThemeMenu(); } catch (e) {}
 
     ['score-a', 'score-b'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => {
